@@ -3,18 +3,18 @@ const axios = require("axios");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const client_ip = "184.68.183.186";
+  const client_ip = "184.68.183.186";   // hardcoded for testing purpose, TODO: need to replace with req.ip in the future
   try {
-    const response = await axios.get(`https://ipinfo.io/${client_ip}/json`);
+    const response = await axios.get(`https://ipinfo.io/${client_ip}/json`); // api to get geolocation of the client based on their ip, TODO: move to api manager later
     const geolocationData = response.data;
     const lat = geolocationData.loc.split(",")[0];
     const lon = geolocationData.loc.split(",")[1];
     try {
       const list_of_cities_response = await axios.get(
         `https://geogratis.gc.ca/services/geoname/en/geonames.json?lat=${lat}&lon=${lon}&radius=100`
-      );
+      ); // api to get a list of places around the geolocation of the client, TODO: need to move to apimanager in the future
       const actual_data_items = list_of_cities_response.data.items;
-      var customized_response_list = [];
+      var customized_response_list = [];  // the actual json response of this request
       for (let i = 0; i < actual_data_items.length; i++) {
         const currentObject = actual_data_items[i];
         var customized_response = {
