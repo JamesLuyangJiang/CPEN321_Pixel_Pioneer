@@ -2,8 +2,10 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
+const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
+
 router.get("/", async (req, res) => {
-  const client_ip = "184.68.183.186";   // hardcoded for testing purpose, TODO: need to replace with req.ip in the future
+  const client_ip = "184.68.183.186"; // hardcoded for testing purpose, TODO: need to replace with req.ip in the future
   try {
     const response = await axios.get(`https://ipinfo.io/${client_ip}/json`); // api to get geolocation of the client based on their ip, TODO: move to api manager later
     const geolocationData = response.data;
@@ -14,7 +16,8 @@ router.get("/", async (req, res) => {
         `https://geogratis.gc.ca/services/geoname/en/geonames.json?lat=${lat}&lon=${lon}&radius=100`
       ); // api to get a list of places around the geolocation of the client, TODO: need to move to apimanager in the future
       const actual_data_items = list_of_cities_response.data.items;
-      var customized_response_list = [];  // the actual json response of this request
+      var customized_response_list = []; // the actual json response of this request
+      // http://api.weatherapi.com/v1/forecast.json?key=29af4c07ebdd4189a0b222326232410&q=48.8567,2.3508&days=10&aqi=no&alerts=no
       for (let i = 0; i < actual_data_items.length; i++) {
         const currentObject = actual_data_items[i];
         var customized_response = {
@@ -29,11 +32,44 @@ router.get("/", async (req, res) => {
           ),
         };
         customized_response_list.push(customized_response);
-        sortByDistance(customized_response_list);
-        console.log(
-          `Object Name: ${currentObject.name}, Object Lat: ${currentObject.latitude}, Object Lon: ${currentObject.longitude}, Object Distance: ${currentObject.distance}`
-        );
       }
+      sortByDistance(customized_response_list);
+      customized_response_list = getFirstTwenty(customized_response_list);
+      // try {
+      //   const weather_forecast_response = await axios.get(
+      //     `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${currentObject.latitude},${currentObject.longitude}&days=10&aqi=no&alerts=no`
+      //   );
+      //   const weather_data =
+      //     weather_forecast_response.data.forecast.forecastday;
+      //   customized_response.weatherForecast =
+      //     filterWeatherForecast(weather_data);
+      // } catch (error) {
+      //   customized_response.weatherForecast = [];
+      //   console.error("Call weather API failed...");
+      //   continue;
+      // }
+
+      // console.log(
+      //   `Object Name: ${currentObject.name}, Object Lat: ${currentObject.latitude}, Object Lon: ${currentObject.longitude}, Object Distance: ${currentObject.distance}`
+      // );
+      // console.log(customized_response_list.length);
+
+      for (let i = 0; i < customized_response_list.length; i++) {
+        try {
+          const weather_forecast_response = await axios.get(
+            `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${customized_response_list[i].latitude},${customized_response_list[i].longitude}&days=10&aqi=no&alerts=no`
+          );
+          const weather_data =
+            weather_forecast_response.data.forecast.forecastday;
+          customized_response_list[i].weatherForecast =
+            filterWeatherForecast(weather_data);
+        } catch (error) {
+          customized_response.weatherForecast = [];
+          console.error("Call weather API failed...");
+          continue;
+        }
+      }
+
       res.json(customized_response_list);
     } catch (error) {
       res.status(500).json({ error: "Unable to retrieve geolocation data" });
@@ -82,6 +118,44 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 function sortByDistance(objects) {
   // Use the sort() method to sort the list by the "distance" field
   objects.sort((a, b) => a.distance - b.distance);
+}
+
+function filterWeatherForecast(weatherForecast) {
+  const filteredForecast = [];
+
+  for (const forecast of weatherForecast) {
+    const date = forecast.date;
+    var conditions = [];
+
+    conditions.push({
+      time: forecast.hour[0].time,
+      condition: forecast.hour[0].condition.text,
+    });
+    conditions.push({
+      time: forecast.hour[6].time,
+      condition: forecast.hour[6].condition.text,
+    });
+    conditions.push({
+      time: forecast.hour[12].time,
+      condition: forecast.hour[12].condition.text,
+    });
+    conditions.push({
+      time: forecast.hour[18].time,
+      condition: forecast.hour[18].condition.text,
+    });
+
+    filteredForecast.push({ date: date, conditions: conditions });
+  }
+
+  return filteredForecast;
+}
+
+function getFirstTwenty(list) {
+  if (list.length <= 20) {
+    return list;
+  } else {
+    return list.slice(0, 20);
+  }
 }
 
 module.exports = router;
