@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
           ),
         };
         customized_response_list.push(customized_response);
-        sortByDistance(customized_response_list)
+        sortByDistance(customized_response_list);
         console.log(
           `Object Name: ${currentObject.name}, Object Lat: ${currentObject.latitude}, Object Lon: ${currentObject.longitude}, Object Distance: ${currentObject.distance}`
         );
@@ -49,6 +49,7 @@ router.post("/", (req, res) => {
   );
 });
 
+// Acknowledgement: produced by ChatGPT
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const earthRadius = 6371; // Radius of the Earth in kilometers
 
@@ -77,6 +78,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return distance;
 }
 
+// Acknowledgement: produced by ChatGPT
 function sortByDistance(objects) {
   // Use the sort() method to sort the list by the "distance" field
   objects.sort((a, b) => a.distance - b.distance);
