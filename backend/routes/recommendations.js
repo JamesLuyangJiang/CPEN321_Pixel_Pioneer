@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
       ); // api to get a list of places around the geolocation of the client, TODO: need to move to apimanager in the future
       const actual_data_items = list_of_cities_response.data.items;
       var customized_response_list = []; // the actual json response of this request
-      // http://api.weatherapi.com/v1/forecast.json?key=29af4c07ebdd4189a0b222326232410&q=48.8567,2.3508&days=10&aqi=no&alerts=no
+
       for (let i = 0; i < actual_data_items.length; i++) {
         const currentObject = actual_data_items[i];
         var customized_response = {
@@ -34,25 +34,7 @@ router.get("/", async (req, res) => {
         customized_response_list.push(customized_response);
       }
       sortByDistance(customized_response_list);
-      customized_response_list = getFirstTwenty(customized_response_list);
-      // try {
-      //   const weather_forecast_response = await axios.get(
-      //     `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${currentObject.latitude},${currentObject.longitude}&days=10&aqi=no&alerts=no`
-      //   );
-      //   const weather_data =
-      //     weather_forecast_response.data.forecast.forecastday;
-      //   customized_response.weatherForecast =
-      //     filterWeatherForecast(weather_data);
-      // } catch (error) {
-      //   customized_response.weatherForecast = [];
-      //   console.error("Call weather API failed...");
-      //   continue;
-      // }
-
-      // console.log(
-      //   `Object Name: ${currentObject.name}, Object Lat: ${currentObject.latitude}, Object Lon: ${currentObject.longitude}, Object Distance: ${currentObject.distance}`
-      // );
-      // console.log(customized_response_list.length);
+      customized_response_list = getFirstTwenty(customized_response_list); // only getting the closest 20 places since the next API call will take a long time
 
       for (let i = 0; i < customized_response_list.length; i++) {
         try {
@@ -120,6 +102,7 @@ function sortByDistance(objects) {
   objects.sort((a, b) => a.distance - b.distance);
 }
 
+// Only using 00:00, 06:00, 12:00, and 18:00 weather conditions of the day
 function filterWeatherForecast(weatherForecast) {
   const filteredForecast = [];
 
