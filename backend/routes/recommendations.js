@@ -113,18 +113,22 @@ function filterWeatherForecast(weatherForecast) {
     conditions.push({
       time: forecast.hour[0].time,
       condition: forecast.hour[0].condition.text,
+      //   airquality: forecast.hour[0].air_quality,
     });
     conditions.push({
       time: forecast.hour[6].time,
       condition: forecast.hour[6].condition.text,
+      //   airquality: forecast.hour[6].air_quality,
     });
     conditions.push({
       time: forecast.hour[12].time,
       condition: forecast.hour[12].condition.text,
+      //   airquality: forecast.hour[12].air_quality,
     });
     conditions.push({
       time: forecast.hour[18].time,
       condition: forecast.hour[18].condition.text,
+      //   airquality: forecast.hour[18].air_quality,
     });
 
     filteredForecast.push({ date: date, conditions: conditions });
