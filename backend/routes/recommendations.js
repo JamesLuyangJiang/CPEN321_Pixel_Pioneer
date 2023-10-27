@@ -36,21 +36,21 @@ router.get("/", async (req, res) => {
       sortByDistance(customized_response_list);
       customized_response_list = getFirstTwenty(customized_response_list); // only getting the closest 20 places since the next API call will take a long time
 
-      for (let i = 0; i < customized_response_list.length; i++) {
+      const weatherAPIRequests = customized_response_list.map(async (item) => {
         try {
           const weather_forecast_response = await axios.get(
-            `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${customized_response_list[i].latitude},${customized_response_list[i].longitude}&days=10&aqi=no&alerts=no`
+            `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${item.latitude},${item.longitude}&days=10&aqi=no&alerts=no`
           );
           const weather_data =
             weather_forecast_response.data.forecast.forecastday;
-          customized_response_list[i].weatherForecast =
-            filterWeatherForecast(weather_data);
-        } catch (error) {
-          customized_response.weatherForecast = [];
+          item.weatherForecast = filterWeatherForecast(weather_data);
+        } catch (err) {
+          item.weatherForecast = [];
           console.error("Call weather API failed...");
-          continue;
         }
-      }
+      });
+
+      await Promise.all(weatherAPIRequests);
 
       res.json(customized_response_list);
     } catch (error) {

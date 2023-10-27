@@ -8,12 +8,12 @@ const port = 3000;
 
 const recommendationsRoutes = require("./routes/recommendations");
 const schedulingRoutes = require("./routes/events");
-const userRoutes = require("./require/users");
+// const userRoutes = require("./routes/users");
 
 app.use(express.json());
 app.use("/recommendations", recommendationsRoutes);
 app.use("/scheduling", schedulingRoutes);
-app.use("/user", userRoutes);
+// app.use("/user", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
