@@ -37,14 +37,4 @@ router.post("/:userid/:username/:email/:distance/:maxnumberofobservatories", asy
   }
 });
 
-// async function run() {
-//   try {
-//     await client.connect();
-//     console.log("Successfully connected to the database");
-//   } catch (err) {
-//     console.log(err);
-//     await client.close();
-//   }
-// }
-
 module.exports = router;
