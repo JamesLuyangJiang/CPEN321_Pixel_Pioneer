@@ -49,14 +49,4 @@ router.post("/:id/events", async (req, res) => {
   }
 });
 
-// async function run() {
-//   try {
-//     await client.connect();
-//     console.log("Successfully connected to the database");
-//   } catch (err) {
-//     console.log(err);
-//     await client.close();
-//   }
-// }
-
 module.exports = router;
