@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 8081;
 
 // const { MongoClient } = require("mongodb");
 // const uri = "mongodb://localhost:27017";
@@ -16,7 +16,11 @@ app.use("/scheduling", schedulingRoutes);
 // app.use("/user", userRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  obj = {
+    clientip: req.ip.substring(7),
+    message: 'Hello World'
+  }
+  res.send(obj);
 });
 
 // app.post("/scheduling/:id/events", async (req, res) => {

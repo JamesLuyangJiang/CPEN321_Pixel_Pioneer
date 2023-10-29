@@ -5,7 +5,7 @@ const router = express.Router();
 const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
 
 router.get("/", async (req, res) => {
-  const client_ip = "184.68.183.186"; // hardcoded for testing purpose, TODO: need to replace with req.ip in the future
+  const client_ip = req.ip.substring(7); // hardcoded for testing purpose, TODO: need to replace with req.ip in the future
   try {
     const response = await axios.get(`https://ipinfo.io/${client_ip}/json`); // api to get geolocation of the client based on their ip, TODO: move to api manager later
     const geolocationData = response.data;
