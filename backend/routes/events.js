@@ -10,9 +10,7 @@ router.get("/:id/events", async (req, res) => {
     await client.connect();
     console.log("Successfully connected to the database");
     try {
-      console.log("finding...");
       const { id } = req.params;
-      console.log(id);
       const responseObj = await client
         .db("astronomy")
         .collection("events")

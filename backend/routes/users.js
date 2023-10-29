@@ -11,18 +11,18 @@ router.get("/:userid", (req, res) => {
   res.send("The specified user id is: " + userid);
 });
 
-router.post("/:userid/:username/:email/:distance/:maxnumberofobservatories", async (req, res) => {
+router.post("/update/:userid/:username/:email/:distance/:maxnumberofobservatories", async (req, res) => {
   try {
     await client.connect();
     console.log("Successfully connected to the database");
     try {
-      const { userid, username, email, distance, maxnumberofobservatories } = req.body;
-      console.log(userid);
-      req.body.userid = userid;
-      req.body.username = username;
-      req.body.email = email;
-      req.body.distance = distance;
-      req.body.maxnumberofobservatories = maxnumberofobservatories;
+      const { userid, username, email, distance, maxnumberofobservatories } = req.params;
+      console.log(userid, username, email, distance, maxnumberofobservatories);
+      // req.body.userid = userid;
+      // req.body.username = username;
+      // req.body.email = email;
+      // req.body.distance = distance;
+      // req.body.maxnumberofobservatories = maxnumberofobservatories;
 
       await client.db("astronomy").collection("users").insertOne(req.body);
 
