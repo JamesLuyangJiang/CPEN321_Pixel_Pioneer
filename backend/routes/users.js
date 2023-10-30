@@ -11,6 +11,26 @@ router.get("/:userid", (req, res) => {
   res.send("The specified user id is: " + userid);
 });
 
+// router.post("/create", async (req, res) => {
+//   try {
+//     await client.connect();
+//     console.log("Successfully connected to the database");
+//     try {
+//       console.log(req.body);
+//       const user_id = await client.db("astronomy").collection("globaluseridcounter").find()
+//       console.log(user_id);
+//       user_profile_obj = {
+
+//       }
+//     } catch (err) {
+//       res.status(400).send(err);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     await client.close();
+//   }
+// })
+
 router.post("/update/:userid/:username/:email/:distance/:maxnumberofobservatories", async (req, res) => {
   try {
     await client.connect();

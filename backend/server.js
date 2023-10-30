@@ -60,6 +60,19 @@ async function retrieveGlobalUserIDCounter() {
       console.log("started new count at 1...");
     } else {
       console.log("already started counter...");
+      const user_id_obj = await client
+        .db("astronomy")
+        .collection("globaluseridcounter")
+        .find()
+        .toArray();
+      const user_id_final = user_id_obj[0].count;
+      console.log(user_id_final);
+
+      // logic for update the next user_id
+      // await client
+      //   .db("astronomy")
+      //   .collection("globaluseridcounter")
+      //   .replaceOne({ count: user_id_final }, { count: user_id_final + 1 });
     }
   } catch (err) {
     console.log(err);
