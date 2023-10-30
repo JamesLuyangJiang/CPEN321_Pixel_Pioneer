@@ -1,4 +1,7 @@
 /backend/node_modules/
+/backend/cert.pem
+/backend/csr.pem
+/backend/key_cpen321_https_harthuang.pem
 .DS_Store
 
 # dependencies
