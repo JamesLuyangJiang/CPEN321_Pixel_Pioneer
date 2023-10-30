@@ -1,3 +1,6 @@
+const https = require("https");
+const fs = require("fs");
+
 const express = require("express");
 const app = express();
 const port = 8081;
@@ -18,20 +21,6 @@ app.use("/users", userRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-
-// app.post("/scheduling/:id/events", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     req.body.id = Number(id);
-//     console.log(req.body);
-
-//     await client.db("astronomy").collection("events").insertOne(req.body);
-//     res.status(200).send("Event added successfully\n");
-//   } catch (err) {
-//     console.log(err);
-//     res.send(400).send(err);
-//   }
-// });
 
 async function run() {
   try {
@@ -79,25 +68,22 @@ async function retrieveGlobalUserIDCounter() {
   }
 }
 
-// app.post("scheduling/:id/events", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     console.log(id);
-//     console.log(req.body);
-//     await client.db("astronomy").collection("events").insertOne(req.body);
-//     res.status(200).send("Event added successfully\n");
-//   } catch (err) {
-//     console.log(err);
-//     res.send(400).send(err);
-//   }
-// });
-
 app.listen(port, async () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`HTTPS server listening on port ${port}`);
   run();
   retrieveGlobalUserIDCounter();
 });
 
-// module.exports = {
-//   client, // Export the MongoDB client
-// };
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync("key_cpen321_https_harthuang.pem"),
+//       cert: fs.readFileSync("cert.pem"),
+//     },
+//     app
+//   )
+//   .listen(port, async () => {
+//     console.log(`HTTPS server listening on port ${port}`);
+//     run();
+//     retrieveGlobalUserIDCounter();
+//   });
