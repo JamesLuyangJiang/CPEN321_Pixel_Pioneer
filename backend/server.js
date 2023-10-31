@@ -68,11 +68,12 @@ async function retrieveGlobalUserIDCounter() {
   }
 }
 
-app.listen(port, async () => {
-  console.log(`HTTPS server listening on port ${port}`);
-  run();
-  retrieveGlobalUserIDCounter();
-});
+// Using Local ONLY
+// app.listen(port, async () => {
+//   console.log(`HTTPS server listening on port ${port}`);
+//   run();
+//   retrieveGlobalUserIDCounter();
+// });
 
 // https
 //   .createServer(
@@ -87,3 +88,18 @@ app.listen(port, async () => {
 //     run();
 //     retrieveGlobalUserIDCounter();
 //   });
+
+// Using in VM ONLY
+https
+  .createServer(
+    {
+      key: fs.readFileSync("privkey.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(port, async () => {
+    console.log(`HTTPS server listening on port ${port}`);
+    run();
+    retrieveGlobalUserIDCounter();
+  });
