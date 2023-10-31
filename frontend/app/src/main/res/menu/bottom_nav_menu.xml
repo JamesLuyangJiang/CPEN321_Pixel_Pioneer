@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_stars"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_stars"/>
+
+    <item
+        android:id="@+id/navigation_recommend"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_recommend"/>
+
+    <item
+        android:id="@+id/navigation_events"
+        android:icon="@drawable/event_fill0_wght400_grad0_opsz24"
+        android:title="@string/title_events"/>
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/person_fill0_wght400_grad0_opsz24"
+        android:title="@string/title_profile"/>
+
+</menu>

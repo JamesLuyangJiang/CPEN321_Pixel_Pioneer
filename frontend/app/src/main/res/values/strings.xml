@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">M4_MVP</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_stars">Stars</string>
+    <string name="title_recommend">Recommendation</string>
+    <string name="title_events">Events</string>
+    <string name="title_profile">Profile</string>
+
+    <!--Recommendation Fragment-->
+    <string name="star_name_title">What star you want to see?</string>
+    <string name="star_name_hint">Name of the star</string>
+    <string name="date_title">Within how many days?</string>
+    <string name="date_unit">days</string>
+    <string name="recommend_button">Go!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/recommendations/100/10</string>
+<!--    <string name="url">https://httpbin.org/get</string>-->
+
+    <!--Profile Fragment-->
+    <string name="basicInfoTitle">Basic Information</string>
+    <string name="emailTitle">Gmail:</string>
+    <string name="emailAddress">testing@gmail.com</string>
+
+    <string name="preferenceTitle">Preferences</string>
+    <string name="distanceTitle">Maximum distance for places:</string>
+    <string name="distanceUnit">KM</string>
+    <string name="distanceRange">(1000\u0020KM\u0020\u2264\u0020input\u0020\u2264\u00205000\u0020KM)</string>
+    <string name="defaultDistance">3000</string>
+    <string name="updateProfileText">Update</string>
+</resources>
