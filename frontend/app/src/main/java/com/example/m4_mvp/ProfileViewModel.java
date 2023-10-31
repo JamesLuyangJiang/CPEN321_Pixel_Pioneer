@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 public class ProfileViewModel extends ViewModel {
     private GoogleSignInAccount googleAccount;
     private int maxDistance;
+    private String uid;
 
     public GoogleSignInAccount getGoogleAccount() {
         return googleAccount;
@@ -24,5 +25,7 @@ public class ProfileViewModel extends ViewModel {
     public void setMaxDistance(String distance) { this.maxDistance = Integer.parseInt(distance); }
 
     public int getMaxDistance() { return this.maxDistance; }
+
+    public void setuid(String uid) { this.uid = uid; }
 
 }

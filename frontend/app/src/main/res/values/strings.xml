@@ -13,7 +13,8 @@
     <string name="date_unit">days</string>
     <string name="recommend_button">Go!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/recommendations/100/10</string>
+    <string name="rec_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/recommendations</string>
+    <string name="profile_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users</string>
 <!--    <string name="url">https://httpbin.org/get</string>-->
 
     <!--Profile Fragment-->
@@ -25,6 +26,6 @@
     <string name="distanceTitle">Maximum distance for places:</string>
     <string name="distanceUnit">KM</string>
     <string name="distanceRange">(1000\u0020KM\u0020\u2264\u0020input\u0020\u2264\u00205000\u0020KM)</string>
-    <string name="defaultDistance">3000</string>
+    <string name="defaultDistance">1000</string>
     <string name="updateProfileText">Update</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.example.m4_mvp.ui.recommend;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +11,7 @@ import android.widget.NumberPicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.m4_mvp.R;
 import com.example.m4_mvp.databinding.FragmentRecommendBinding;
@@ -85,7 +82,7 @@ public class RecommendFragment extends Fragment {
                     try {
                         // set up https connection
                         String response;
-                        URL url = new URL(getResources().getString(R.string.url));
+                        URL url = new URL(getResources().getString(R.string.rec_url));
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                         // Configure the connection
