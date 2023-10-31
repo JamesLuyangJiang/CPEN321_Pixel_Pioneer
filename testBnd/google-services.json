@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "211714771148",
+    "project_id": "cpen321project-1c569",
+    "storage_bucket": "cpen321project-1c569.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211714771148:android:8c1a4fade5efc63da65a69",
+        "android_client_info": {
+          "package_name": "com.example.m4_mvp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj1rGBz5wJC7ENa881IgP9DbyOr_aReZs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
