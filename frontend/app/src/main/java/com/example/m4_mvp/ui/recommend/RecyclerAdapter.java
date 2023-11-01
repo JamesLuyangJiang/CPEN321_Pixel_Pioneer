@@ -20,9 +20,13 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     final static String TAG = "RecyclerItem";
     private List<List<String>> data;
+    private View.OnClickListener buttonOnClickListener;
+    private String buttonText;
 
-    public RecyclerAdapter(List<List<String>> data) {
+    public RecyclerAdapter(List<List<String>> data, String buttonText, View.OnClickListener buttonOnClickListener) {
         this.data = data;
+        this.buttonText = buttonText;
+        this.buttonOnClickListener = buttonOnClickListener;
     }
 
     @NonNull
@@ -34,18 +38,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        // Text
         holder.placeName.setText(data.get(position).get(0));
-        holder.placeDistance.setText(data.get(position).get(1));
-        holder.planDate.setText(data.get(position).get(2));
+        if (buttonText.equals("Select")) {
+            holder.placeDistance.setText(data.get(position).get(1));
+            holder.planDate.setText(data.get(position).get(2));
+        } else {
+            holder.placeDistance.setText("");
+            holder.planDate.setText(data.get(position).get(1));
+        }
 
-        // Set a listener for the button in each item
-        holder.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: post event request here
-                Log.d(TAG, "onClick: " + position);
-            }
-        });
+        // Button
+        holder.button.setText(buttonText);
+        holder.button.setOnClickListener(buttonOnClickListener);
+    }
+
+    // Change data after getting response from events request
+    public void changeData(List<List<String>> newData) {
+        this.data.clear();
+        this.data.addAll(newData);
+        notifyDataSetChanged();
     }
 
     @Override
