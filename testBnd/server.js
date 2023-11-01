@@ -102,23 +102,23 @@ async function sendNotification(registrationToken) {
     });
 }
 
-app.listen(port, async () => {
-  console.log(`HTTPS server listening on port ${port}`);
-  run();
-  retrieveGlobalUserIDCounter();
-  sendNotification(testAppToken);
-});
+// app.listen(port, async () => {
+//   console.log(`HTTPS server listening on port ${port}`);
+//   run();
+//   retrieveGlobalUserIDCounter();
+//   sendNotification(testAppToken);
+// });
 
-// https
-//   .createServer(
-//     {
-//       key: fs.readFileSync("privkey.pem"),
-//       cert: fs.readFileSync("cert.pem"),
-//     },
-//     app
-//   )
-//   .listen(port, async () => {
-//     console.log(`HTTPS server listening on port ${port}`);
-//     run();
-//     retrieveGlobalUserIDCounter();
-//   });
+https
+  .createServer(
+    {
+      key: fs.readFileSync("privkey.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(port, async () => {
+    console.log(`HTTPS server listening on port ${port}`);
+    run();
+    retrieveGlobalUserIDCounter();
+  });
