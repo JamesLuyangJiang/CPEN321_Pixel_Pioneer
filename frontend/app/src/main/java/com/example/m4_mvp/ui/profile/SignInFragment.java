@@ -1,6 +1,7 @@
 package com.example.m4_mvp.ui.profile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -149,7 +150,7 @@ public class SignInFragment extends Fragment {
                     connection.setRequestMethod("POST");
                     connection.setReadTimeout(10000);
                     connection.setConnectTimeout(15000);
-                    connection.setDoOutput(true); // This is important for POST requests
+                    connection.setDoOutput(true);
 
                     // Set up the JSON object
                     String jsonString = "{\"email\": \"" + profileViewModel.getGoogleAccount().getEmail() +
@@ -179,9 +180,12 @@ public class SignInFragment extends Fragment {
                         br.close();
                         response = sb.toString();
 
-                        profileViewModel.setuid(response);
+                        // Parse JSON string
+                        JSONObject jsonObject = new JSONObject(response);
 
-                        Log.d(TAG, "userid: " + response);
+                        profileViewModel.setuid(jsonObject.getString("userid"));
+
+                        Log.d(TAG, "userid: " + jsonObject.getString("userid"));
                     } else {
                         Log.d(TAG, "onError: " + responseCode);
                     }

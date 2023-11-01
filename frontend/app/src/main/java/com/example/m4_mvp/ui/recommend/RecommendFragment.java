@@ -12,7 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.m4_mvp.ProfileViewModel;
 import com.example.m4_mvp.R;
 import com.example.m4_mvp.databinding.FragmentRecommendBinding;
 
@@ -34,6 +36,14 @@ public class RecommendFragment extends Fragment {
     private NumberPicker datePicker;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<String> networkTaskResult;
+    private ProfileViewModel profileViewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,9 +55,9 @@ public class RecommendFragment extends Fragment {
 
         // Set up date picker
         datePicker = binding.datePicker;
-        datePicker.setMinValue(1);
-        datePicker.setMaxValue(7);
-        datePicker.setValue(1);
+        datePicker.setMinValue(3);
+        datePicker.setMaxValue(10);
+        datePicker.setValue(3);
         datePicker.setWrapSelectorWheel(false);
 
         return root;
@@ -82,7 +92,7 @@ public class RecommendFragment extends Fragment {
                     try {
                         // set up https connection
                         String response;
-                        URL url = new URL(getResources().getString(R.string.rec_url));
+                        URL url = new URL(getResources().getString(R.string.rec_url) + "/" + profileViewModel.getuid() + "/10");
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                         // Configure the connection
