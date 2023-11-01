@@ -1,9 +1,21 @@
 const https = require("https");
 const fs = require("fs");
 
+const fcm = require("./routes/fcm");
+
 const express = require("express");
 const app = express();
 const port = 8081;
+
+const testAppToken =
+  "cBc-1l_iQvuKJPqKSMSdJO:APA91bEqjbbmKNQ6MzV69pXccqedzrfGlHa_H18KdgasEiulRHILZ9yIIetoGEOwwnjlak-h8dHsrApXOWuS1NkCBxxbnytbZghniPv21oZvRjiv4FhicscBvsXcq93961r9j-8LuHVB";
+
+// Firebase
+var admin = require("firebase-admin");
+var serviceAccount = require("./fcm.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
@@ -68,10 +80,33 @@ async function retrieveGlobalUserIDCounter() {
   }
 }
 
+async function sendNotification(registrationToken) {
+  var message = {
+    notification: {
+      title: "Astronomy Guide App",
+      body: "New event has been added!",
+    },
+    token: registrationToken,
+  };
+
+  console.log("STARTED TO SEND NOTIFICATIONS...");
+
+  await admin
+    .messaging()
+    .send(message)
+    .then(async function (response) {
+      console.log("Successfully sent with response: ", response);
+    })
+    .catch(async function (err) {
+      console.log("Something went wrong: " + err);
+    });
+}
+
 app.listen(port, async () => {
   console.log(`HTTPS server listening on port ${port}`);
   run();
   retrieveGlobalUserIDCounter();
+  sendNotification(testAppToken);
 });
 
 // https
