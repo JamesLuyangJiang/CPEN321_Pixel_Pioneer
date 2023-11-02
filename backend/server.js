@@ -39,28 +39,6 @@ async function run() {
   }
 }
 
-async function sendNotification(registrationToken) {
-  var message = {
-    notification: {
-      title: "Astronomy Guide App",
-      body: "New event has been added!",
-    },
-    token: registrationToken,
-  };
-
-  console.log("STARTED TO SEND NOTIFICATIONS...");
-
-  await admin
-    .messaging()
-    .send(message)
-    .then(async function (response) {
-      console.log("Successfully sent with response: ", response);
-    })
-    .catch(async function (err) {
-      console.log("Something went wrong: " + err);
-    });
-}
-
 // FOR LOCAL TESTING, USE THIS HTTP SERVER
 app.listen(port, async () => {
   console.log(`HTTP server listening on port ${port}`);
