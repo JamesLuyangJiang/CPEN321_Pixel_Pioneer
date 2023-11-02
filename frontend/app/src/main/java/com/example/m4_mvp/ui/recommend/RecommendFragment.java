@@ -87,12 +87,16 @@ public class RecommendFragment extends Fragment {
                 // Go to the loading fragment
                 transaction.commit();
 
+                // Get the value of the date picker
+                NumberPicker datePicker = binding.datePicker;
+                int days = datePicker.getValue();
+
                 // Make an https post request to server
                 networkTaskResult = executorService.submit(() -> {
                     try {
                         // set up https connection
                         String response;
-                        URL url = new URL(getResources().getString(R.string.rec_url) + "/" + profileViewModel.getuid() + "/10");
+                        URL url = new URL(getResources().getString(R.string.rec_url) + "/" + profileViewModel.getuid() + "/" + days);
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                         // Configure the connection
