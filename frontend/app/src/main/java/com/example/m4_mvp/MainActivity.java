@@ -42,11 +42,10 @@ public class MainActivity extends AppCompatActivity {
         profileViewModel.initGoogleAccount(MainActivity.this);
         profileViewModel.setMaxDistance(getResources().getString(R.string.defaultDistance));
 
-        // TODO: test this
         SharedPreferences sharedPreferences = getSharedPreferences("uid", Context.MODE_PRIVATE);
         profileViewModel.setSharedPreferences(sharedPreferences);
 
-        Log.d(TAG, "onCreate: " + sharedPreferences.getString("uid", null));
+        Log.d(TAG, "uid signed in: " + sharedPreferences.getString("uid", null));
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -103,8 +102,10 @@ public class MainActivity extends AppCompatActivity {
                         // Get new FCM registration token
                         String token = task.getResult();
 
+                        profileViewModel.setToken(token);
+
                         // Log and toast
-                        Log.d(TAG, token);
+                        Log.d(TAG, "firebase token: " + token);
                         Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });

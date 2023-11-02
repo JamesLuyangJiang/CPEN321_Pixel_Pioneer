@@ -12,6 +12,7 @@ public class ProfileViewModel extends ViewModel {
     private GoogleSignInAccount googleAccount;
     private int maxDistance;
     private SharedPreferences sharedPreferences;
+    private String token;
 
     public GoogleSignInAccount getGoogleAccount() {
         return googleAccount;
@@ -39,5 +40,7 @@ public class ProfileViewModel extends ViewModel {
 
     public void setSharedPreferences(SharedPreferences sharedPreferences) { this.sharedPreferences = sharedPreferences; };
 
-    public SharedPreferences getSharedPreferences() { return this.sharedPreferences; };
+    public void setToken (String token) { this.token = token; }
+
+    public String getToken () { return this.token; }
 }

@@ -93,7 +93,7 @@ public class ResultsFragment extends Fragment {
         View.OnClickListener recButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = recyclerView.getChildAdapterPosition((View) v.getParent()); // Get item position
+                int position = recyclerView.getChildAdapterPosition((View) v.getParent());
                 List<String> eventData = recResponse.get(position);
 
                 // Make an https post request for creating a new event
@@ -112,7 +112,7 @@ public class ResultsFragment extends Fragment {
 
                         // Set up the JSON object
                         String jsonString = "{\"name\": \"" + eventData.get(0) +
-                                "\", \"date\": \"" + eventData.get(2) + "\", \"token\": \"" + "dlAa4wgoScea5UDoSZrK_r:APA91bGIJRBSIgERXI_kC-z5xbTzbfiCGG2hpL2c8AM2De2rIhhfwHE6wDommhUR59cnwozSeWhaSO61S2j0IrTRBqDRQwAQvZDsYIN8Zrhq7oVjdZps6KtJ8ywFo925_Ud49dTJmeZG" + "\"}";
+                                "\", \"date\": \"" + eventData.get(2) + "\", \"notificationToken\": \"" + profileViewModel.getToken() + "\"}";
 
                         // Set up the request body
                         byte[] requestBytes = jsonString.getBytes("UTF-8");
