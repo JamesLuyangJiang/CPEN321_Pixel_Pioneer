@@ -9,6 +9,7 @@ const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
 
 router.get("/:userid/:days", async (req, res) => {
     const { userid, days } = req.params;
+    console.log("days: " + days);
     const distance = await getUserDistance(userid);
 
     const maximum_city_number = 10;
