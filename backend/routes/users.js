@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const uuid = require("uuid");
 const { MongoClient } = require("mongodb");
+const { use } = require("./users");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
@@ -39,7 +40,6 @@ async function createProfile(req, res) {
           userid: user_id,
           email: req.body.email,
           distance: req.body.distance,
-          maxnumberofobservatories: req.body.maxnumberofobservatories,
         });
         res.send(responseObj);
       }
@@ -69,25 +69,40 @@ async function getProfile(req, res) {
 }
 
 async function updateProfile(req, res) {
-  try {
-    const { userid, username, email, distance, maxnumberofobservatories } =
-      req.params;
-    console.log(userid, username, email, distance, maxnumberofobservatories);
+  const isConnected = manageDB();
+  if (isConnected) {
+    try {
+      const { userid } = req.params;
+      console.log(userid);
+      console.log(typeof(userid));
 
-    await client.db("astronomy").collection("users").insertOne(req.body);
+      const checkIDExists = await client
+        .db("astronomy")
+        .collection("users")
+        .findOne({ userid: userid });
 
-    res.status(200).send("User added successfully\n");
-  } catch (err) {
-    res.status(400).send(err);
+      console.log(checkIDExists);
+
+      if (!checkIDExists) {
+        res.status(400).send("ID does not exist in database.");
+      } else {
+        await client
+          .db("astronomy")
+          .collection("users")
+          .findOneAndReplace(
+            { userid: userid },
+            { userid: userid, email: req.body.email, distance: req.body.distance }
+          );
+        res.status(200).send("User profile updated successfully\n");
+      }
+    } catch (err) {
+      res.status(400).send(err);
+    }
   }
 }
 
 router.get("/get/:userid", getProfile);
-router.put("/put/:userid", updateProfile);
+router.put("/update/:userid", updateProfile);
 router.post("/create", createProfile);
-
-// router.post(
-//   "/update/:userid/:username/:email/:distance/:maxnumberofobservatories",
-// );
 
 module.exports = router;
