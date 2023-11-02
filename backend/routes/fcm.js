@@ -1,13 +1,28 @@
 // Firebase Cloud Messaging
 var admin = require("firebase-admin");
 
-async function sendNotification(registrationToken) {
+const moment = require('moment');
+// TODO: change file name to notification.js
+// This function is finished with the help of ChatGPT, especially for the usage of "moment"
+function calculateTTLOnSeconds(dateToNotify) {
+//    // Parse the "dateToNotify" string into a Date object using moment.js
+//    dateToNotifyStr = dateToNotifyStr + " 00:00"
+//    const parsedDateToNotify = moment(dateToNotifyStr, 'YYYY-MM-DD HH:mm');
+    // Get the current date and time
+    const currentDateAndTime = moment();
+    // Calculate the time difference in seconds
+    const timeDifferenceInSeconds = dateToNotify.diff(currentDateAndTime, 'seconds');
+    return timeDifferenceInSeconds;
+}
+async function sendNotification(registrationToken, dateToNotify) {
+    //  const time_to_live = Number(calculateTTLOnSeconds(dateToNotify));
+  const messageBody = "New event has been added for date " + dateToNotify;
   var message = {
     notification: {
-      title: "Astronomy Guide App",
-      body: "New event has been added!",
+      title: "New event registered!",
+      body: messageBody,
     },
-    token: registrationToken,
+    token: registrationToken
   };
 
   await admin
