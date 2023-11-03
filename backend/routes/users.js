@@ -92,7 +92,7 @@ async function updateProfile(req, res) {
             userid: userid,
             email: req.body.email,
             distance: req.body.distance,
-            token: req.body.token,
+            notificationToken: req.body.notificationToken,
           }
         );
         res.status(200).send("User profile updated successfully\n");

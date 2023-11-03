@@ -47,7 +47,6 @@ router.post("/:userid", async (req, res) => {
             userid: checkReceiverEmailExists.userid,
             name: eventName,
             date: eventDate,
-            notificationToken: checkEventExists.token,
           });
           await notification.sendInviteNotification(
             checkReceiverEmailExists.token,
