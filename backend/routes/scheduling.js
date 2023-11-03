@@ -63,21 +63,21 @@ router.post("/:id/events", async (req, res) => {
         };
         await client.db("astronomy").collection("events").insertOne(event_obj);
 
-        const astronomy_data =
-          await apiManager.fetchAstronomyInfoOnScheduledDate(
-            req.body.name,
-            req.body.date
-          );
+        // const astronomy_data =
+        //   await apiManager.fetchAstronomyInfoOnScheduledDate(
+        //     req.body.name,
+        //     req.body.date
+        //   );
 
-        console.log(astronomy_data);
+        // console.log(astronomy_data);
 
-        if (req.body.notificationToken && req.body.date) {
-          await notification.sendNotification(
-            req.body.notificationToken,
-            req.body.date,
-            astronomy_data
-          );
-        }
+        // if (req.body.notificationToken && req.body.date) {
+        //   await notification.sendNotification(
+        //     req.body.notificationToken,
+        //     req.body.date,
+        //     astronomy_data
+        //   );
+        // }
 
         res.status(200).send("Event added successfully\n");
       }
