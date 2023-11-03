@@ -12,11 +12,16 @@ router.get("/:userid/:days", async (req, res) => {
   const distance = await getUserDistance(userid);
 
   const maximum_city_number = 10;
+  const publicIP = req.ip.substring(7);
 
   try {
     // fetch organized observatory data from apimanager module
     const nearby_observatory_list =
-      await apiManager.fetchNearbyObservatoryFromAPIs(distance, Number(days));
+      await apiManager.fetchNearbyObservatoryFromAPIs(
+        publicIP,
+        distance,
+        Number(days)
+      );
 
     const recommendation_list = generateRecommendationList(
       nearby_observatory_list,

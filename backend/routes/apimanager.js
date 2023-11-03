@@ -4,8 +4,9 @@ const router = express.Router();
 
 const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
 
-async function fetchNearbyObservatoryFromAPIs(radius, days) {
-    const client_ip = "184.68.183.186"; // hardcoded for testing purpose, TODO: need to replace with req.ip in the future
+async function fetchNearbyObservatoryFromAPIs(publicIP, radius, days) {
+    const client_ip = publicIP;
+    console.log(client_ip);
       try {
         const response = await axios.get(`https://ipinfo.io/${client_ip}/json`); // api to get geolocation of the client based on their ip,
         const geolocationData = response.data;
