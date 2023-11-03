@@ -9,7 +9,6 @@ const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
 
 router.get("/:userid/:days", async (req, res) => {
     const { userid, days } = req.params;
-    console.log("days: " + days);
     const distance = await getUserDistance(userid);
 
     const maximum_city_number = 10;
@@ -18,7 +17,6 @@ router.get("/:userid/:days", async (req, res) => {
         // fetch organized observatory data from apimanager module
         const nearby_observatory_list = await apiManager.fetchNearbyObservatoryFromAPIs(distance, Number(days));
         const recommendation_list = generateRecommendationList(nearby_observatory_list, distance, maximum_city_number);
-        console.log("recommendation_list" + recommendation_list);
         // Process the data or send it as a response
         res.json(recommendation_list);
     } catch (error) {
@@ -56,59 +54,72 @@ async function getUserDistance(userid) {
     }
 }
 
+// Utilized ChatGPT to optimize the commented code, improving response time.
 function generateRecommendationList(nearby_observatory_list, distance_preference, maximum_city_number) {
-    // Filtering results with condition_score of 3 and below
-    // Filter the weatherForecast for each item in the list
-    nearby_observatory_list.forEach(item => {
-       item.weatherForecast = item.weatherForecast.filter(forecast => forecast.condition_score > 3)
-       .sort((a, b) => {return  b.condition_score - a.condition_score;});
-
-    });
-    var maxDistance = distance_preference;
-    var minDistance = 0.01;
-    // Sort the weatherForecast array for each observatory based on condition_score
-    nearby_observatory_list.forEach(item => {
-        if(Number(item.distance) > maxDistance) {
-            maxDistance = Number(item.distance);
-        } else if (Number(item.distance) < minDistance) {
-            minDistance = Number(item.distance);
+    // Calculate minDistance and maxDistance using reduce
+    const { min_distance, max_distance } = nearby_observatory_list
+    .filter(item => item.weatherForecast.some(forecast => forecast.condition_score > 3))
+    .reduce((acc, item) => {
+        const item_distance = Number(item.distance);
+        if (item_distance < acc.min_distance) {
+            acc.min_distance = item_distance;
         }
-    });
-    nearby_observatory_list.forEach(item => {
-        const distanceScore = (1 - (item.distance - minDistance) / (maxDistance - minDistance)) * 0.4;
-        const conditionScore = item.weatherForecast[0].condition_score * 0.6 / 9;
-        item.totalScore = (distanceScore + conditionScore) * 100;
-    });
-    if (nearby_observatory_list.length < maximum_city_number) {
-        maximum_city_number = nearby_observatory_list.length;
-    }
-    console.log("nearby_observatory_list.length: " + nearby_observatory_list.length)
-    const recommendation_list = []; // the actual json response of this request
+        if (item_distance > acc.max_distance) {
+            acc.max_distance = item_distance;
+        }
+        return acc;
+    }, { min_distance: 0.01, max_distance: distance_preference });
+    
+    // Calculate total scores and sort the recommendation list in one pass
+    const recommendation_list = nearby_observatory_list
+        .map(item => {
+            const item_distance = Number(item.distance);
+            const weighted_distance_score = (1 - (item_distance - minDistance) / (maxDistance - minDistance)) * 0.4;
+            const weighted_condition_score = item.weatherForecast[0].condition_score * 0.6 / 9;
+            const total_score = (weighted_distance_score + weighted_condition_score) * 100;
+            return {
+                name: item.name,
+                distance: item_distance.toFixed(2),
+                date: item.weatherForecast[0].date,
+                condition: item.weatherForecast[0].condition,
+                total_score: total_score.toFixed(2),
+            };
+        })
+        .sort((a, b) => b.total_score - a.total_score);
 
-    for (let i = 0; i < maximum_city_number; i++) {
-      const currentObservatory = nearby_observatory_list[i];
-      const recommended_observatory = {
-          name: currentObservatory.name,
-          distance: currentObservatory.distance.toFixed(2),
-          date: currentObservatory.weatherForecast[0].date,
-          condition: currentObservatory.weatherForecast[0].condition,
-          totalScore: currentObservatory.totalScore.toFixed(2),
-      };
-      recommendation_list.push(recommended_observatory);
-    }
-    console.log("testing testing!!!");
-    console.log("recommendation_list" + recommendation_list);
-    return recommendation_list;
+    return recommendation_list.slice(0, maximum_city_number);
 }
-function getTopNObjects(list, n) {
-  if (n < 0) {
-    n = 0;
-  }
-  if (list.length <= n) {
-    return list;
-  } else {
-    return list.slice(0, n);
-  }
-}
+
+//function generateRecommendationList(nearby_observatory_list, distance_preference, maximum_city_number) {
+//    var maxDistance = distance_preference;
+//    var minDistance = 0.01;
+//    // Filtering results with condition_score of 3 and below
+//    nearby_observatory_list.forEach(item => {
+//        item.weatherForecast = item.weatherForecast.filter(forecast => forecast.condition_score > 3)
+//        .sort((a, b) => {return  b.condition_score - a.condition_score;});
+//        if(Number(item.distance) > maxDistance) {
+//            maxDistance = Number(item.distance);
+//        } else if (Number(item.distance) < minDistance) {
+//            minDistance = Number(item.distance);
+//        }
+//    });
+//    // Sort the recommendation_list for each observatory based on total_score
+//    const recommendation_list = []; // the actual json response of this request
+//    nearby_observatory_list.forEach(item => {
+//        const weightedDistanceScore = (1 - (item.distance - minDistance) / (maxDistance - minDistance)) * 0.4;
+//        const weightedConditionScore = item.weatherForecast[0].condition_score * 0.6 / 9;
+//        item.total_score = (weightedDistanceScore + weightedConditionScore) * 100;
+////        item.sort((a, b) => {return  b.total_score - a.total_score;});
+//        const recommended_observatory = {
+//              name: item.name,
+//              distance: item.distance.toFixed(2),
+//              date: item.weatherForecast[0].date,
+//              condition: item.weatherForecast[0].condition,
+//              total_score: item.total_score.toFixed(2),
+//        };
+//        recommendation_list.push(recommended_observatory);
+//    });
+//    return recommendation_list;
+//}
 
 module.exports = router;
