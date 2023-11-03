@@ -33,7 +33,19 @@ async function createProfile(req, res) {
 
       if (checkEmailExists) {
         console.log("This email found in database");
-        await res.status(200).send(checkEmailExists);
+        console.log(req.body.notificationToken);
+        await client.db("astronomy").collection("users").findOneAndReplace(
+          {
+            email: req.body.email,
+          },
+          {
+            userid: checkEmailExists.userid,
+            email: checkEmailExists.email,
+            distance: checkEmailExists.distance,
+            notificationToken: req.body.notificationToken,
+          }
+        );
+        res.status(200).send(checkEmailExists);
       } else {
         await client.db("astronomy").collection("users").insertOne({
           userid: user_id,
