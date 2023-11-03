@@ -33,7 +33,7 @@ async function createProfile(req, res) {
 
       if (checkEmailExists) {
         console.log("This email found in database");
-        await res.status(400).send("Email already registered");
+        await res.status(200).send(checkEmailExists);
       } else {
         await client.db("astronomy").collection("users").insertOne({
           userid: user_id,
@@ -85,17 +85,14 @@ async function updateProfile(req, res) {
       if (!checkIDExists) {
         res.status(400).send("ID does not exist in database.");
       } else {
-        await client
-          .db("astronomy")
-          .collection("users")
-          .findOneAndReplace(
-            { userid: userid },
-            {
-              userid: userid,
-              email: req.body.email,
-              distance: req.body.distance,
-            }
-          );
+        await client.db("astronomy").collection("users").findOneAndReplace(
+          { userid: userid },
+          {
+            userid: userid,
+            email: req.body.email,
+            distance: req.body.distance,
+          }
+        );
         res.status(200).send("User profile updated successfully\n");
       }
     } catch (err) {
