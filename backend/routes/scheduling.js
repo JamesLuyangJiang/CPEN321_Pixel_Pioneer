@@ -19,20 +19,19 @@ async function manageDB() {
   }
 }
 
-// TODO: change the file name to scheduling.js
 router.get("/:id/events", async (req, res) => {
   try {
-    await client.connect();
+    manageDB();
     console.log("Successfully connected to the database");
     try {
       const { id } = req.params;
-      const responseObj = await client
+      const event = await client
         .db("astronomy")
         .collection("events")
         .find({ userid: id })
         .toArray();
-      console.log(responseObj);
-      res.status(200).send(responseObj);
+      console.log(event);
+      res.status(200).send(event);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -44,7 +43,7 @@ router.get("/:id/events", async (req, res) => {
 
 router.post("/:id/events", async (req, res) => {
   try {
-    await client.connect();
+    manageDB();
     console.log("Successfully connected to the database");
     try {
       const { id } = req.params;
@@ -63,12 +62,23 @@ router.post("/:id/events", async (req, res) => {
           notificationToken: req.body.notificationToken,
         };
         await client.db("astronomy").collection("events").insertOne(event_obj);
+
+        const astronomy_data =
+          await apiManager.fetchAstronomyInfoOnScheduledDate(
+            req.body.name,
+            req.body.date
+          );
+
+        console.log(astronomy_data);
+
         if (req.body.notificationToken && req.body.date) {
           await notification.sendNotification(
             req.body.notificationToken,
-            req.body.date
+            req.body.date,
+            astronomy_data
           );
         }
+
         res.status(200).send("Event added successfully\n");
       }
     } catch (err) {
@@ -94,6 +104,8 @@ router.delete("/:id/events/delete", async (req, res) => {
       if (!checkIDExists) {
         res.status(400).send("FAILED because ID does not exist in database.");
       } else {
+        console.log(req.body)
+        console.log(req.body.name)
         const checkEventExists = await client
           .db("astronomy")
           .collection("events")
