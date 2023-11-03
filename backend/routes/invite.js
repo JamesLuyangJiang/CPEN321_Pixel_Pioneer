@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-app.post("/:userid", async (req, res) => {
+router.post("/:userid", async (req, res) => {
   const { userid } = req.params;
   console.log(req.body.name);
   console.log(req.body.receiver);

@@ -19,11 +19,13 @@ const client = new MongoClient(uri);
 const recommendationsRoutes = require("./routes/recommendations");
 const schedulingRoutes = require("./routes/scheduling");
 const userRoutes = require("./routes/users");
+const invitationRoutes = require("./routes/invite");
 
 app.use(express.json());
 app.use("/recommendations", recommendationsRoutes);
 app.use("/scheduling", schedulingRoutes);
 app.use("/users", userRoutes);
+app.use("/invitation", invitationRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -40,21 +42,21 @@ async function run() {
 }
 
 // FOR LOCAL TESTING, USE THIS HTTP SERVER
-// app.listen(port, async () => {
-//   console.log(`HTTP server listening on port ${port}`);
-//   run();
-// });
+app.listen(port, async () => {
+  console.log(`HTTP server listening on port ${port}`);
+  run();
+});
 
 // FOR VM TESTING, USE THIS HTTPS SERVER
-https
-  .createServer(
-    {
-      key: fs.readFileSync("privkey.pem"),
-      cert: fs.readFileSync("cert.pem"),
-    },
-    app
-  )
-  .listen(port, async () => {
-    console.log(`HTTPS server listening on port ${port}`);
-    run();
-  });
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync("privkey.pem"),
+//       cert: fs.readFileSync("cert.pem"),
+//     },
+//     app
+//   )
+//   .listen(port, async () => {
+//     console.log(`HTTPS server listening on port ${port}`);
+//     run();
+//   });
