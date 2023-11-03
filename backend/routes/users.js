@@ -41,7 +41,7 @@ async function createProfile(req, res) {
           distance: req.body.distance,
           token: req.body.token,
         });
-        res.send(responseObj);
+        res.status(200).send(responseObj);
       }
     } catch (err) {
       res.status(400).send(err);
