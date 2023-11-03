@@ -39,7 +39,7 @@ async function createProfile(req, res) {
           userid: user_id,
           email: req.body.email,
           distance: req.body.distance,
-          token: req.body.token,
+          notificationToken: req.body.notificationToken,
         });
         res.status(200).send(responseObj);
       }
