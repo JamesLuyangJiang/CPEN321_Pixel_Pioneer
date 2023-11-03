@@ -13,8 +13,8 @@ async function fetchNearbyObservatoryFromAPIs(radius, days) {
         const lon = geolocationData.loc.split(",")[1];
 
         const nearby_observatory_list = await fetchNearbyObservatoriesList(lat, lon, radius);
-        const ObservatoriesWithConditionInfo = await fetchObservatoriesWithConditionInfo(nearby_observatory_list, days);
-        return ObservatoriesWithConditionInfo;
+        const observatoriesWithConditionInfo = await fetchObservatoriesWithConditionInfo(nearby_observatory_list, days);
+        return observatoriesWithConditionInfo;
       } catch (error) {
         console.error("Error processing fetchNearbyObservatoryFromAPIs:", error);
       }
@@ -69,7 +69,7 @@ function markWeatherForecast(weatherForecast) {
     const date = forecast.date;
 
     let condition_score = 3;
-
+    
     if ("Clear" == forecast.hour[0].condition.text) {
         condition_score *= 3;
     }
@@ -166,6 +166,20 @@ async function fetchObservatoriesWithConditionInfo(nearby_observatory_list, days
 }
 
 
+async function fetchAstronomyInfoOnScheduledDate(observatory_name, date) {
+    try {
+              const astronomy_response = await axios.get(
+                `http://api.weatherapi.com/v1/astronomy.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${observatory_name}&date=${date}`);
+              const astronomy_data = {
+                 sunrise: astronomy_response.data.astronomy.astro.sunrise,
+                 sunset: astronomy_response.data.astronomy.astro.sunset
+              }
+              return astronomy_data;
+            } catch (err) {
+              console.error(err);
+            }
+}
+
 module.exports = {
-    fetchNearbyObservatoryFromAPIs,
+    fetchNearbyObservatoryFromAPIs, fetchAstronomyInfoOnScheduledDate
 };

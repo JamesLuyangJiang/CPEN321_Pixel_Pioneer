@@ -19,7 +19,6 @@ async function manageDB() {
   }
 }
 
-// TODO: change the file name to scheduling.js
 router.get("/:id/events", async (req, res) => {
   try {
     await client.connect();
