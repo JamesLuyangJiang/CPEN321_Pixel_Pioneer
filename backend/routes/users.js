@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const uuid = require("uuid");
 const { MongoClient } = require("mongodb");
-const { use } = require("./users");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
@@ -74,7 +73,7 @@ async function updateProfile(req, res) {
     try {
       const { userid } = req.params;
       console.log(userid);
-      console.log(typeof(userid));
+      console.log(typeof userid);
 
       const checkIDExists = await client
         .db("astronomy")
@@ -91,7 +90,11 @@ async function updateProfile(req, res) {
           .collection("users")
           .findOneAndReplace(
             { userid: userid },
-            { userid: userid, email: req.body.email, distance: req.body.distance }
+            {
+              userid: userid,
+              email: req.body.email,
+              distance: req.body.distance,
+            }
           );
         res.status(200).send("User profile updated successfully\n");
       }
