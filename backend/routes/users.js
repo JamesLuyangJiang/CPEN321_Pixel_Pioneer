@@ -39,6 +39,7 @@ async function createProfile(req, res) {
           userid: user_id,
           email: req.body.email,
           distance: req.body.distance,
+          token: req.body.token,
         });
         res.send(responseObj);
       }
@@ -91,6 +92,7 @@ async function updateProfile(req, res) {
             userid: userid,
             email: req.body.email,
             distance: req.body.distance,
+            token: req.body.token,
           }
         );
         res.status(200).send("User profile updated successfully\n");
