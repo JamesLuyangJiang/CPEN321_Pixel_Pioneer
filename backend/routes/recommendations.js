@@ -7,7 +7,11 @@ const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
 
-router.get("/:userid/:days", async (req, res) => {
+// ChatGPT usage: NO
+// This is a handler for the GET request
+// Organize all the dependencies here
+// to return our recommendation list to the client
+async function recommendationRequestHandler(req, res) {
   const { userid, days } = req.params;
   const distance = await getUserDistance(userid);
 
@@ -34,14 +38,11 @@ router.get("/:userid/:days", async (req, res) => {
     console.log(error);
     res.status(500).json({ error: "Failed to generate recommendation list" });
   }
-});
+}
 
-router.post("/", (req, res) => {
-  res.send(
-    "This post request should return a list of recommended places based on the filters provided by the users."
-  );
-});
-
+// ChatGPT usage: NO
+// Fetch user's preferred distance
+// from user's profile database
 async function getUserDistance(userid) {
   try {
     await client.connect();
@@ -66,6 +67,7 @@ async function getUserDistance(userid) {
   }
 }
 
+// ChatGPT usage: Partial
 // Utilized ChatGPT to optimize the commented code, improving response time.
 // Then refined the code based on the actual requirement.
 function generateRecommendationList(
@@ -116,36 +118,6 @@ function generateRecommendationList(
   return recommendation_list.slice(0, maximum_city_number + 1);
 }
 
-//function generateRecommendationList(nearby_observatory_list, distance_preference, maximum_city_number) {
-//    var maxDistance = distance_preference;
-//    var minDistance = 0.01;
-//    // Filtering results with condition_score of 3 and below
-//    nearby_observatory_list.forEach(item => {
-//        item.weatherForecast = item.weatherForecast.filter(forecast => forecast.condition_score > 3)
-//        .sort((a, b) => {return  b.condition_score - a.condition_score;});
-//        if(Number(item.distance) > maxDistance) {
-//            maxDistance = Number(item.distance);
-//        } else if (Number(item.distance) < minDistance) {
-//            minDistance = Number(item.distance);
-//        }
-//    });
-//    // Sort the recommendation_list for each observatory based on total_score
-//    const recommendation_list = []; // the actual json response of this request
-//    nearby_observatory_list.forEach(item => {
-//        const weightedDistanceScore = (1 - (item.distance - minDistance) / (maxDistance - minDistance)) * 0.4;
-//        const weightedConditionScore = item.weatherForecast[0].condition_score * 0.6 / 9;
-//        item.total_score = (weightedDistanceScore + weightedConditionScore) * 100;
-////        item.sort((a, b) => {return  b.total_score - a.total_score;});
-//        const recommended_observatory = {
-//              name: item.name,
-//              distance: item.distance.toFixed(2),
-//              date: item.weatherForecast[0].date,
-//              condition: item.weatherForecast[0].condition,
-//              total_score: item.total_score.toFixed(2),
-//        };
-//        recommendation_list.push(recommended_observatory);
-//    });
-//    return recommendation_list;
-//}
+router.get("/:userid/:days", recommendationRequestHandler);
 
 module.exports = router;

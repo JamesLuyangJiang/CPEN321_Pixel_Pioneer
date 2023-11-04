@@ -5,7 +5,8 @@ const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
-async function manageDB() {
+// ChatGPT usage: NO
+async function connectDB() {
   try {
     await client.connect();
     console.log("Successfully connected to the database");
@@ -17,8 +18,12 @@ async function manageDB() {
   }
 }
 
+// ChatGPT usage: Partial
+// We consulted ChatGPT for the MongoDB CRUD operations
+// instead of reading the documentation
+// because this way is faster
 async function createProfile(req, res) {
-  const isConnected = await manageDB();
+  const isConnected = await connectDB();
   if (isConnected) {
     try {
       const user_id = uuid.v4();
@@ -61,27 +66,38 @@ async function createProfile(req, res) {
   }
 }
 
+// ChatGPT usage: Partial
+// We consulted ChatGPT for the MongoDB CRUD operations
+// instead of reading the documentation
+// because this way is faster
 async function getProfile(req, res) {
-  const { userid } = req.params;
-  try {
-    // Fetch the current user by userid
-    const user = await client
-      .db("astronomy")
-      .collection("users")
-      .findOne({ userid: userid });
+  const isConnected = connectDB();
+  if (isConnected) {
+    const { userid } = req.params;
+    try {
+      // Fetch the current user by userid
+      const user = await client
+        .db("astronomy")
+        .collection("users")
+        .findOne({ userid: userid });
 
-    if (!user) {
-      res.status(404).send("User not found");
-    } else {
-      res.status(200).send(user);
+      if (!user) {
+        res.status(404).send("User not found");
+      } else {
+        res.status(200).send(user);
+      }
+    } catch (err) {
+      res.status(400).send(err);
     }
-  } catch (err) {
-    res.status(400).send(err);
   }
 }
 
+// ChatGPT usage: Partial
+// We consulted ChatGPT for the MongoDB CRUD operations
+// instead of reading the documentation
+// because this way is faster
 async function updateProfile(req, res) {
-  const isConnected = manageDB();
+  const isConnected = connectDB();
   if (isConnected) {
     try {
       const { userid } = req.params;
