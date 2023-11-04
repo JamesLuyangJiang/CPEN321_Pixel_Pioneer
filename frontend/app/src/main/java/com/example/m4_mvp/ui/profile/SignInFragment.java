@@ -154,7 +154,7 @@ public class SignInFragment extends Fragment {
 
                     // Set up the JSON object
                     String jsonString = "{\"email\": \"" + profileViewModel.getGoogleAccount().getEmail() +
-                            "\", \"distance\": \"" + profileViewModel.getMaxDistance() +"\"}";
+                            "\", \"distance\": \"" + profileViewModel.getMaxDistance() + "\", \"notificationToken\": \"" + profileViewModel.getToken() + "\"}";
 
                     // Set up the request body
                     byte[] requestBytes = jsonString.getBytes("UTF-8");
@@ -182,6 +182,8 @@ public class SignInFragment extends Fragment {
 
                         // Parse JSON string
                         JSONObject jsonObject = new JSONObject(response);
+
+                        Log.d(TAG, "newUID: " + jsonObject.getString("userid"));
 
                         profileViewModel.setuid(jsonObject.getString("userid"));
 
