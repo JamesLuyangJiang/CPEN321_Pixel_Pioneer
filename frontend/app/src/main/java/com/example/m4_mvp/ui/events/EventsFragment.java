@@ -53,6 +53,7 @@ public class EventsFragment extends Fragment {
 
     private ProfileViewModel profileViewModel;
 
+    // ChatGPT usage: Partial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,18 +65,13 @@ public class EventsFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: Yes
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        // TODO: remove this if necessary
-        EventsViewModel eventsViewModel =
-                new ViewModelProvider(this).get(EventsViewModel.class);
-
         binding = FragmentEventsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         RecyclerView recyclerView = root.findViewById(R.id.eventsRecyclerView);
-        // TODO: remove this list for testing
-        // List<List<String>> dataList = Arrays.asList(Arrays.asList("Van", "10", "2023-10-30"), Arrays.asList("Edmonton", "20", "2023-11-01"));
         View.OnClickListener cancelListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,13 +124,10 @@ public class EventsFragment extends Fragment {
 
                 try {
                     String deleteResult = networkTaskResult.get();
-
                     Toast.makeText(requireActivity(), "Event deleted!", Toast.LENGTH_SHORT).show();
 
                     showLoading(root);
-
                     makeRequest(root);
-
                 } catch (Exception e) {
                     Log.d(TAG, "delete failed with error: " + e);
                 }
@@ -236,29 +229,26 @@ public class EventsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         showLoading(root);
-        
         makeRequest(root);
 
         return root;
     }
 
+    // ChatGPT usage: Partial
     private void showLoading( View view) {
         // Hide the recycler view
         RecyclerView recyclerView = view.findViewById(R.id.eventsRecyclerView);
         recyclerView.setVisibility(View.INVISIBLE);
 
-        Log.d(TAG, "showLoading: recyclerView hidden");
-
-        // Show the loading page first
+        // Show the loading page
         ProgressBar progressBar = view.findViewById(R.id.eventsProgressBar);
         progressBar.setVisibility(View.VISIBLE);
-
-        Log.d(TAG, "showLoading: progressBar shown");
         
         TextView loadingText = view.findViewById(R.id.eventsLoadingText);
         loadingText.setVisibility(View.VISIBLE);
     }
 
+    // ChatGPT usage: Yes
     private void makeRequest(View view) {
         // Make an https GET request to server
         networkTaskResult = executorService.submit(() -> {
@@ -276,7 +266,6 @@ public class EventsFragment extends Fragment {
                 connection.connect();
 
                 int responseCode = connection.getResponseCode();
-
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     // Read the response
                     InputStream is = connection.getInputStream();
@@ -297,9 +286,7 @@ public class EventsFragment extends Fragment {
                 }
 
                 connection.disconnect();
-
                 return null;
-
             } catch (IOException e) {
                 // TODO: handle exception here
                 Log.d(TAG, "onException: " + e);
@@ -308,6 +295,7 @@ public class EventsFragment extends Fragment {
         });
     }
 
+    // ChatGPT usage: Partial
     private void onResponse(String jsonString, View view) {
         // Case for no events found
         if (Objects.equals(jsonString, "[]")) {
@@ -372,12 +360,14 @@ public class EventsFragment extends Fragment {
         });
     }
 
+    // ChatGPT usage: No
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    // ChatGPT usage: Yes
     @Override
     public void onDestroy() {
         super.onDestroy();

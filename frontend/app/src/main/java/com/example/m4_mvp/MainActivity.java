@@ -27,7 +27,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
-
     final static String TAG = "MainActivity";
     private ActivityMainBinding binding;
 

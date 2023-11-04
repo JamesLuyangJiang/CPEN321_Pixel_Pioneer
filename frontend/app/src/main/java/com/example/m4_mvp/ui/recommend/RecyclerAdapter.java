@@ -20,12 +20,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private View.OnClickListener buttonOnClickListener;
     private String buttonText;
 
+    // ChatGPT usage: Yes
     public RecyclerAdapter(List<List<String>> data, String buttonText, View.OnClickListener buttonOnClickListener) {
         this.data = data;
         this.buttonText = buttonText;
         this.buttonOnClickListener = buttonOnClickListener;
     }
 
+    // ChatGPT usage: Partial
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,6 +35,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+    // ChatGPT usage: Partial
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Text
@@ -50,24 +53,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.button.setOnClickListener(buttonOnClickListener);
     }
 
-    // Change data after getting response from events request
-    public void changeData(List<List<String>> newData) {
-        this.data.clear();
-        this.data.addAll(newData);
-        notifyDataSetChanged();
-    }
-
+    // ChatGPT usage: Yes
     @Override
     public int getItemCount() {
         return data.size();
     }
 
+    // ChatGPT usage: Partial
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView placeName;
         TextView placeDistance;
         TextView planDate;
         Button button;
 
+        // ChatGPT usage: Partial
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             placeName = itemView.findViewById(R.id.placeName);

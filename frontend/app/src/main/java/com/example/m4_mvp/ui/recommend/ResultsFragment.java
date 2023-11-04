@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,10 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -45,6 +41,7 @@ public class ResultsFragment extends Fragment {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<String> networkTaskResult;
 
+    // ChatGPT usage: Yes
     public static ResultsFragment newInstance(String response) {
         ResultsFragment fragment = new ResultsFragment();
         Bundle args = new Bundle();
@@ -53,6 +50,7 @@ public class ResultsFragment extends Fragment {
         return fragment;
     }
 
+    // ChatGPT usage: Yes
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,14 +80,13 @@ public class ResultsFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: Partial
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_results, container, false);
         RecyclerView recyclerView = root.findViewById(R.id.recRecyclerView);
 
-        // TODO: remove this list for testing
-        // List<List<String>> dataList = Arrays.asList(Arrays.asList("Van", "10", "2023-10-30"), Arrays.asList("Edmonton", "20", "2023-11-01"));
         String recButtonText = "Select";
         View.OnClickListener recButtonListener = new View.OnClickListener() {
             @Override
@@ -126,7 +123,6 @@ public class ResultsFragment extends Fragment {
                         out.close();
 
                         int responseCode = connection.getResponseCode();
-
                         if (responseCode == HttpURLConnection.HTTP_OK) {
                             Log.d(TAG, "event created");
                         } else {
@@ -134,9 +130,7 @@ public class ResultsFragment extends Fragment {
                         }
 
                         connection.disconnect();
-
                         return null;
-
                     } catch (IOException e) {
                         // TODO: handle exception here
                         Log.d(TAG, "onException: " + e);
@@ -153,8 +147,8 @@ public class ResultsFragment extends Fragment {
                 }
             }
         };
-        RecyclerAdapter adapter = new RecyclerAdapter(recResponse, recButtonText, recButtonListener);
 
+        RecyclerAdapter adapter = new RecyclerAdapter(recResponse, recButtonText, recButtonListener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -162,6 +156,7 @@ public class ResultsFragment extends Fragment {
         return root;
     }
 
+    // ChatGPT usage: No
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -169,6 +164,7 @@ public class ResultsFragment extends Fragment {
         Log.d(TAG, "onViewCreated: " + recResponse);
     }
 
+    // ChatGPT usage: Yes
     @Override
     public void onDestroy() {
         super.onDestroy();

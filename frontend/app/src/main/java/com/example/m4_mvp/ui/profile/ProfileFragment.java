@@ -18,9 +18,7 @@ import android.widget.Toast;
 import com.example.m4_mvp.ProfileViewModel;
 import com.example.m4_mvp.R;
 import com.example.m4_mvp.databinding.FragmentProfileBinding;
-import com.example.m4_mvp.databinding.FragmentRecommendBinding;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -39,6 +37,7 @@ public class ProfileFragment extends Fragment {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<String> networkTaskResult;
 
+    // ChatGPT usage: Partial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +45,7 @@ public class ProfileFragment extends Fragment {
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
     }
 
+    // ChatGPT usage: Partial
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
+    // ChatGPT usage: Partial
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -115,7 +116,6 @@ public class ProfileFragment extends Fragment {
                             Log.d(TAG, "profile updated");
 
                             // On success, update profileViewModel
-                            //TODO: make sure the distance input is not null
                             if (inputDistance.getText() != null) {
                                 profileViewModel.setMaxDistance(inputDistance.getText().toString());
                             }

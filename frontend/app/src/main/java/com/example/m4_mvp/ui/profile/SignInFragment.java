@@ -1,13 +1,11 @@
 package com.example.m4_mvp.ui.profile;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,7 +17,6 @@ import android.view.ViewGroup;
 
 import com.example.m4_mvp.ProfileViewModel;
 import com.example.m4_mvp.R;
-import com.example.m4_mvp.ui.recommend.ResultsFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -54,6 +51,7 @@ public class SignInFragment extends Fragment {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<String> networkTaskResult;
 
+    // ChatGPT usage: Partial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +65,7 @@ public class SignInFragment extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
     }
 
+    // ChatGPT usage: No
     @Override
     public void onStart() {
         super.onStart();
@@ -75,6 +74,7 @@ public class SignInFragment extends Fragment {
         updateUI(account);
     }
 
+    // ChatGPT usage: No
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,6 +82,7 @@ public class SignInFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_signin, container, false);
     }
 
+    // ChatGPT usage: No
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -95,11 +96,13 @@ public class SignInFragment extends Fragment {
         });
     }
 
+    // ChatGPT usage: No
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    // ChatGPT usage: No
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -113,6 +116,7 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: No
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -127,6 +131,7 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: Partial
     private void updateUI(GoogleSignInAccount account) {
         if (account == null) {
             Log.d(TAG, "There is no user signed in!");
@@ -208,6 +213,7 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: Partial
     @Override
     public void onDestroy() {
         super.onDestroy();

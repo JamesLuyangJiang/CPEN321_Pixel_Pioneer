@@ -252,6 +252,7 @@ public class StarsFragment extends Fragment {
 
     // ChatGPT usage: Partial
     private class StarsLocationListener implements LocationListener {
+        // ChatGPT usage: Partial
         /*
          * This code is based on the answer by user3732887
          * on the post https://stackoverflow.com/questions/41441906/how-to-get-a-users-current-city
@@ -336,7 +337,7 @@ public class StarsFragment extends Fragment {
         binding = null;
     }
 
-    // ChatGPT usage: Partial
+    // ChatGPT usage: Yes
     @Override
     public void onDestroy() {
         super.onDestroy();

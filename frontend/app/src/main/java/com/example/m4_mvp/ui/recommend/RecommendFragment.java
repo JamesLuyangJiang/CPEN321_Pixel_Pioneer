@@ -39,6 +39,7 @@ public class RecommendFragment extends Fragment {
     private Future<String> networkTaskResult;
     private ProfileViewModel profileViewModel;
 
+    // ChatGPT usage: Partial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,7 @@ public class RecommendFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: Partial
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class RecommendFragment extends Fragment {
         return root;
     }
 
+    // ChatGPT usage: Yes
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -77,8 +80,6 @@ public class RecommendFragment extends Fragment {
         recommendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: check the star is available or not
-
                 // Start the fragment transaction to loading page
                 LoadingFragment loadingFragment = new LoadingFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -149,12 +150,14 @@ public class RecommendFragment extends Fragment {
         });
     }
 
+    // ChatGPT usage: No
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    // ChatGPT usage: Yes
     @Override
     public void onDestroy() {
         super.onDestroy();
