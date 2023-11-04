@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +44,10 @@ public class RecommendFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+
+        if (profileViewModel.getuid() == null) {
+            Toast.makeText(requireActivity(), "Please sign in on profile page!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

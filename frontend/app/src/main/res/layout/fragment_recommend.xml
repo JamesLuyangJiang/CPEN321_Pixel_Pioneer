@@ -7,51 +7,25 @@
     tools:context=".ui.recommend.RecommendFragment">
 
     <TextView
-        android:id="@+id/starNameTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="@string/star_name_title"
-        android:textSize="12pt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.207"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/starNameEntry"
-        android:layout_width="205dp"
-        android:layout_height="59dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="@string/star_name_hint"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/starNameTitle" />
-
-    <TextView
         android:id="@+id/dateTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_width="351dp"
+        android:layout_height="86dp"
+        android:layout_marginTop="124dp"
         android:text="@string/date_title"
         android:textSize="12pt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.133"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/starNameEntry" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <NumberPicker
         android:id="@+id/datePicker"
         style="@android:style/Widget.Material.NumberPicker"
         android:layout_width="104dp"
         android:layout_height="105dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="56dp"
         android:selectionDividerHeight="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.052"
+        app:layout_constraintHorizontal_bias="0.39"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTitle" />
 
@@ -71,11 +45,11 @@
         android:id="@+id/dateUnit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="88dp"
         android:text="@string/date_unit"
         android:textSize="12pt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.008"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/datePicker"
         app:layout_constraintTop_toBottomOf="@+id/dateTitle" />
 
