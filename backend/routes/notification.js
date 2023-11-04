@@ -1,25 +1,15 @@
 const express = require("express");
 const app = express();
+
 // Firebase Cloud Messaging
 var admin = require("firebase-admin");
-const moment = require("moment");
 
-//// This function is finished with the help of ChatGPT, especially for the usage of "moment"
-//function calculateTTLOnSeconds(dateToNotify) {
-////    // Parse the "dateToNotify" string into a Date object using moment.js
-////    dateToNotifyStr = dateToNotifyStr + " 00:00"
-////    const parsedDateToNotify = moment(dateToNotifyStr, 'YYYY-MM-DD HH:mm');
-//    // Get the current date and time
-//    const currentDateAndTime = moment();
-//    // Calculate the time difference in seconds
-//    const timeDifferenceInSeconds = dateToNotify.diff(currentDateAndTime, 'seconds');
-//    return timeDifferenceInSeconds;
-//}
-
+// ChatGPT usage: NO
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// ChatGPT usage: NO
 async function sendNotification(
   registrationToken,
   dateToNotify,
@@ -50,6 +40,10 @@ async function sendNotification(
   }
 }
 
+// ChatGPT usage: NO
+// Using Firebase Cloud Messaging service to send
+// real-time push notification to a device identified
+// by the registration token when there is an invitation
 async function sendInviteNotification(
   registrationToken,
   eventDate,
