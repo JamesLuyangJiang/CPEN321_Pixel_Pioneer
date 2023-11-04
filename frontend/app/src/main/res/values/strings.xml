@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Astronomy Guide</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_stars">Stars</string>
+    <string name="title_recommend">Recommendation</string>
+    <string name="title_events">Events</string>
+    <string name="title_profile">Profile</string>
+
+    <!--Stars Fragment-->
+    <string name="starsHeading">Current star chart at your location</string>
+    <string name="starsFrequency">Updates every 5 seconds</string>
+
+    <!--Recommendation Fragment-->
+    <string name="date_title">Within how many days you want to do star gazing?</string>
+    <string name="date_unit">days</string>
+    <string name="recommend_button">Go!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="rec_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/recommendations</string>
+    <string name="rank_title">Ranked based on our score</string>
+    <!--<string name="url">https://httpbin.org/get</string>-->
+
+    <!--Profile Fragment-->
+    <string name="basicInfoTitle">Basic Information</string>
+    <string name="emailTitle">Gmail:</string>
+    <string name="emailAddress">testing@gmail.com</string>
+    <string name="profile_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users</string>
+
+    <string name="preferenceTitle">Preferences</string>
+    <string name="distanceTitle">Maximum distance for places:</string>
+    <string name="distanceUnit">KM</string>
+    <string name="distanceRange">(50 KM \u2264 input \u2264 1000 KM, default = 1000)</string>
+    <string name="defaultDistance">1000</string>
+    <string name="updateProfileText">Update</string>
+
+    <!--Events Fragment-->
+    <string name="events_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/scheduling</string>
+    <string name="noEventsTitle">No future events.</string>
+    <string name="invite_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/invitation</string>
+</resources>

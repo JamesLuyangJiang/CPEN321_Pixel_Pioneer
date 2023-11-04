@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/stars_fragment">
+
+    <fragment
+        android:id="@+id/stars_fragment"
+        android:name="com.example.m4_mvp.ui.stars.StarsFragment"
+        android:label="@string/title_stars"
+        tools:layout="@layout/fragment_stars" />
+
+    <fragment
+        android:id="@+id/recommend_fragment"
+        android:name="com.example.m4_mvp.ui.recommend.RecommendFragment"
+        android:label="@string/title_recommend"
+        tools:layout="@layout/fragment_recommend" />
+
+    <fragment
+        android:id="@+id/events_fragment"
+        android:name="com.example.m4_mvp.ui.events.EventsFragment"
+        android:label="@string/title_events"
+        tools:layout="@layout/fragment_events" />
+
+    <fragment
+        android:id="@+id/signin_fragment"
+        android:name="com.example.m4_mvp.ui.profile.SignInFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_signin" />
+
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="com.example.m4_mvp.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>
