@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.m4_mvp.databinding.ActivityMainBinding;
-import com.example.m4_mvp.ui.profile.SignInFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,23 +33,57 @@ public class MainActivity extends AppCompatActivity {
 
     private ProfileViewModel profileViewModel;
 
+    // ChatGPT usage: No
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getPermissions();
+    }
+
+    // ChatGPT usage: No
+    private void getPermissions() {
+        // Check if we have WIFI and location permissions
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // If no, request for it
+            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            displayUI();
+        }
+    }
+
+    // ChatGPT usage: No
+    // Source: https://stackoverflow.com/questions/50067149/start-a-fragment-from-upon-getting-permission
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                displayUI();
+            } else {
+                Toast.makeText(MainActivity.this, "Location permission required!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    // ChatGPT usage: Yes
+    private void displayUI() {
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         profileViewModel.initGoogleAccount(MainActivity.this);
-        profileViewModel.setMaxDistance(getResources().getString(R.string.defaultDistance));
 
         SharedPreferences sharedPreferences = getSharedPreferences("uid", Context.MODE_PRIVATE);
         profileViewModel.setSharedPreferences(sharedPreferences);
+
+        if (profileViewModel.getMaxDistance() == -1) {
+            profileViewModel.setMaxDistance(getResources().getString(R.string.defaultDistance));
+        }
 
         Log.d(TAG, "uid signed in: " + sharedPreferences.getString("uid", null));
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        getPermissions();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -109,15 +142,6 @@ public class MainActivity extends AppCompatActivity {
 //                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void getPermissions() {
-        // Check if we have WIFI and location permissions
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // If no, request for it
-            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
     }
 
 }
