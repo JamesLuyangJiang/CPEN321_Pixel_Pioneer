@@ -43,15 +43,18 @@ router.post("/:userid", async (req, res) => {
         if (!checkReceiverEmailExists) {
           res.status(400).send("INVITED USER NOT FOUND IN DATABASE.");
         } else {
+          console.log("PRINT INVITED USER INFO...");
+          console.log(checkReceiverEmailExists);
           await client.db("astronomy").collection("events").insertOne({
             userid: checkReceiverEmailExists.userid,
             name: eventName,
             date: eventDate,
           });
           await notification.sendInviteNotification(
-            checkReceiverEmailExists.token,
+            checkReceiverEmailExists.notificationToken,
             eventDate,
-            eventName
+            eventName,
+            checkEventExists.email
           );
           res.status(200).send("INVITE USER SUCCESSFUL.");
         }

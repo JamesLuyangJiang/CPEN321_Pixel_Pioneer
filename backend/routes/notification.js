@@ -50,7 +50,13 @@ async function sendNotification(
   }
 }
 
-async function sendInviteNotification(registrationToken, eventDate, eventName) {
+async function sendInviteNotification(
+  registrationToken,
+  eventDate,
+  eventName,
+  senderEmail
+) {
+  const messageTitle = senderEmail + " has invited you to the following event!";
   const messageBody =
     "You have been invited to join the event in " +
     eventName +
@@ -58,7 +64,7 @@ async function sendInviteNotification(registrationToken, eventDate, eventName) {
     eventDate;
   var message = {
     notification: {
-      title: "New event registered!",
+      title: messageTitle,
       body: messageBody,
     },
     token: registrationToken,
