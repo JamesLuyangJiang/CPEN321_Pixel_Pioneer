@@ -58,6 +58,10 @@ public class EventsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+
+        if (profileViewModel.getuid() == null) {
+            Toast.makeText(requireActivity(), "Please sign in on profile page!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -74,8 +78,8 @@ public class EventsFragment extends Fragment {
         // List<List<String>> dataList = Arrays.asList(Arrays.asList("Van", "10", "2023-10-30"), Arrays.asList("Edmonton", "20", "2023-11-01"));
         View.OnClickListener cancelListener = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                int position = recyclerView.getChildAdapterPosition((View) v.getParent());
+            public void onClick(View view) {
+                int position = recyclerView.getChildAdapterPosition((View) view.getParent());
                 List<String> eventData = eventsResponse.get(position);
                 Log.d(TAG, "onClick: " + eventData);
 
@@ -140,6 +144,9 @@ public class EventsFragment extends Fragment {
         View.OnClickListener inviteListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int position = recyclerView.getChildAdapterPosition((View) view.getParent());
+                List<String> eventData = eventsResponse.get(position);
+
                 // Create a custom view for the dialog
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.invite_dialog, null);
@@ -165,26 +172,24 @@ public class EventsFragment extends Fragment {
                 btnInvite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int position = recyclerView.getChildAdapterPosition((View) v.getParent());
-                        List<String> eventData = eventsResponse.get(position);
                         Log.d(TAG, "onClick: " + eventData);
 
                         String receiverEmail = editText.getText().toString();
-                        Log.d(TAG, "dialog continue: " + receiverEmail);
+                        Log.d(TAG, "dialog invite: " + receiverEmail);
 
                         networkTaskResult = executorService.submit(() -> {
                             try {
                                 URL url = new URL(getResources().getString(R.string.invite_url) + "/" + profileViewModel.getuid());
                                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                                // Set up the connection for a DELETE request
+                                // Set up the connection for a POST request
                                 connection.setRequestMethod("POST");
                                 connection.setReadTimeout(10000);
                                 connection.setConnectTimeout(15000);
 
                                 // Set the request body
                                 connection.setDoOutput(true);
-                                String requestBody = "{\"name\": \"" + eventData.get(0) + "\"email\": \"" + receiverEmail + "\"}";
+                                String requestBody = "{\"name\": \"" + eventData.get(0) + "\", \"receiver\": \"" + receiverEmail + "\"}";
 
                                 // Set up the request body
                                 byte[] requestBytes = requestBody.getBytes("UTF-8");
