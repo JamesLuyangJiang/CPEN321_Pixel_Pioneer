@@ -56,11 +56,12 @@ async function sendInviteNotification(
   eventName,
   senderEmail
 ) {
-  const messageTitle = senderEmail + " has invited you to the following event!";
+  const messageTitle = "You have a new invitation.";
   const messageBody =
-    "You have been invited to join the event in " +
+    senderEmail +
+    " has invited you to join the event at " +
     eventName +
-    " at " +
+    " on " +
     eventDate;
   var message = {
     notification: {
