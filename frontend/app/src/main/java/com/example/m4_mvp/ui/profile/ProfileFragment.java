@@ -54,6 +54,9 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
         profileView = root;
 
+        EditText maxDistance =  root.findViewById(R.id.maxDistInput);
+        maxDistance.setText(String.valueOf(profileViewModel.getMaxDistance()));
+
         // Inflate the layout for this fragment
         return root;
     }
@@ -86,6 +89,12 @@ public class ProfileFragment extends Fragment {
                         connection.setDoOutput(true);
                         // TODO: check valid input range
                         EditText inputDistance = profileView.findViewById(R.id.maxDistInput);
+
+                        if (inputDistance.getText() == null) {
+                            Toast.makeText(requireActivity(), "Please enter a valid distance!", Toast.LENGTH_SHORT).show();
+                            return null;
+                        }
+
                         String requestBody = "{\"email\": \"" + profileViewModel.getGoogleAccount().getEmail() +
                                 "\", \"distance\": \"" + inputDistance.getText().toString() + "\", \"notificationToken\": \"" + profileViewModel.getToken() + "\"}";
 
@@ -104,7 +113,12 @@ public class ProfileFragment extends Fragment {
 
                         if (responseCode == HttpURLConnection.HTTP_OK) {
                             Log.d(TAG, "profile updated");
-                            Toast.makeText(requireActivity(), "Profile updated!", Toast.LENGTH_SHORT).show();
+
+                            // On success, update profileViewModel
+                            //TODO: make sure the distance input is not null
+                            if (inputDistance.getText() != null) {
+                                profileViewModel.setMaxDistance(inputDistance.getText().toString());
+                            }
                         } else {
                             Log.d(TAG, "profile update failed with response code: " + responseCode);
                         }
@@ -117,10 +131,13 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-                // On success, update profileViewModel
-                //TODO: make sure the distance input is not null
-//                EditText maxDistance = profileView.findViewById(R.id.maxDistInput);
-//                profileViewModel.setMaxDistance(maxDistance.toString());
+                try {
+                    String updateResult = networkTaskResult.get();
+
+                    Toast.makeText(requireActivity(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.d(TAG, "profile update failed with error: " + e);
+                }
             }
         });
     }
