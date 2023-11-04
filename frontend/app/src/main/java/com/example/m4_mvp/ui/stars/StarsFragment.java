@@ -7,19 +7,16 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.m4_mvp.databinding.FragmentStarsBinding;
 import com.example.m4_mvp.R;
@@ -64,12 +61,9 @@ public class StarsFragment extends Fragment {
 
     private ImageView starImage;
 
+    // ChatGPT usage: Partial
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        // TODO: remove this if not needed
-        StarsViewModel starsViewModel =
-                new ViewModelProvider(this).get(StarsViewModel.class);
-
         binding = FragmentStarsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -88,6 +82,7 @@ public class StarsFragment extends Fragment {
         return root;
     }
 
+    // ChatGPT usage: No
     void buildSkyMap(Bitmap canvas, Bitmap skymapRaw, double curDegree, double rightAscentionOffset, double locationLat, double timeOffset) {
         for (int i = 0; i < CANVAS_WIDTH; i++) {
             for (int j = 0; j < CANVAS_HEIGHT; j++) {
@@ -126,6 +121,7 @@ public class StarsFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: No
     double[] rotationY(double theta, double phi, double offsetX, double offsetY) {
         double xEucl, yEucl, zEucl, xTransformedEucl, yTransformedEucl, zTransformedEucl;
         double cosineThetaRot, rho;
@@ -158,6 +154,7 @@ public class StarsFragment extends Fragment {
         return arr;
     }
 
+    // ChatGPT usage: No
     int getAtlasGlobe(double theta, double phi, @NonNull Bitmap skymapRaw) {
         int xRelative = (int) (SKYMAP_WIDTH * ((-theta) / (2 * 3.1415926535) + 3));
         int xPos = xRelative % SKYMAP_WIDTH;
@@ -168,6 +165,7 @@ public class StarsFragment extends Fragment {
         return skymapRaw.getPixel(xPos, yPos);
     }
 
+    // ChatGPT usage: No
     double[] calculateOffset(double curDegree, double rightAscentionOffset, double locationLat, double timeOffset) {
         double offsetX = (curDegree + rightAscentionOffset) * 2 * Math.PI / 360 + timeOffset;
         double offsetY = (NORTH_POLE - locationLat) * 2 * Math.PI / 360;
@@ -177,6 +175,7 @@ public class StarsFragment extends Fragment {
         return new double[]{offsetX, offsetY};
     }
 
+    // ChatGPT usage: Yes
     public String makeHttpGetRequest(String currentDate, double lat, double lon) {
         try {
             //Log.d(TAG, "arrived here0");
@@ -251,6 +250,7 @@ public class StarsFragment extends Fragment {
         return responseREL + responseRightAsc;
     }
 
+    // ChatGPT usage: Partial
     private class StarsLocationListener implements LocationListener {
         /*
          * This code is based on the answer by user3732887
@@ -329,12 +329,14 @@ public class StarsFragment extends Fragment {
         }
     }
 
+    // ChatGPT usage: No
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    // ChatGPT usage: Partial
     @Override
     public void onDestroy() {
         super.onDestroy();

@@ -6,15 +6,18 @@
     <string name="title_events">Events</string>
     <string name="title_profile">Profile</string>
 
+    <!--Stars Fragment-->
+    <string name="starsHeading">Current star chart at your location</string>
+    <string name="starsFrequency">Updates every 5 seconds</string>
+
     <!--Recommendation Fragment-->
-    <string name="star_name_title">What star you want to see?</string>
-    <string name="star_name_hint">Name of the star</string>
-    <string name="date_title">Within how many days?</string>
+    <string name="date_title">Within how many days you want to do star gazing?</string>
     <string name="date_unit">days</string>
     <string name="recommend_button">Go!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="rec_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/recommendations</string>
-<!--    <string name="url">https://httpbin.org/get</string>-->
+    <string name="rank_title">Ranked based on our score</string>
+    <!--<string name="url">https://httpbin.org/get</string>-->
 
     <!--Profile Fragment-->
     <string name="basicInfoTitle">Basic Information</string>
@@ -25,7 +28,7 @@
     <string name="preferenceTitle">Preferences</string>
     <string name="distanceTitle">Maximum distance for places:</string>
     <string name="distanceUnit">KM</string>
-    <string name="distanceRange">(200\u0020KM\u0020\u2264\u0020input\u0020\u2264\u00201000\u0020KM)</string>
+    <string name="distanceRange">(50 KM \u2264 input \u2264 1000 KM, default = 1000)</string>
     <string name="defaultDistance">1000</string>
     <string name="updateProfileText">Update</string>
 
