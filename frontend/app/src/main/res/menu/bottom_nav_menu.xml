@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/navigation_stars"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/kid_star_fill0_wght400_grad0_opsz24"
         android:title="@string/title_stars"/>
 
     <item
         android:id="@+id/navigation_recommend"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/lightbulb_fill0_wght400_grad0_opsz24"
         android:title="@string/title_recommend"/>
 
     <item
