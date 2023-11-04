@@ -1,13 +1,12 @@
 const express = require("express");
-const apiManager = require("./apimanager");
-const notification = require("./notification");
 const router = express.Router();
 
 const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
-async function manageDB() {
+// ChatGPT usage: NO
+async function connectDB() {
   try {
     await client.connect();
     console.log("Successfully connected to the database");
@@ -19,10 +18,13 @@ async function manageDB() {
   }
 }
 
-router.get("/:id/events", async (req, res) => {
-  try {
-    await client.connect();
-    console.log("Successfully connected to the database");
+// ChatGPT usage: Partial
+// We consulted ChatGPT for the MongoDB CRUD operations
+// instead of reading the documentation
+// because this way is faster
+async function getScheduledEvents(req, res) {
+  const isConnected = connectDB();
+  if (isConnected) {
     try {
       const { id } = req.params;
       const responseObj = await client
@@ -35,16 +37,16 @@ router.get("/:id/events", async (req, res) => {
     } catch (err) {
       res.status(400).send(err);
     }
-  } catch (err) {
-    console.log(err);
-    await client.close();
   }
-});
+}
 
-router.post("/:id/events", async (req, res) => {
-  try {
-    await client.connect();
-    console.log("Successfully connected to the database");
+// ChatGPT usage: Partial
+// We consulted ChatGPT for the MongoDB CRUD operations
+// instead of reading the documentation
+// because this way is faster
+async function createScheduledEvent(req, res) {
+  const isConnected = connectDB();
+  if (isConnected) {
     try {
       const { id } = req.params;
       console.log(id);
@@ -63,35 +65,20 @@ router.post("/:id/events", async (req, res) => {
         };
         await client.db("astronomy").collection("events").insertOne(event_obj);
 
-        // const astronomy_data =
-        //   await apiManager.fetchAstronomyInfoOnScheduledDate(
-        //     req.body.name,
-        //     req.body.date
-        //   );
-
-        // console.log(astronomy_data);
-
-        // if (req.body.notificationToken && req.body.date) {
-        //   await notification.sendNotification(
-        //     req.body.notificationToken,
-        //     req.body.date,
-        //     astronomy_data
-        //   );
-        // }
-
         res.status(200).send("Event added successfully\n");
       }
     } catch (err) {
       res.status(400).send(err);
     }
-  } catch (err) {
-    console.log(err);
-    await client.close();
   }
-});
+}
 
-router.delete("/:id/events/delete", async (req, res) => {
-  const isConnected = manageDB();
+// ChatGPT usage: Partial
+// We consulted ChatGPT for the MongoDB CRUD operations
+// instead of reading the documentation
+// because this way is faster
+async function deleteScheduledEvent(req, res) {
+  const isConnected = connectDB();
   if (isConnected) {
     try {
       const { id } = req.params;
@@ -127,6 +114,10 @@ router.delete("/:id/events/delete", async (req, res) => {
       res.status(400).send(err);
     }
   }
-});
+}
+
+router.get("/:id/events", getScheduledEvents);
+router.post("/:id/events", createScheduledEvent);
+router.delete("/:id/events/delete", deleteScheduledEvent);
 
 module.exports = router;
