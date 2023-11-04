@@ -6,7 +6,9 @@ const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
-async function manageDB() {
+// ChatGPT usage: NO
+// Utility function to connect to our MongoDB database
+async function connectDB() {
   try {
     await client.connect();
     console.log("Successfully connected to the database");
@@ -18,14 +20,17 @@ async function manageDB() {
   }
 }
 
-router.post("/:userid", async (req, res) => {
-  const isConnected = manageDB();
+// ChatGPT usage: NO
+// This interface will add a new event to the invited user
+// If this invited user is in our database
+async function inviteSpecifiedUser(req, res) {
+  const isConnected = connectDB();
   if (isConnected) {
     try {
       const { userid } = req.params;
       console.log(req.body.name);
       console.log(req.body.receiver);
-      // TODO: Check if userid exists, if it exists, find the name and date of the event
+      // Check if userid exists, if it exists, find the name and date of the event
       const checkEventExists = await client
         .db("astronomy")
         .collection("events")
@@ -35,7 +40,7 @@ router.post("/:userid", async (req, res) => {
       } else {
         const eventName = checkEventExists.name;
         const eventDate = checkEventExists.date;
-        // TODO: Check if receiver email exists in database
+        // Check if receiver email exists in database
         const checkReceiverEmailExists = await client
           .db("astronomy")
           .collection("users")
@@ -69,6 +74,8 @@ router.post("/:userid", async (req, res) => {
       res.status(400).send(err);
     }
   }
-});
+}
+
+router.post("/:userid", inviteSpecifiedUser);
 
 module.exports = router;
