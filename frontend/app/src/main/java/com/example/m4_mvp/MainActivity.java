@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Log and toast
                         Log.d(TAG, "firebase token: " + token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

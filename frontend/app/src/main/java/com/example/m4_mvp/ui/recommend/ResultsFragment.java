@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.m4_mvp.ProfileViewModel;
 import com.example.m4_mvp.R;
@@ -142,6 +143,14 @@ public class ResultsFragment extends Fragment {
                         return null;
                     }
                 });
+
+                try {
+                    String createEventResult = networkTaskResult.get();
+
+                    Toast.makeText(requireActivity(), "Event created!", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.d(TAG, "create event failed with error: " + e);
+                }
             }
         };
         RecyclerAdapter adapter = new RecyclerAdapter(recResponse, recButtonText, recButtonListener);
