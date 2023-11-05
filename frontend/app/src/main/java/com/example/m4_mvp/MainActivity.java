@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.os.Handler;
 
 import com.example.m4_mvp.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -122,13 +123,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fetchToken();
+    }
+
+    // ChatGPT usage: Partial
+    private void fetchToken() {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                            return;
+
+                            // Try fetching from FCM again since it is usually FCM issue
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fetchToken(); // Retry the token retrieval
+                                }
+                            }, 500);
                         }
 
                         // Get new FCM registration token
@@ -142,5 +155,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }
