@@ -51,8 +51,12 @@ async function run() {
 https
   .createServer(
     {
-      key: fs.readFileSync("privkey.pem"),
-      cert: fs.readFileSync("cert.pem"),
+      key: fs.readFileSync(
+        "/home/azureuser/backend-jiayuhuang-20231104/privkey.pem"
+      ),
+      cert: fs.readFileSync(
+        "/home/azureuser/backend-jiayuhuang-20231104/cert.pem"
+      ),
     },
     app
   )
