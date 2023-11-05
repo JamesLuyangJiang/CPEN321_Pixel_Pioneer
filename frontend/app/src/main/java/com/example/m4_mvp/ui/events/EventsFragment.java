@@ -199,7 +199,6 @@ public class EventsFragment extends Fragment {
 
                                 if (responseCode == HttpURLConnection.HTTP_OK) {
                                     Log.d(TAG, "invitation sent");
-                                    Toast.makeText(requireActivity(), "Invitation sent!", Toast.LENGTH_SHORT).show();
                                     connection.disconnect();
                                     return "done";
                                 } else {
@@ -215,6 +214,14 @@ public class EventsFragment extends Fragment {
                         });
 
                         dialog.dismiss();
+
+                        try {
+                            String inviteResult = networkTaskResult.get();
+
+                            Toast.makeText(requireActivity(), "Invitation sent!", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Log.d(TAG, "onClick: invitation failed");
+                        }
                     }
                 });
 
