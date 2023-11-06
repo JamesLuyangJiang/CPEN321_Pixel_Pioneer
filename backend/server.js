@@ -31,21 +31,9 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-async function run() {
-  try {
-    await client.connect();
-    console.log("Successfully connected to the database");
-  } catch (err) {
-    console.log(err);
-  } finally {
-    await client.close();
-  }
-}
-
 // FOR LOCAL TESTING, USE THIS HTTP SERVER
 // app.listen(port, async () => {
 //   console.log(`HTTP server listening on port ${port}`);
-//   run();
 // });
 
 // FOR VM TESTING, USE THIS HTTPS SERVER
@@ -59,5 +47,4 @@ https
   )
   .listen(port, async () => {
     console.log(`HTTPS server listening on port ${port}`);
-    run();
   });
