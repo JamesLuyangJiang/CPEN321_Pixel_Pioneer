@@ -108,7 +108,7 @@ async function updateProfile(req, res) {
       const checkIDExists = await client
         .db("astronomy")
         .collection("users")
-        .findOne({ userid: userid });
+        .findOne({ userid });
 
       console.log(checkIDExists);
 
