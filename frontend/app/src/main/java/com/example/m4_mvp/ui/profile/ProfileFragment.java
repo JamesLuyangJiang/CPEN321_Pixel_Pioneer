@@ -48,7 +48,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Get the data binding and view
-        com.example.m4_mvp.databinding.FragmentProfileBinding binding = FragmentProfileBinding.inflate(inflater, container, false);
+        FragmentProfileBinding binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         profileView = root;
 
@@ -87,12 +87,12 @@ public class ProfileFragment extends Fragment {
 
                         // Set the request body
                         connection.setDoOutput(true);
-                        // TODO: check valid input range
+
                         EditText inputDistance = profileView.findViewById(R.id.maxDistInput);
 
-                        if (inputDistance.getText() == null) {
-                            Toast.makeText(requireActivity(), "Please enter a valid distance!", Toast.LENGTH_SHORT).show();
-                            return null;
+                        if (inputDistance.getText().toString().equals("") || Integer.parseInt(inputDistance.getText().toString()) > 1000 || Integer.parseInt(inputDistance.getText().toString()) < 50) {
+                            Log.d(TAG, "onClick: " + inputDistance.getText().toString());
+                            return "rangeError";
                         }
 
                         String requestBody = "{\"email\": \"" + profileViewModel.getGoogleAccount().getEmail() +
@@ -131,9 +131,13 @@ public class ProfileFragment extends Fragment {
                 });
 
                 try {
-                    networkTaskResult.get();
+                    String updateResult = networkTaskResult.get();
 
-                    Toast.makeText(requireActivity(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                    if (updateResult == "rangeError") {
+                        Toast.makeText(requireActivity(), "Please enter a number in the range above!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireActivity(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (Exception e) {
                     Log.d(TAG, "profile update failed with error: " + e);
                 }
