@@ -30,6 +30,11 @@ async function getScheduledEvents(req, res) {
       res.status(200).send(responseObj);
     } catch (err) {
       res.status(400).send(err);
+    } finally {
+      if (client) {
+        await client.close();
+        console.log("Database connection closed");
+      }
     }
   }
 }
@@ -63,6 +68,11 @@ async function createScheduledEvent(req, res) {
       }
     } catch (err) {
       res.status(400).send(err);
+    } finally {
+      if (client) {
+        await client.close();
+        console.log("Database connection closed");
+      }
     }
   }
 }
@@ -106,6 +116,11 @@ async function deleteScheduledEvent(req, res) {
       }
     } catch (err) {
       res.status(400).send(err);
+    } finally {
+      if (client) {
+        await client.close();
+        console.log("Database connection closed");
+      }
     }
   }
 }
