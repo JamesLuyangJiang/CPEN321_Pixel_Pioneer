@@ -189,23 +189,6 @@ async function fetchObservatoriesWithConditionInfo(
   return nearby_observatory_list;
 }
 
-// ChatGPT usage: NO
-async function fetchAstronomyInfoOnScheduledDate(observatory_name, date) {
-  try {
-    const astronomy_response = await axios.get(
-      `https://api.weatherapi.com/v1/astronomy.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${observatory_name}&date=${date}`
-    );
-    const astronomy_data = {
-      sunrise: astronomy_response.data.astronomy.astro.sunrise,
-      sunset: astronomy_response.data.astronomy.astro.sunset,
-    };
-    return astronomy_data;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
 module.exports = {
   fetchNearbyObservatoryFromAPIs,
-  fetchAstronomyInfoOnScheduledDate,
 };
