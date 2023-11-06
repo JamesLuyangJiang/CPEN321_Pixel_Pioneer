@@ -32,10 +32,8 @@ public class ProfileFragment extends Fragment {
 
     private ProfileViewModel profileViewModel;
 
-    private FragmentProfileBinding binding;
     private View profileView;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private Future<String> networkTaskResult;
 
     // ChatGPT usage: Partial
     @Override
@@ -50,7 +48,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Get the data binding and view
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        com.example.m4_mvp.databinding.FragmentProfileBinding binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         profileView = root;
 
@@ -75,6 +73,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Update Profile!");
+                Future<String> networkTaskResult;
 
                 networkTaskResult = executorService.submit(() -> {
                     try {
@@ -132,7 +131,7 @@ public class ProfileFragment extends Fragment {
                 });
 
                 try {
-                    String updateResult = networkTaskResult.get();
+                    networkTaskResult.get();
 
                     Toast.makeText(requireActivity(), "Profile updated!", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {

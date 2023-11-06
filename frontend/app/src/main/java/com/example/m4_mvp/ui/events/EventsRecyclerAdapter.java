@@ -1,6 +1,5 @@
 package com.example.m4_mvp.ui.events;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

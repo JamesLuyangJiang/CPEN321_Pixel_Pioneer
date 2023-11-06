@@ -33,7 +33,6 @@ public class RecommendFragment extends Fragment {
     final static String TAG = "RecommendFragment";
 
     private FragmentRecommendBinding binding;
-    private Button recommendButton;
     private NumberPicker datePicker;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<String> networkTaskResult;
@@ -76,7 +75,7 @@ public class RecommendFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Button for submitting user inputs and redirect to new fragment
-        recommendButton = view.findViewById(R.id.recommendButton);
+        Button recommendButton = view.findViewById(R.id.recommendButton);
         recommendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

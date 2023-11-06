@@ -45,9 +45,6 @@ public class StarsFragment extends Fragment {
     private int CANVAS_HEIGHT = 1024;
     private static final double EPSILON = 10e-7;
     private static final double NORTH_POLE = 90.0;
-    private static final int PERMISSIONS_REQUEST_CODE = 100;
-    private LocationManager locationManager;
-    private StarsLocationListener locationListener;
 
     private double locationLat = 49.246292;
     private double locationLong = -123.116226;
@@ -69,8 +66,9 @@ public class StarsFragment extends Fragment {
 
         starImage = root.findViewById(R.id.imageView);
 
-        locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new StarsLocationListener();
+        //    private static final int PERMISSIONS_REQUEST_CODE = 100;
+        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        StarsLocationListener locationListener = new StarsLocationListener();
 
         if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 225);
@@ -96,7 +94,8 @@ public class StarsFragment extends Fragment {
                     continue;
                 }
 
-                double theta, phi;
+                double theta,
+                       phi;
 
                 if (relativeX > 0) {
                     theta = Math.atan(relativeY / (relativeX + EPSILON));
@@ -123,9 +122,18 @@ public class StarsFragment extends Fragment {
 
     // ChatGPT usage: No
     double[] rotationY(double theta, double phi, double offsetX, double offsetY) {
-        double xEucl, yEucl, zEucl, xTransformedEucl, yTransformedEucl, zTransformedEucl;
-        double cosineThetaRot, rho;
-        double thetaRot, phiRot;
+        double xEucl,
+               yEucl,
+               zEucl,
+               xTransformedEucl,
+               yTransformedEucl,
+               zTransformedEucl;
+
+        double cosineThetaRot,
+               rho;
+
+        double thetaRot,
+               phiRot;
 
         xEucl = Math.sin(phi) * Math.cos(theta);
         yEucl = Math.sin(phi) * Math.sin(theta);
@@ -283,13 +291,13 @@ public class StarsFragment extends Fragment {
             Log.d(TAG, locationLat + " latitude");
             Log.d(TAG, locationLong + " longitude");
 
-            double temp_long = -123.116226;
-            double temp_lat = 49.246292;
+//            double temp_long = -123.116226;
+//            double temp_lat = 49.246292;
 
             executorService = Executors.newSingleThreadExecutor();
 
             // Execute the network request in a background thread
-            Future<String> result = executorService.submit(() -> {
+            executorService.submit(() -> {
                 response = makeHttpGetRequest(currentDate, locationLat, locationLong);
                 return response;
             });
@@ -303,7 +311,8 @@ public class StarsFragment extends Fragment {
 
             // Update the star chart
             ImageView image;
-            Bitmap skymapRaw, canvas;
+            Bitmap skymapRaw,
+                   canvas;
 
             image = starImage;
 
