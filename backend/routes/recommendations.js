@@ -1,18 +1,17 @@
 const express = require("express");
-const axios = require("axios");
 const router = express.Router();
 const apiManager = require("./apimanager");
 const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
-const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
 
 // ChatGPT usage: NO
 // This is a handler for the GET request
 // Organize all the dependencies here
 // to return our recommendation list to the client
 async function recommendationRequestHandler(req, res) {
-  const { userid, days } = req.params;
+  const userid = req.params.userid;
+  const days = req.params.days;
   const distance = await getUserDistance(userid);
 
   const maximum_city_number = 10;
@@ -44,14 +43,13 @@ async function recommendationRequestHandler(req, res) {
 // Fetch user's preferred distance
 // from user's profile database
 async function getUserDistance(userid) {
-  try {
     await client.connect();
     try {
       // Fetch the current user by userid
       const user = await client
         .db("astronomy")
         .collection("users")
-        .findOne({ userid: userid });
+        .findOne({ userid });
 
       if (!user) {
         return 1000; // Default distance
@@ -59,11 +57,8 @@ async function getUserDistance(userid) {
       return Number(user.distance) || 1000; // Set distance from user's data. If its null, set 1000
     } catch (err) {
       console.log(err);
-    }
-  } catch (err) {
-    console.log(err);
+    } finally {
     await client.close();
-    return 1000; // Default distance
   }
 }
 
