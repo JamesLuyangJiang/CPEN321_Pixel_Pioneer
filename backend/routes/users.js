@@ -13,8 +13,9 @@ async function connectDB() {
     return true;
   } catch (err) {
     console.log(err);
-    await client.close();
     return false;
+  } finally {
+    await client.close();
   }
 }
 
@@ -27,7 +28,7 @@ async function createProfile(req, res) {
   if (isConnected) {
     try {
       const user_id = uuid.v4();
-      responseObj = {
+      var response_obj = {
         userid: user_id,
         message: "Successfully created user profile",
       };
@@ -58,7 +59,7 @@ async function createProfile(req, res) {
           distance: req.body.distance,
           notificationToken: req.body.notificationToken,
         });
-        res.status(200).send(responseObj);
+        res.status(200).send(response_obj);
       }
     } catch (err) {
       res.status(400).send(err);
@@ -79,7 +80,7 @@ async function getProfile(req, res) {
       const user = await client
         .db("astronomy")
         .collection("users")
-        .findOne({ userid: userid });
+        .findOne({ userid });
 
       if (!user) {
         res.status(404).send("User not found");
@@ -115,9 +116,9 @@ async function updateProfile(req, res) {
         res.status(400).send("ID does not exist in database.");
       } else {
         await client.db("astronomy").collection("users").findOneAndReplace(
-          { userid: userid },
+          { userid },
           {
-            userid: userid,
+            userid,
             email: req.body.email,
             distance: req.body.distance,
             notificationToken: req.body.notificationToken,
