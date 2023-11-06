@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -133,7 +134,7 @@ public class ProfileFragment extends Fragment {
                 try {
                     String updateResult = networkTaskResult.get();
 
-                    if (updateResult == "rangeError") {
+                    if (Objects.equals(updateResult, "rangeError")) {
                         Toast.makeText(requireActivity(), "Please enter a number in the range above!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(requireActivity(), "Profile updated!", Toast.LENGTH_SHORT).show();
