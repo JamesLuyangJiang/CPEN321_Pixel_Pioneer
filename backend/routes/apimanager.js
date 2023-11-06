@@ -1,6 +1,16 @@
 const axios = require("axios");
+const fs = require('fs');
 
-const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
+var CONFIDENTIAL_WEATHER_API_KEY = "";
+// ChatGPT usage: Partial
+// Consulated ChatGPT on how to asynchronously read the contents of the file
+fs.readFile('confidential_weather_api_key.txt', { encoding: 'utf-8' }, (err, data) => {
+    if (err) {
+        console.error('Error reading file:', err);
+        return;
+    }
+    CONFIDENTIAL_WEATHER_API_KEY = data;
+});
 
 // ChatGPT usage: Partial
 // Consulated ChatGPT on how to read device's IP
