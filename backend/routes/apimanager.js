@@ -178,7 +178,7 @@ async function fetchObservatoriesWithConditionInfo(
 async function fetchAstronomyInfoOnScheduledDate(observatory_name, date) {
   try {
     const astronomy_response = await axios.get(
-      `http://api.weatherapi.com/v1/astronomy.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${observatory_name}&date=${date}`
+      `https://api.weatherapi.com/v1/astronomy.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${observatory_name}&date=${date}`
     );
     const astronomy_data = {
       sunrise: astronomy_response.data.astronomy.astro.sunrise,
