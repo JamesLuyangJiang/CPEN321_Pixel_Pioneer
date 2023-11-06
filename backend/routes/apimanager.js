@@ -1,4 +1,3 @@
-const express = require("express");
 const axios = require("axios");
 
 const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
