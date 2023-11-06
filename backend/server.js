@@ -37,6 +37,7 @@ async function run() {
     console.log("Successfully connected to the database");
   } catch (err) {
     console.log(err);
+  } finally {
     await client.close();
   }
 }
@@ -51,12 +52,8 @@ async function run() {
 https
   .createServer(
     {
-      key: fs.readFileSync(
-        "/home/azureuser/backend-jiayuhuang-20231104/privkey.pem"
-      ),
-      cert: fs.readFileSync(
-        "/home/azureuser/backend-jiayuhuang-20231104/cert.pem"
-      ),
+      key: fs.readFileSync("privkey.pem"),
+      cert: fs.readFileSync("cert.pem"),
     },
     app
   )
