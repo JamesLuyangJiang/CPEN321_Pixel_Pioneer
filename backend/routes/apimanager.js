@@ -167,7 +167,7 @@ async function fetchObservatoriesWithConditionInfo(
   const weatherAPIRequests = nearby_observatory_list.map(async (item) => {
     try {
       const weather_forecast_response = await axios.get(
-        `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${item.latitude},${item.longitude}&days=${days}&aqi=yes&alerts=no`
+        `https://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${item.latitude},${item.longitude}&days=${days}&aqi=yes&alerts=no`
       );
       const weather_data = weather_forecast_response.data.forecast.forecastday;
       item.weatherForecast = markWeatherForecast(weather_data);
