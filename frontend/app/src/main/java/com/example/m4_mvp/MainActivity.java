@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "uid signed in: " + sharedPreferences.getString("uid", null));
 
-        com.example.m4_mvp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
