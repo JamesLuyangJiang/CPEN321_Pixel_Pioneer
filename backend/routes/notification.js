@@ -1,6 +1,3 @@
-const express = require("express");
-const app = express();
-
 // Firebase Cloud Messaging
 var admin = require("firebase-admin");
 
