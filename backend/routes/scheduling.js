@@ -13,8 +13,9 @@ async function connectDB() {
     return true;
   } catch (err) {
     console.log(err);
-    await client.close();
     return false;
+  } finally {
+    await client.close();
   }
 }
 
@@ -57,7 +58,7 @@ async function createScheduledEvent(req, res) {
       if (!checkIDExists) {
         res.status(400).send("FAILED because ID does not exist in database.");
       } else {
-        event_obj = {
+        var event_obj = {
           userid: id,
           name: req.body.name,
           date: req.body.date,
