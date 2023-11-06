@@ -168,19 +168,19 @@ async function fetchObservatoriesWithConditionInfo(
   days
 ) {
   const weatherAPIRequests = nearby_observatory_list.map(async (item) => {
-    const weather_forecast_response = await axios
+    return axios
       .get(
         `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${item.latitude},${item.longitude}&days=${days}&aqi=yes&alerts=no`
       )
+      .then((weather_forecast_response) => {
+        const weather_data =
+          weather_forecast_response.data.forecast.forecastday;
+        item.weatherForecast = markWeatherForecast(weather_data);
+      })
       .catch((err) => {
         item.weatherForecast = [];
         console.error("Call weather API failed...", err);
       });
-
-    if (weather_forecast_response) {
-      const weather_data = weather_forecast_response.data.forecast.forecastday;
-      item.weatherForecast = markWeatherForecast(weather_data);
-    }
   });
 
   await Promise.all(weatherAPIRequests).catch((error) => {
