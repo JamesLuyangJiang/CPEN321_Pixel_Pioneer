@@ -1,16 +1,20 @@
 const axios = require("axios");
-const fs = require('fs');
+const fs = require("fs");
 
 var CONFIDENTIAL_WEATHER_API_KEY = "";
 // ChatGPT usage: Partial
 // Consulated ChatGPT on how to asynchronously read the contents of the file
-fs.readFile('confidential_weather_api_key.txt', { encoding: 'utf-8' }, (err, data) => {
+fs.readFile(
+  "confidential_weather_api_key.txt",
+  { encoding: "utf-8" },
+  (err, data) => {
     if (err) {
-        console.error('Error reading file:', err);
-        return;
+      console.error("Error reading file:", err);
+      return;
     }
     CONFIDENTIAL_WEATHER_API_KEY = data;
-});
+  }
+);
 
 // ChatGPT usage: Partial
 // Consulated ChatGPT on how to read device's IP
@@ -129,32 +133,31 @@ function getTopNObjects(list, n) {
 
 // ChatGPT usage: NO
 async function fetchNearbyObservatoriesList(lat, lon, radius) {
+  const list_of_observatories_response = await axios.get(
+    `https://geogratis.gc.ca/services/geoname/en/geonames.json?lat=${lat}&lon=${lon}&radius=${radius}`
+  ); // api to get a list of places around the geolocation of the client
 
-    const list_of_observatories_response = await axios.get(
-      `https://geogratis.gc.ca/services/geoname/en/geonames.json?lat=${lat}&lon=${lon}&radius=${radius}`
-    ); // api to get a list of places around the geolocation of the client
+  const actual_data_items = list_of_observatories_response.data.items;
+  var nearby_observatory_list = []; // the actual json response of this request
 
-    const actual_data_items = list_of_observatories_response.data.items;
-    var nearby_observatory_list = []; // the actual json response of this request
-
-    for (let i = 0; i < actual_data_items.length; i++) {
-      const currentObject = actual_data_items[i];
-      var nearby_observatory = {
-        name: currentObject.name,
-        latitude: currentObject.latitude,
-        longitude: currentObject.longitude,
-        distance: calculateDistance(
-          lat,
-          lon,
-          currentObject.latitude,
-          currentObject.longitude
-        ),
-      };
-      nearby_observatory_list.push(nearby_observatory);
-    }
-    sortByDistance(nearby_observatory_list);
-    nearby_observatory_list = getTopNObjects(nearby_observatory_list, 20); // only getting the closest 20 places since the next API call will take a long time
-    return nearby_observatory_list;
+  for (let i = 0; i < actual_data_items.length; i++) {
+    const currentObject = actual_data_items[i];
+    var nearby_observatory = {
+      name: currentObject.name,
+      latitude: currentObject.latitude,
+      longitude: currentObject.longitude,
+      distance: calculateDistance(
+        lat,
+        lon,
+        currentObject.latitude,
+        currentObject.longitude
+      ),
+    };
+    nearby_observatory_list.push(nearby_observatory);
+  }
+  sortByDistance(nearby_observatory_list);
+  nearby_observatory_list = getTopNObjects(nearby_observatory_list, 20); // only getting the closest 20 places since the next API call will take a long time
+  return nearby_observatory_list;
 }
 
 // ChatGPT usage: Partial
@@ -165,15 +168,18 @@ async function fetchObservatoriesWithConditionInfo(
   days
 ) {
   const weatherAPIRequests = nearby_observatory_list.map(async (item) => {
-    try {
-      const weather_forecast_response = await axios.get(
-        `https://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${item.latitude},${item.longitude}&days=${days}&aqi=yes&alerts=no`
-      );
+    const weather_forecast_response = await axios
+      .get(
+        `http://api.weatherapi.com/v1/forecast.json?key=${CONFIDENTIAL_WEATHER_API_KEY}&q=${item.latitude},${item.longitude}&days=${days}&aqi=yes&alerts=no`
+      )
+      .catch((err) => {
+        item.weatherForecast = [];
+        console.error("Call weather API failed...", err);
+      });
+
+    if (weather_forecast_response) {
       const weather_data = weather_forecast_response.data.forecast.forecastday;
       item.weatherForecast = markWeatherForecast(weather_data);
-    } catch (err) {
-      item.weatherForecast = [];
-      console.error("Call weather API failed...");
     }
   });
 
