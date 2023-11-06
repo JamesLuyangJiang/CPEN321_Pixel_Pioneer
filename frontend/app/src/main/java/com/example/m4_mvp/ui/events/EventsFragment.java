@@ -123,7 +123,7 @@ public class EventsFragment extends Fragment {
                 });
 
                 try {
-                    String deleteResult = networkTaskResult.get();
+                    networkTaskResult.get();
                     Toast.makeText(requireActivity(), "Event deleted!", Toast.LENGTH_SHORT).show();
 
                     showLoading(root);
@@ -216,7 +216,7 @@ public class EventsFragment extends Fragment {
                         dialog.dismiss();
 
                         try {
-                            String inviteResult = networkTaskResult.get();
+                            networkTaskResult.get();
 
                             Toast.makeText(requireActivity(), "Invitation sent!", Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {

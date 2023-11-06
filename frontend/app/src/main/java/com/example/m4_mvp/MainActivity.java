@@ -29,7 +29,6 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
     final static String TAG = "MainActivity";
-    private ActivityMainBinding binding;
 
     private ProfileViewModel profileViewModel;
 
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "uid signed in: " + sharedPreferences.getString("uid", null));
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.m4_mvp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -99,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.navigation_stars:
-                        navController.navigate(R.id.stars_fragment);
-                        return true;
                     case R.id.navigation_recommend:
                         navController.navigate(R.id.recommend_fragment);
                         return true;
@@ -117,9 +113,10 @@ public class MainActivity extends AppCompatActivity {
                             navController.navigate(R.id.profile_fragment);
                         }
                         return true;
+                    default:
+                        navController.navigate(R.id.stars_fragment);
+                        return true;
                 }
-
-                return false;
             }
         });
 

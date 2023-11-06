@@ -98,7 +98,6 @@ public class ResultsFragment extends Fragment {
                 networkTaskResult = executorService.submit(() -> {
                     try {
                         // set up https connection
-                        String response;
                         URL url = new URL(getResources().getString(R.string.events_url) + "/" + profileViewModel.getuid() + "/events");
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -139,7 +138,7 @@ public class ResultsFragment extends Fragment {
                 });
 
                 try {
-                    String createEventResult = networkTaskResult.get();
+                    networkTaskResult.get();
 
                     Toast.makeText(requireActivity(), "Event created!", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
