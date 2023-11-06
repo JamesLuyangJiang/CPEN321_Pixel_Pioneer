@@ -1,6 +1,5 @@
 const express = require("express");
 const axios = require("axios");
-const router = express.Router();
 
 const CONFIDENTIAL_WEATHER_API_KEY = "29af4c07ebdd4189a0b222326232410";
 
@@ -75,9 +74,9 @@ function markWeatherForecast(weatherForecast) {
 
     let condition_score = 3;
 
-    if ("Clear" == forecast.hour[0].condition.text) {
+    if (forecast.hour[0].condition.text == "Clear") {
       condition_score *= 3;
-    } else if ("Partly cloudy" == forecast.hour[0].condition.text) {
+    } else if (forecast.hour[0].condition.text == "Partly cloudy") {
       condition_score *= 2;
     }
 
@@ -99,8 +98,8 @@ function markWeatherForecast(weatherForecast) {
     }
 
     filteredForecast.push({
-      date: date,
-      condition_score: condition_score,
+      date,
+      condition_score,
       condition: forecast.hour[0].condition.text,
     });
   }
@@ -121,10 +120,11 @@ function getTopNObjects(list, n) {
 
 // ChatGPT usage: NO
 async function fetchNearbyObservatoriesList(lat, lon, radius) {
-  try {
+
     const list_of_observatories_response = await axios.get(
       `https://geogratis.gc.ca/services/geoname/en/geonames.json?lat=${lat}&lon=${lon}&radius=${radius}`
     ); // api to get a list of places around the geolocation of the client
+
     const actual_data_items = list_of_observatories_response.data.items;
     var nearby_observatory_list = []; // the actual json response of this request
 
@@ -146,10 +146,6 @@ async function fetchNearbyObservatoriesList(lat, lon, radius) {
     sortByDistance(nearby_observatory_list);
     nearby_observatory_list = getTopNObjects(nearby_observatory_list, 20); // only getting the closest 20 places since the next API call will take a long time
     return nearby_observatory_list;
-  } catch (error) {
-    nearby_observatory_list = [];
-    console.log("Unable to retrieve geolocation data");
-  }
 }
 
 // ChatGPT usage: Partial
