@@ -28,19 +28,19 @@ app.get("/", (req, res) => {
 });
 
 // FOR LOCAL TESTING, USE THIS HTTP SERVER
-// app.listen(port, async () => {
-//   console.log(`HTTP server listening on port ${port}`);
-// });
+app.listen(port, async () => {
+  console.log(`HTTP server listening on port ${port}`);
+});
 
-// FOR VM TESTING, USE THIS HTTPS SERVER
-https
-  .createServer(
-    {
-      key: fs.readFileSync("privkey.pem"),
-      cert: fs.readFileSync("cert.pem"),
-    },
-    app
-  )
-  .listen(port, async () => {
-    console.log(`HTTPS server listening on port ${port}`);
-  });
+// // FOR VM TESTING, USE THIS HTTPS SERVER
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync("privkey.pem"),
+//       cert: fs.readFileSync("cert.pem"),
+//     },
+//     app
+//   )
+//   .listen(port, async () => {
+//     console.log(`HTTPS server listening on port ${port}`);
+//   });
