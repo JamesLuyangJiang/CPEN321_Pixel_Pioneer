@@ -1,6 +1,5 @@
-// Test file for Scheduling Module
-const schedulingRoute = require("../routes/scheduling")
-
-// Interface POST
-// https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/
-
+describe("scheduling", () => {
+  test("scheduling stub test #1", () => {
+    console.log("hello world");
+  });
+});
