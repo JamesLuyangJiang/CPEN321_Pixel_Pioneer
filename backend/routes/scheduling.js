@@ -129,4 +129,9 @@ router.get("/:id/events", getScheduledEvents);
 router.post("/:id/events", createScheduledEvent);
 router.delete("/:id/events/delete", deleteScheduledEvent);
 
-module.exports = router;
+module.exports = {
+  router,
+  getScheduledEvents,
+  createScheduledEvent,
+  deleteScheduledEvent,
+};
