@@ -5,12 +5,14 @@ const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
-// ChatGPT usage: NO
-async function connectDB() {
-  await client.connect();
-  console.log("Successfully connected to the database");
-  return true;
-}
+const { connectDB } = require("./dbconn");
+
+// // ChatGPT usage: NO
+// async function connectDB() {
+//   await client.connect();
+//   console.log("Successfully connected to the database");
+//   return true;
+// }
 
 // ChatGPT usage: Partial
 // We consulted ChatGPT for the MongoDB CRUD operations
@@ -129,9 +131,8 @@ router.get("/:id/events", getScheduledEvents);
 router.post("/:id/events", createScheduledEvent);
 router.delete("/:id/events/delete", deleteScheduledEvent);
 
-module.exports = {
-  router,
-  getScheduledEvents,
-  createScheduledEvent,
-  deleteScheduledEvent,
-};
+module.exports = router;
+
+module.exports.getScheduledEvents = getScheduledEvents;
+module.exports.createScheduledEvent = createScheduledEvent;
+module.exports.deleteScheduledEvent = deleteScheduledEvent;
