@@ -32,7 +32,7 @@ describe("MongoDB connection", () => {
   let db;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect("mongodb://localhost:27017", {
+    connection = await MongoClient.connect("mongodb://pixelpioneer.canadacentral.cloudapp.azure.com:27017", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -125,12 +125,6 @@ describe("GET /recommendations/:userid/:days", () => {
        expect(res.status).not.toHaveBeenCalledWith(500);
        console.log("res.json", res.json.getMockImplementation)
      });
-
-
-     // Other test cases like handling errors, invalid inputs, etc.
-
-
-      // Add a test for error handling
     });
 
     describe('generateRecommendationList', () => {
