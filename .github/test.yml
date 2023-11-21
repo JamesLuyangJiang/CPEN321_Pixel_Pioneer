@@ -1,0 +1,14 @@
+name: Test backend server
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/
+    steps:
+      - uses: actions/checkout@v1
+      - run: echo "### Install and build backend server"
+      - run: npm install
+      - run: echo "### Running test"
+      - run: npm test
