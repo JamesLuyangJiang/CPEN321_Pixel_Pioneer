@@ -1,7 +1,7 @@
 jest.mock("axios");
 
 const axios = require("axios");
-const { forecast } = require("./const");
+const { forecast } = require("../const");
 
 jest.mock("../routes/apimanager", () => ({
   isNotNullOrEmpty: jest.fn(),
