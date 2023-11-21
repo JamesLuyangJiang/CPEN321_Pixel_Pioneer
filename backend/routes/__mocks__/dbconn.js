@@ -76,6 +76,10 @@ module.exports = {
       return false;
     } else if (email === "harthuang990517@gmail.com") {
       return true;
+    } else if (email === "receivernotindatabase@gmail.com") {
+      return false;
+    } else if (email === "hannah@gmail.com") {
+      return true;
     } else if (email === "invalid@gmail.com") {
       throw new Error("Invalid email to database.");
     } else {

@@ -8,7 +8,7 @@ const {
   deleteScheduledEvent,
 } = require("./routes/scheduling");
 const { getProfile, createProfile, updateProfile } = require("./routes/users");
-const invitationRoutes = require("./routes/invite");
+const { inviteSpecifiedUser } = require("./routes/invite");
 
 app.use(express.json());
 // app.use("/recommendations", recommendationsRoutes);
@@ -35,6 +35,7 @@ app.get("/users/get/:userid", getProfile);
 app.put("/users/update/:userid", updateProfile);
 app.post("/users/create", createProfile);
 
-
+// Invitation Routes
+app.post("/invitation/:userid", inviteSpecifiedUser);
 
 module.exports = app;
