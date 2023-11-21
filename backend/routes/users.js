@@ -21,8 +21,6 @@ module.exports = {
   createProfile: async (req, res) => {
     const isConnected = await connectDB();
     if (isConnected) {
-      console.log("HITTING....");
-      console.log(req.body);
       try {
         const user_id = uuid.v4();
         var response_obj = {
@@ -30,11 +28,8 @@ module.exports = {
           message: "Successfully created user profile",
         };
         const checkEmailExists = await findUserEmailExists(req.body.email);
-        console.log(checkEmailExists);
 
         if (checkEmailExists) {
-          console.log("This email found in database");
-          console.log(req.body.notificationToken);
           const newProfile = {
             userid: checkEmailExists.userid,
             email: checkEmailExists.email,
@@ -44,7 +39,6 @@ module.exports = {
           await findEmailAndReplaceUserToken(req.body.email, newProfile);
           res.status(200).send(newProfile);
         } else {
-          console.log("HITTING CREATE NEW USER...");
           await createNewUser(
             user_id,
             req.body.email,
@@ -56,11 +50,11 @@ module.exports = {
       } catch (err) {
         res.status(400).send(err);
       } finally {
-        if (client) {
-          await client.close();
-          console.log("Database connection closed");
-        }
+        await client.close();
+        console.log("Database connection closed");
       }
+    } else {
+      res.status(400).send("Database not connected");
     }
   },
 
@@ -84,11 +78,11 @@ module.exports = {
       } catch (err) {
         res.status(400).send(err);
       } finally {
-        if (client) {
-          await client.close();
-          console.log("Database connection closed");
-        }
+        await client.close();
+        console.log("Database connection closed");
       }
+    } else {
+      res.status(400).send("Database not connected");
     }
   },
 
@@ -100,15 +94,10 @@ module.exports = {
     const isConnected = connectDB();
     if (isConnected) {
       try {
-        console.log("HITTING UPDATE USERS...");
         const { userid } = req.params;
-        console.log(userid);
-        console.log(typeof userid);
 
         const userProfile = await checkIDExists(userid);
 
-        console.log("HITTING CHECK ID EXISTS");
-        console.log(userProfile);
 
         if (!userProfile) {
           res.status(400).send("ID does not exist in database.");
@@ -119,30 +108,20 @@ module.exports = {
             distance: req.body.distance,
             notificationToken: req.body.notificationToken,
           };
-          console.log("UPDATED PROFILE...");
-          console.log(updatedProfile);
           const responseObject = await updateExistingUser(
             userid,
             updatedProfile
           );
-          console.log("HITTING UPDATE RESPONSE OBJECT...");
-          console.log(responseObject);
           res.status(200).send("User profile updated successfully\n");
         }
       } catch (err) {
         res.status(400).send(err);
       } finally {
-        if (client) {
-          await client.close();
-          console.log("Database connection closed");
-        }
+        await client.close();
+        console.log("Database connection closed");
       }
+    } else {
+      res.status(400).send("Database not connected");
     }
   },
 };
-
-// router.get("/get/:userid", getProfile);
-// router.put("/update/:userid", updateProfile);
-// router.post("/create", createProfile);
-
-// module.exports = router;

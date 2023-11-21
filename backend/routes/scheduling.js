@@ -22,22 +22,21 @@ module.exports = {
       try {
         const { id } = req.params;
         const userProfile = checkIDExists(id);
-        console.log(userProfile);
         let responseObj;
         if (!userProfile) {
           res.status(400).send("FAILED because ID does not exist in database.");
         } else {
           responseObj = await findAllEvents(id);
-          console.log(responseObj);
           res.status(200).send(responseObj);
         }
       } catch (err) {
-        console.log(err);
         res.status(400).send(err);
       } finally {
         await client.close();
         console.log("Database connection closed");
       }
+    } else {
+      res.status(400).send("Database not connected");
     }
   },
 
@@ -50,9 +49,7 @@ module.exports = {
     if (isConnected) {
       try {
         const { id } = req.params;
-        console.log(id);
         const userProfile = await checkIDExists(id);
-        console.log(userProfile);
         if (!userProfile) {
           res.status(400).send("FAILED because ID does not exist in database.");
         } else {
@@ -71,6 +68,8 @@ module.exports = {
         await client.close();
         console.log("Database connection closed");
       }
+    } else {
+      res.status(400).send("Database not connected");
     }
   },
 
@@ -83,14 +82,11 @@ module.exports = {
     if (isConnected) {
       try {
         const { id } = req.params;
-        console.log(id);
         const userProfile = await checkIDExists(id);
-        console.log(userProfile);
         if (!userProfile) {
           res.status(400).send("FAILED because ID does not exist in database.");
         } else {
           const checkEventExists = await findOneEvent(id, req.body.name);
-          console.log(checkEventExists);
           if (!checkEventExists) {
             res
               .status(400)
@@ -109,8 +105,7 @@ module.exports = {
         console.log("Database connection closed");
       }
     } else {
-      // not connected to the database
-      res.status(400).send("DATABASE NOT CONNECTED\n");
+      res.status(400).send("Database not connected");
     }
   },
 };
