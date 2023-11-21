@@ -28,14 +28,17 @@ public class EventRecyclerViewAssertion {
     private static boolean found = false;
     private static int foundPosition = -1;
 
+    // ChatGPT usage: Partial
     public static boolean checkEachItem(String[] selectedPlan) {
         EventRecyclerViewAssertion.selectedPlan = selectedPlan;
         Espresso.onView(withId(RECYCLER_VIEW_ID)).perform(new CheckItemAction());
         return EventRecyclerViewAssertion.found;
     }
 
+    // ChatGPT usage: Partial
     private static class CheckItemAction implements ViewAction {
 
+        // ChatGPT usage: Partial
         @Override
         public Matcher<View> getConstraints() {
             return Matchers.allOf(
@@ -44,11 +47,13 @@ public class EventRecyclerViewAssertion {
             );
         }
 
+        // ChatGPT usage: Partial
         @Override
         public String getDescription() {
             return "Check each item in event RecyclerView";
         }
 
+        // ChatGPT usage: Partial
         @Override
         public void perform(UiController uiController, View view) {
             if (!(view instanceof RecyclerView)) {
@@ -130,24 +135,29 @@ public class EventRecyclerViewAssertion {
         }
     }
 
+    // ChatGPT usage: Partial
     private static class CheckItemAssertion implements ViewAction {
 
         private int position;
 
+        // ChatGPT usage: Partial
         public CheckItemAssertion(int position) {
             this.position = position;
         }
 
+        // ChatGPT usage: Partial
         @Override
         public Matcher<View> getConstraints() {
             return Matchers.allOf(isAssignableFrom(View.class), isDisplayed());
         }
 
+        // ChatGPT usage: Partial
         @Override
         public String getDescription() {
             return "Check item in RecyclerView";
         }
 
+        // ChatGPT usage: Partial
         @Override
         public void perform(UiController uiController, View view) {
             // Replace with your actual IDs

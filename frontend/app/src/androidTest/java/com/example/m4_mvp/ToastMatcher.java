@@ -9,11 +9,13 @@ import org.hamcrest.TypeSafeMatcher;
 
 public class ToastMatcher extends TypeSafeMatcher<Root> {
 
+    // ChatGPT usage: Partial
     @Override
     public void describeTo(Description description) {
         description.appendText("is toast");
     }
 
+    // ChatGPT usage: Partial
     @Override
     public boolean matchesSafely(Root root) {
         int type = root.getWindowLayoutParams().get().type;
@@ -25,6 +27,7 @@ public class ToastMatcher extends TypeSafeMatcher<Root> {
         return false;
     }
 
+    // ChatGPT usage: Partial
     public static ToastMatcher isToast() {
         return new ToastMatcher();
     }
