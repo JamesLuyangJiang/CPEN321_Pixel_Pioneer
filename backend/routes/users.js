@@ -1,147 +1,148 @@
-const express = require("express");
-const router = express.Router();
+// const express = require("express");
+// const router = express.Router();
 const uuid = require("uuid");
+const {
+  connectDB,
+  findUserEmailExists,
+  findEmailAndReplaceUserToken,
+  createNewUser,
+  checkIDExists,
+  updateExistingUser,
+} = require("./dbconn");
 const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
-// ChatGPT usage: NO
-async function connectDB() {
-  await client.connect();
-  console.log("Successfully connected to the database");
-  return true;
-}
+module.exports = {
+  // ChatGPT usage: Partial
+  // We consulted ChatGPT for the MongoDB CRUD operations
+  // instead of reading the documentation
+  // because this way is faster
+  createProfile: async (req, res) => {
+    const isConnected = await connectDB();
+    if (isConnected) {
+      console.log("HITTING....");
+      console.log(req.body);
+      try {
+        const user_id = uuid.v4();
+        var response_obj = {
+          userid: user_id,
+          message: "Successfully created user profile",
+        };
+        const checkEmailExists = await findUserEmailExists(req.body.email);
+        console.log(checkEmailExists);
 
-// ChatGPT usage: Partial
-// We consulted ChatGPT for the MongoDB CRUD operations
-// instead of reading the documentation
-// because this way is faster
-async function createProfile(req, res) {
-  const isConnected = await connectDB();
-  if (isConnected) {
-    try {
-      const user_id = uuid.v4();
-      var response_obj = {
-        userid: user_id,
-        message: "Successfully created user profile",
-      };
-      const checkEmailExists = await client
-        .db("astronomy")
-        .collection("users")
-        .findOne({ email: req.body.email });
-
-      if (checkEmailExists) {
-        console.log("This email found in database");
-        console.log(req.body.notificationToken);
-        await client.db("astronomy").collection("users").findOneAndReplace(
-          {
-            email: req.body.email,
-          },
-          {
+        if (checkEmailExists) {
+          console.log("This email found in database");
+          console.log(req.body.notificationToken);
+          const newProfile = {
             userid: checkEmailExists.userid,
             email: checkEmailExists.email,
             distance: checkEmailExists.distance,
             notificationToken: req.body.notificationToken,
-          }
-        );
-        res.status(200).send(checkEmailExists);
-      } else {
-        await client.db("astronomy").collection("users").insertOne({
-          userid: user_id,
-          email: req.body.email,
-          distance: req.body.distance,
-          notificationToken: req.body.notificationToken,
-        });
-        res.status(200).send(response_obj);
-      }
-    } catch (err) {
-      res.status(400).send(err);
-    } finally {
-      if (client) {
-        await client.close();
-        console.log("Database connection closed");
-      }
-    }
-  }
-}
-
-// ChatGPT usage: Partial
-// We consulted ChatGPT for the MongoDB CRUD operations
-// instead of reading the documentation
-// because this way is faster
-async function getProfile(req, res) {
-  const isConnected = connectDB();
-  if (isConnected) {
-    const { userid } = req.params;
-    try {
-      // Fetch the current user by userid
-      const user = await client
-        .db("astronomy")
-        .collection("users")
-        .findOne({ userid });
-
-      if (!user) {
-        res.status(404).send("User not found");
-      } else {
-        res.status(200).send(user);
-      }
-    } catch (err) {
-      res.status(400).send(err);
-    } finally {
-      if (client) {
-        await client.close();
-        console.log("Database connection closed");
+          };
+          await findEmailAndReplaceUserToken(req.body.email, newProfile);
+          res.status(200).send(newProfile);
+        } else {
+          console.log("HITTING CREATE NEW USER...");
+          await createNewUser(
+            user_id,
+            req.body.email,
+            req.body.distance,
+            req.body.notificationToken
+          );
+          res.status(200).send(response_obj);
+        }
+      } catch (err) {
+        res.status(400).send(err);
+      } finally {
+        if (client) {
+          await client.close();
+          console.log("Database connection closed");
+        }
       }
     }
-  }
-}
+  },
 
-// ChatGPT usage: Partial
-// We consulted ChatGPT for the MongoDB CRUD operations
-// instead of reading the documentation
-// because this way is faster
-async function updateProfile(req, res) {
-  const isConnected = connectDB();
-  if (isConnected) {
-    try {
+  // ChatGPT usage: Partial
+  // We consulted ChatGPT for the MongoDB CRUD operations
+  // instead of reading the documentation
+  // because this way is faster
+  getProfile: async (req, res) => {
+    const isConnected = connectDB();
+    if (isConnected) {
       const { userid } = req.params;
-      console.log(userid);
-      console.log(typeof userid);
+      try {
+        // Fetch the current user by userid
+        const user = await checkIDExists(userid);
 
-      const checkIDExists = await client
-        .db("astronomy")
-        .collection("users")
-        .findOne({ userid });
+        if (!user) {
+          res.status(404).send("User not found");
+        } else {
+          res.status(200).send(user);
+        }
+      } catch (err) {
+        res.status(400).send(err);
+      } finally {
+        if (client) {
+          await client.close();
+          console.log("Database connection closed");
+        }
+      }
+    }
+  },
 
-      console.log(checkIDExists);
+  // ChatGPT usage: Partial
+  // We consulted ChatGPT for the MongoDB CRUD operations
+  // instead of reading the documentation
+  // because this way is faster
+  updateProfile: async (req, res) => {
+    const isConnected = connectDB();
+    if (isConnected) {
+      try {
+        console.log("HITTING UPDATE USERS...");
+        const { userid } = req.params;
+        console.log(userid);
+        console.log(typeof userid);
 
-      if (!checkIDExists) {
-        res.status(400).send("ID does not exist in database.");
-      } else {
-        await client.db("astronomy").collection("users").findOneAndReplace(
-          { userid },
-          {
+        const userProfile = await checkIDExists(userid);
+
+        console.log("HITTING CHECK ID EXISTS");
+        console.log(userProfile);
+
+        if (!userProfile) {
+          res.status(400).send("ID does not exist in database.");
+        } else {
+          const updatedProfile = {
             userid,
             email: req.body.email,
             distance: req.body.distance,
             notificationToken: req.body.notificationToken,
-          }
-        );
-        res.status(200).send("User profile updated successfully\n");
-      }
-    } catch (err) {
-      res.status(400).send(err);
-    } finally {
-      if (client) {
-        await client.close();
-        console.log("Database connection closed");
+          };
+          console.log("UPDATED PROFILE...");
+          console.log(updatedProfile);
+          const responseObject = await updateExistingUser(
+            userid,
+            updatedProfile
+          );
+          console.log("HITTING UPDATE RESPONSE OBJECT...");
+          console.log(responseObject);
+          res.status(200).send("User profile updated successfully\n");
+        }
+      } catch (err) {
+        res.status(400).send(err);
+      } finally {
+        if (client) {
+          await client.close();
+          console.log("Database connection closed");
+        }
       }
     }
-  }
-}
+  },
+};
 
-router.get("/get/:userid", getProfile);
-router.put("/update/:userid", updateProfile);
-router.post("/create", createProfile);
+// router.get("/get/:userid", getProfile);
+// router.put("/update/:userid", updateProfile);
+// router.post("/create", createProfile);
 
-module.exports = router;
+// module.exports = router;

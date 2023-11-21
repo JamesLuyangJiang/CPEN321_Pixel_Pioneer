@@ -33,7 +33,10 @@ module.exports = {
   },
 
   insertOneEvent: async (eventObj) => {
-    return await client.db("astronomy").collection("events").insertOne(eventObj);
+    return await client
+      .db("astronomy")
+      .collection("events")
+      .insertOne(eventObj);
   },
 
   findOneAndDeleteOneEvent: async (userID, eventName) => {
@@ -41,5 +44,37 @@ module.exports = {
       .db("astronomy")
       .collection("events")
       .findOneAndDelete({ userid: userID, name: eventName });
+  },
+
+  findUserEmailExists: async (email) => {
+    return await client
+      .db("astronomy")
+      .collection("users")
+      .findOne({ email: email });
+  },
+
+  findEmailAndReplaceUserToken: async (email, newProfile) => {
+    return await client.db("astronomy").collection("users").findOneAndReplace(
+      {
+        email: email,
+      },
+      newProfile
+    );
+  },
+
+  createNewUser: async (userID, email, distance, token) => {
+    return await client.db("astronomy").collection("users").insertOne({
+      userid: userID,
+      email: email,
+      distance: distance,
+      notificationToken: token,
+    });
+  },
+
+  updateExistingUser: async (userID, updatedProfile) => {
+    return await client
+      .db("astronomy")
+      .collection("users")
+      .findOneAndReplace({ userid: userID }, updatedProfile);
   },
 };

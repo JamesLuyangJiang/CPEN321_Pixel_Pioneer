@@ -7,7 +7,7 @@ const {
   getScheduledEvents,
   deleteScheduledEvent,
 } = require("./routes/scheduling");
-const userRoutes = require("./routes/users");
+const { getProfile, createProfile, updateProfile } = require("./routes/users");
 const invitationRoutes = require("./routes/invite");
 
 app.use(express.json());
@@ -29,5 +29,12 @@ app.get("/", (req, res) => {
 app.get("/scheduling/:id/events", getScheduledEvents);
 app.post("/scheduling/:id/events", createScheduledEvent);
 app.delete("/scheduling/:id/events/delete", deleteScheduledEvent);
+
+// User Routes
+app.get("/users/get/:userid", getProfile);
+app.put("/users/update/:userid", updateProfile);
+app.post("/users/create", createProfile);
+
+
 
 module.exports = app;

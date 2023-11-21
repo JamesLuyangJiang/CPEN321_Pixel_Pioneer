@@ -1,15 +1,7 @@
 jest.mock("../routes/dbconn");
 
-const { connectDB } = require("../routes/scheduling");
-
 const app = require("../app");
 const request = require("supertest");
-
-// const {
-//   getScheduledEvents,
-//   createScheduledEvent,
-//   deleteScheduledEvent,
-// } = require("../routes/scheduling");
 
 // GET https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/scheduling/:id/events
 describe("GET a list of events", () => {
