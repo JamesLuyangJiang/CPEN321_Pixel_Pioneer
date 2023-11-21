@@ -32,7 +32,7 @@ describe("MongoDB connection", () => {
   let db;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect("mongodb://localhost:27017", {
+    connection = await MongoClient.connect("mongodb://20.63.115.201:27017", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -57,7 +57,7 @@ describe('getUserDistance', () => {
        let db;
 
        beforeAll(async () => {
-         connection = await MongoClient.connect("mongodb://localhost:27017", {
+         connection = await MongoClient.connect("mongodb://20.63.115.201:27017", {
            useNewUrlParser: true,
            useUnifiedTopology: true,
          });
