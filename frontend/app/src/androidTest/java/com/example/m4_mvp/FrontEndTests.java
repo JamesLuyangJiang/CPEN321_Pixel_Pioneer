@@ -80,12 +80,14 @@ public class FrontEndTests {
 
     private UiDevice uiDevice;
 
+    // ChatGPT usage: Partial
     @Before
     public void setUp() {
         // Initialize UiDevice instance
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
+    // ChatGPT usage: Partial
     @Test
     public void fr3Test() throws InterruptedException, UiObjectNotFoundException {
         // Google sign in
@@ -168,6 +170,7 @@ public class FrontEndTests {
         Thread.sleep(1000);
     }
 
+    // ChatGPT usage: Partial
     @Test
     public void fr4Test() throws Throwable {
         // Prerequisite steps to get to the results page of recommendation
@@ -308,6 +311,7 @@ public class FrontEndTests {
         Thread.sleep(10000);
     }
 
+    // ChatGPT usage: Partial
     @Test
     public void fr5Test() throws Throwable {
         // Prerequisite steps
@@ -425,91 +429,91 @@ public class FrontEndTests {
     }
 
     // ChatGPT usage: Partial
-//    @Test
-//    public void skyChartTest() throws InterruptedException {
-//        Thread.sleep(20000);
-//
-//        FragmentScenario<StarsFragment> fragmentScenario = FragmentScenario.launch(StarsFragment.class);
-//
-//        // Access the fragment instance and its public variable
-//        fragmentScenario.onFragment(fragment -> {
-//            double yourVariable = fragment.getDiff();
-//
-//            // Perform assertions on yourVariable
-//            assert(yourVariable < 15.00);
-//        });
-//    }
-//
-//    // ChatGPT usage: Partial
-//    @Test
-//    public void easeOfUseTest() throws InterruptedException {
-//        int clickCount = 0;
-//        // Click on the "Profile" menu item in the bottom navigation bar
-//        uiDevice.findObject(By.res("com.example.m4_mvp:id/navigation_profile")).click();
-//        clickCount++;
-//
-//        // Wait for the fragment to load
-//        Thread.sleep(1000);
-//
-//        // Click on the Google Sign-In button
-//        ViewInteraction id = onView(
-//                allOf(withText("Sign in"),
-//                        childAtPosition(
-//                                allOf(withId(R.id.sign_in_button),
-//                                        childAtPosition(
-//                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-//                                                0)),
-//                                0),
-//                        isDisplayed()));
-//        id.perform(click());
-//        clickCount++;
-//
-//        while (true) {
-//            Thread.sleep(1000);
-//            UiObject2 accountElement = uiDevice.findObject(By.text("CPEN321"));
-//            UiObject2 emailField = uiDevice.findObject(By.clazz("android.widget.EditText"));
-//            if (accountElement != null) {
-//                accountElement.click();
-//                clickCount++;
-//                Thread.sleep(3000);
-//                break;
-//            } else if (emailField != null) {
-//                // Entering the email
-//                emailField.setText("cpen321pixelpioneer@gmail.com");
-//                clickCount++;
-//                uiDevice.findObject(By.text("NEXT")).click();
-//                clickCount++;
-//
-//                // Entering the password
-//                while (true) {
-//                    Thread.sleep(1000);
-//                    UiObject2 passwordField = uiDevice.findObject(By.clazz("android.widget.EditText"));
-//                    if (passwordField != null) {
-//                        passwordField.setText("pixel321!");
-//                        uiDevice.findObject(By.text("NEXT")).click();
-//                        clickCount++;
-//                        break;
-//                    }
-//                }
-//
-//                // Agree terms and conditions
-//                clickButton("I agree");
-//                clickCount++;
-//                clickButton("MORE");
-//                clickCount++;
-//                clickButton("ACCEPT");
-//                clickCount++;
-//                Thread.sleep(6000);
-//                break;
-//            }
-//        }
-//
-//        Thread.sleep(3000);
-//
-//        if (clickCount >= 10) {
-//            throw new IllegalStateException("Number of clicks exceeds maximum of 10!");
-//        }
-//    }
+    @Test
+    public void skyChartTest() throws InterruptedException {
+        Thread.sleep(20000);
+
+        FragmentScenario<StarsFragment> fragmentScenario = FragmentScenario.launch(StarsFragment.class);
+
+        // Access the fragment instance and its public variable
+        fragmentScenario.onFragment(fragment -> {
+            double yourVariable = fragment.getDiff();
+
+            // Perform assertions on yourVariable
+            assert(yourVariable < 15.00);
+        });
+    }
+
+    // ChatGPT usage: Partial
+    @Test
+    public void easeOfUseTest() throws InterruptedException {
+        int clickCount = 0;
+        // Click on the "Profile" menu item in the bottom navigation bar
+        uiDevice.findObject(By.res("com.example.m4_mvp:id/navigation_profile")).click();
+        clickCount++;
+
+        // Wait for the fragment to load
+        Thread.sleep(1000);
+
+        // Click on the Google Sign-In button
+        ViewInteraction id = onView(
+                allOf(withText("Sign in"),
+                        childAtPosition(
+                                allOf(withId(R.id.sign_in_button),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                0)),
+                                0),
+                        isDisplayed()));
+        id.perform(click());
+        clickCount++;
+
+        while (true) {
+            Thread.sleep(1000);
+            UiObject2 accountElement = uiDevice.findObject(By.text("CPEN321"));
+            UiObject2 emailField = uiDevice.findObject(By.clazz("android.widget.EditText"));
+            if (accountElement != null) {
+                accountElement.click();
+                clickCount++;
+                Thread.sleep(3000);
+                break;
+            } else if (emailField != null) {
+                // Entering the email
+                emailField.setText("cpen321pixelpioneer@gmail.com");
+                clickCount++;
+                uiDevice.findObject(By.text("NEXT")).click();
+                clickCount++;
+
+                // Entering the password
+                while (true) {
+                    Thread.sleep(1000);
+                    UiObject2 passwordField = uiDevice.findObject(By.clazz("android.widget.EditText"));
+                    if (passwordField != null) {
+                        passwordField.setText("pixel321!");
+                        uiDevice.findObject(By.text("NEXT")).click();
+                        clickCount++;
+                        break;
+                    }
+                }
+
+                // Agree terms and conditions
+                clickButton("I agree");
+                clickCount++;
+                clickButton("MORE");
+                clickCount++;
+                clickButton("ACCEPT");
+                clickCount++;
+                Thread.sleep(6000);
+                break;
+            }
+        }
+
+        Thread.sleep(3000);
+
+        if (clickCount >= 10) {
+            throw new IllegalStateException("Number of clicks exceeds maximum of 10!");
+        }
+    }
 
     private void googleSignIn() throws UiObjectNotFoundException, InterruptedException {
         // Click on the "Profile" menu item in the bottom navigation bar
