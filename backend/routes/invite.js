@@ -54,12 +54,13 @@ module.exports = {
               date: eventDate,
             };
             await insertOneEvent(new_event);
-            await sendInviteNotification(
+            const notificationResult = await sendInviteNotification(
               checkReceiverEmailExists.notificationToken,
               eventDate,
               eventName,
               getSenderProfile.email
             );
+            console.log(notificationResult);
             return res.status(200).send("INVITE USER SUCCESSFUL.");
           }
         }

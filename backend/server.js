@@ -8,13 +8,6 @@ const port = 8081;
 
 const server = http.createServer(app);
 
-// Firebase
-var admin = require("firebase-admin");
-var serviceAccount = require("./fcm.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
 // FOR LOCAL TESTING, USE THIS HTTP SERVER
 server.listen(port, async () => {
   console.log(`HTTP server listening on port ${port}`);

@@ -1,5 +1,11 @@
-// Firebase Cloud Messaging
-var admin = require("firebase-admin");
+const { firebaseCloudMessagingHelper } = require("./firebase");
+
+// // Firebase
+// var admin = require("firebase-admin");
+// var serviceAccount = require("../fcm.json");
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
 
 module.exports = {
   sendInviteNotification: async (
@@ -23,10 +29,12 @@ module.exports = {
       token: registrationToken,
     };
     try {
-      const response = await admin.messaging().send(message);
+      const response = await firebaseCloudMessagingHelper(message);
       console.log("Successfully sent with response: ", response);
+      return registrationToken;
     } catch (err) {
       console.log("Something went wrong: " + err);
+      return null;
     }
   },
 };
