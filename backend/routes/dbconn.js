@@ -10,6 +10,16 @@ module.exports = {
     return true;
   },
 
+  allUserEmails: async () => {
+    const users = await client
+      .db("astronomy")
+      .collection("users")
+      .find()
+      .toArray();
+    const emails = users.map((user) => user.email);
+    return emails;
+  },
+
   checkIDExists: async (userID) => {
     return await client
       .db("astronomy")

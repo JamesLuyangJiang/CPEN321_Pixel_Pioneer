@@ -42,18 +42,18 @@ async function recommendationRequestHandler(req, res) {
 // Fetch user's preferred distance
 // from user's profile database
 async function getUserDistance(userid) {
-    await client.connect();
-    try {
-      // Fetch the current user by userid
-      const user = await client
-        .db("astronomy")
-        .collection("users")
-        .findOne({ userid });
-      // Set distance from user's data. If its null, set 1000
-      return user && user.distance ? Number(user.distance) : 1000;
-    } catch (err) {
-      console.error("Error fetching user distance:", err);
-    } finally {
+  await client.connect();
+  try {
+    // Fetch the current user by userid
+    const user = await client
+      .db("astronomy")
+      .collection("users")
+      .findOne({ userid });
+    // Set distance from user's data. If its null, set 1000
+    return user && user.distance ? Number(user.distance) : 1000;
+  } catch (err) {
+    console.error("Error fetching user distance:", err);
+  } finally {
     await client.close();
   }
 }
@@ -66,25 +66,32 @@ function generateRecommendationList(
   distance_preference,
   maximum_city_number
 ) {
-  if (!Array.isArray(nearby_observatory_list) || !nearby_observatory_list.length) {
-    throw new Error('Invalid observatory list');
+  if (
+    !Array.isArray(nearby_observatory_list) ||
+    !nearby_observatory_list.length
+  ) {
+    throw new Error("Invalid observatory list");
   }
 
   // Remove duplicates from the list based on the name
-  const uniqueObservatoryList = nearby_observatory_list
-    .reduce((acc, current) => {
-      const x = acc.find(item => item.name === current.name);
+  const uniqueObservatoryList = nearby_observatory_list.reduce(
+    (acc, current) => {
+      const x = acc.find((item) => item.name === current.name);
       if (!x) {
         return acc.concat([current]);
       } else {
         return acc;
       }
-    }, []);
+    },
+    []
+  );
 
   // Calculate minDistance and maxDistance using reduce
   const { min_distance, max_distance } = uniqueObservatoryList
-    .filter((item) =>
-      item.weatherForecast && item.weatherForecast.some((forecast) => forecast.condition_score > 3)
+    .filter(
+      (item) =>
+        item.weatherForecast &&
+        item.weatherForecast.some((forecast) => forecast.condition_score > 3)
     )
     .reduce(
       (acc, item) => {
@@ -98,11 +105,17 @@ function generateRecommendationList(
 
   // Calculate total scores and sort the recommendation list
   const recommendation_list = uniqueObservatoryList
-    .map(item => {
+    .map((item) => {
       // Choose the forecast with the highest date score
-      const bestForecast = item.weatherForecast.reduce((best, current) => {
-        return (best.condition_score * best.date_score > current.condition_score * current.date_score) ? best : current;
-      }, { condition_score: -1 });
+      const bestForecast = item.weatherForecast.reduce(
+        (best, current) => {
+          return best.condition_score * best.date_score >
+            current.condition_score * current.date_score
+            ? best
+            : current;
+        },
+        { condition_score: -1 }
+      );
 
       if (!bestForecast || bestForecast.condition_score === -1) {
         return null;
@@ -110,12 +123,16 @@ function generateRecommendationList(
 
       const item_distance = Number(item.distance);
       const weighted_distance_score =
-        (1 - (item_distance - min_distance) / (max_distance - min_distance)) * 0.3;
+        (1 - (item_distance - min_distance) / (max_distance - min_distance)) *
+        0.3;
       const weighted_condition_score = (bestForecast.condition_score * 0.5) / 9;
-      const weighted_date_score = (bestForecast.date_score * 0.2);
+      const weighted_date_score = bestForecast.date_score * 0.2;
 
       const total_score =
-        (weighted_distance_score + weighted_condition_score + weighted_date_score) * 100;
+        (weighted_distance_score +
+          weighted_condition_score +
+          weighted_date_score) *
+        100;
 
       return {
         name: item.name,
@@ -125,13 +142,16 @@ function generateRecommendationList(
         total_score: total_score.toFixed(2),
       };
     })
-    .filter(item => item !== null)
+    .filter((item) => item !== null)
     .sort((a, b) => b.total_score - a.total_score);
 
   return recommendation_list.slice(0, maximum_city_number);
 }
 
+// router.get("/:userid/:days", recommendationRequestHandler);
 
-router.get("/:userid/:days", recommendationRequestHandler);
+// module.exports = router;
 
-module.exports = router;
+module.exports = {
+  recommendationRequestHandler,
+};

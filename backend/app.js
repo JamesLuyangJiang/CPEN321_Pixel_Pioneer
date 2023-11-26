@@ -9,6 +9,8 @@ const {
 } = require("./routes/scheduling");
 const { getProfile, createProfile, updateProfile } = require("./routes/users");
 const { inviteSpecifiedUser } = require("./routes/invite");
+const { recommendationRequestHandler } = require("./routes/recommendations");
+const { searchUserEmails } = require("./routes/searchEmail");
 
 app.use(express.json());
 // app.use("/recommendations", recommendationsRoutes);
@@ -37,5 +39,11 @@ app.post("/users/create", createProfile);
 
 // Invitation Routes
 app.post("/invitation/:userid", inviteSpecifiedUser);
+
+// Recommendation Routes
+app.get("/recommendations/:userid/:days", recommendationRequestHandler);
+
+// Search Routes
+app.get("/search/allemails", searchUserEmails);
 
 module.exports = app;
