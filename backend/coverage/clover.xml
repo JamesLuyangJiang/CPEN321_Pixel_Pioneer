@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1701068342244" clover="3.2.0">
-  <project timestamp="1701068342245" name="All files">
-    <metrics statements="349" coveredstatements="191" conditionals="80" coveredconditionals="32" methods="51" coveredmethods="9" elements="480" coveredelements="232" complexity="0" loc="349" ncloc="349" packages="2" files="11" classes="11"/>
+<coverage generated="1701109148895" clover="3.2.0">
+  <project timestamp="1701109148895" name="All files">
+    <metrics statements="325" coveredstatements="183" conditionals="80" coveredconditionals="32" methods="38" coveredmethods="9" elements="443" coveredelements="224" complexity="0" loc="325" ncloc="325" packages="2" files="9" classes="9"/>
     <package name="backend">
       <metrics statements="23" coveredstatements="23" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="app.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/app.js">
@@ -35,7 +35,7 @@
       </file>
     </package>
     <package name="backend.routes">
-      <metrics statements="326" coveredstatements="168" conditionals="80" coveredconditionals="32" methods="50" coveredmethods="8"/>
+      <metrics statements="302" coveredstatements="160" conditionals="80" coveredconditionals="32" methods="37" coveredmethods="8"/>
       <file name="apimanager.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/apimanager.js">
         <metrics statements="92" coveredstatements="6" conditionals="28" coveredconditionals="0" methods="16" coveredmethods="0"/>
         <line num="1" count="5" type="stmt"/>
@@ -130,36 +130,6 @@
         <line num="252" count="0" type="stmt"/>
         <line num="254" count="0" type="stmt"/>
         <line num="257" count="5" type="stmt"/>
-      </file>
-      <file name="dbconn.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/dbconn.js">
-        <metrics statements="19" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="12" coveredmethods="0"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="60" count="0" type="stmt"/>
-        <line num="67" count="0" type="stmt"/>
-        <line num="76" count="0" type="stmt"/>
-        <line num="85" count="0" type="stmt"/>
-      </file>
-      <file name="firebase.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/firebase.js">
-        <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="2" count="4" type="stmt"/>
-        <line num="3" count="4" type="stmt"/>
-        <line num="4" count="4" type="stmt"/>
-        <line num="8" count="4" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
       </file>
       <file name="invite.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/invite.js">
         <metrics statements="35" coveredstatements="35" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
