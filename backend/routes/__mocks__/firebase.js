@@ -1,5 +1,3 @@
 module.exports = {
-  firebaseCloudMessagingHelper: jest.fn(() => {
-    return true;
-  }),
+  firebaseCloudMessagingHelper: jest.fn(),
 };
