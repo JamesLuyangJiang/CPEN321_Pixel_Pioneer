@@ -2,6 +2,8 @@ module.exports = {
   // ChatGPT usage: NO
   connectDB: jest.fn(),
 
+  allUserEmails: jest.fn(),
+
   checkIDExists: jest.fn((userID) => {
     if (userID === "3") {
       return false;

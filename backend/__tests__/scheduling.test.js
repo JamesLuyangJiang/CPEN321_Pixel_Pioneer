@@ -153,7 +153,6 @@ describe("Testing DELETE handler to delete an event for a user", () => {
       .delete(`/scheduling/${testID}/events/delete`)
       .send(req_body);
 
-    // console.log(response);
     expect(response.status).toBe(400);
     expect(response.text).toBe(
       "FAILED because this ID does not have this event in database."

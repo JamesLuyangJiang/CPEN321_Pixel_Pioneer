@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1701109148895" clover="3.2.0">
-  <project timestamp="1701109148895" name="All files">
-    <metrics statements="325" coveredstatements="183" conditionals="80" coveredconditionals="32" methods="38" coveredmethods="9" elements="443" coveredelements="224" complexity="0" loc="325" ncloc="325" packages="2" files="9" classes="9"/>
+<coverage generated="1701111979477" clover="3.2.0">
+  <project timestamp="1701111979477" name="All files">
+    <metrics statements="325" coveredstatements="194" conditionals="80" coveredconditionals="34" methods="38" coveredmethods="10" elements="443" coveredelements="238" complexity="0" loc="325" ncloc="325" packages="2" files="9" classes="9"/>
     <package name="backend">
       <metrics statements="23" coveredstatements="23" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="app.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/app.js">
         <metrics statements="21" coveredstatements="21" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-        <line num="1" count="5" type="stmt"/>
-        <line num="2" count="5" type="stmt"/>
-        <line num="4" count="5" type="stmt"/>
-        <line num="9" count="5" type="stmt"/>
-        <line num="10" count="5" type="stmt"/>
-        <line num="11" count="5" type="stmt"/>
-        <line num="12" count="5" type="stmt"/>
-        <line num="13" count="5" type="stmt"/>
-        <line num="15" count="5" type="stmt"/>
-        <line num="26" count="5" type="stmt"/>
-        <line num="27" count="5" type="stmt"/>
-        <line num="31" count="5" type="stmt"/>
-        <line num="32" count="5" type="stmt"/>
-        <line num="33" count="5" type="stmt"/>
-        <line num="36" count="5" type="stmt"/>
-        <line num="37" count="5" type="stmt"/>
-        <line num="38" count="5" type="stmt"/>
-        <line num="41" count="5" type="stmt"/>
-        <line num="44" count="5" type="stmt"/>
-        <line num="47" count="5" type="stmt"/>
-        <line num="49" count="5" type="stmt"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="2" count="6" type="stmt"/>
+        <line num="4" count="6" type="stmt"/>
+        <line num="9" count="6" type="stmt"/>
+        <line num="10" count="6" type="stmt"/>
+        <line num="11" count="6" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="13" count="6" type="stmt"/>
+        <line num="15" count="6" type="stmt"/>
+        <line num="26" count="6" type="stmt"/>
+        <line num="27" count="6" type="stmt"/>
+        <line num="31" count="6" type="stmt"/>
+        <line num="32" count="6" type="stmt"/>
+        <line num="33" count="6" type="stmt"/>
+        <line num="36" count="6" type="stmt"/>
+        <line num="37" count="6" type="stmt"/>
+        <line num="38" count="6" type="stmt"/>
+        <line num="41" count="6" type="stmt"/>
+        <line num="44" count="6" type="stmt"/>
+        <line num="47" count="6" type="stmt"/>
+        <line num="49" count="6" type="stmt"/>
       </file>
       <file name="const.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/const.js">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -35,14 +35,14 @@
       </file>
     </package>
     <package name="backend.routes">
-      <metrics statements="302" coveredstatements="160" conditionals="80" coveredconditionals="32" methods="37" coveredmethods="8"/>
+      <metrics statements="302" coveredstatements="171" conditionals="80" coveredconditionals="34" methods="37" coveredmethods="9"/>
       <file name="apimanager.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/apimanager.js">
         <metrics statements="92" coveredstatements="6" conditionals="28" coveredconditionals="0" methods="16" coveredmethods="0"/>
-        <line num="1" count="5" type="stmt"/>
-        <line num="2" count="5" type="stmt"/>
-        <line num="3" count="5" type="stmt"/>
-        <line num="4" count="5" type="stmt"/>
-        <line num="5" count="5" type="stmt"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="2" count="6" type="stmt"/>
+        <line num="3" count="6" type="stmt"/>
+        <line num="4" count="6" type="stmt"/>
+        <line num="5" count="6" type="stmt"/>
         <line num="9" count="0" type="stmt"/>
         <line num="10" count="0" type="stmt"/>
         <line num="11" count="0" type="stmt"/>
@@ -129,16 +129,16 @@
         <line num="251" count="0" type="stmt"/>
         <line num="252" count="0" type="stmt"/>
         <line num="254" count="0" type="stmt"/>
-        <line num="257" count="5" type="stmt"/>
+        <line num="257" count="6" type="stmt"/>
       </file>
       <file name="invite.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/invite.js">
         <metrics statements="35" coveredstatements="35" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
-        <line num="1" count="5" type="stmt"/>
-        <line num="8" count="5" type="stmt"/>
-        <line num="10" count="5" type="stmt"/>
-        <line num="11" count="5" type="stmt"/>
-        <line num="12" count="5" type="stmt"/>
-        <line num="14" count="5" type="stmt"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="10" count="6" type="stmt"/>
+        <line num="11" count="6" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="14" count="6" type="stmt"/>
         <line num="19" count="5" type="stmt"/>
         <line num="20" count="5" type="cond" truecount="2" falsecount="0"/>
         <line num="21" count="4" type="stmt"/>
@@ -171,8 +171,8 @@
       </file>
       <file name="notification.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/notification.js">
         <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-        <line num="1" count="5" type="stmt"/>
-        <line num="10" count="5" type="stmt"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="10" count="6" type="stmt"/>
         <line num="17" count="2" type="stmt"/>
         <line num="19" count="2" type="stmt"/>
         <line num="24" count="2" type="stmt"/>
@@ -185,12 +185,12 @@
       </file>
       <file name="recommendations.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/recommendations.js">
         <metrics statements="52" coveredstatements="7" conditionals="18" coveredconditionals="0" methods="12" coveredmethods="0"/>
-        <line num="1" count="5" type="stmt"/>
-        <line num="2" count="5" type="stmt"/>
-        <line num="3" count="5" type="stmt"/>
-        <line num="4" count="5" type="stmt"/>
-        <line num="5" count="5" type="stmt"/>
-        <line num="6" count="5" type="stmt"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="2" count="6" type="stmt"/>
+        <line num="3" count="6" type="stmt"/>
+        <line num="4" count="6" type="stmt"/>
+        <line num="5" count="6" type="stmt"/>
+        <line num="6" count="6" type="stmt"/>
         <line num="13" count="0" type="stmt"/>
         <line num="14" count="0" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
@@ -236,15 +236,15 @@
         <line num="145" count="0" type="stmt"/>
         <line num="146" count="0" type="stmt"/>
         <line num="148" count="0" type="stmt"/>
-        <line num="155" count="5" type="stmt"/>
+        <line num="155" count="6" type="stmt"/>
       </file>
       <file name="scheduling.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/scheduling.js">
         <metrics statements="48" coveredstatements="48" conditionals="14" coveredconditionals="14" methods="3" coveredmethods="3"/>
-        <line num="1" count="5" type="stmt"/>
-        <line num="2" count="5" type="stmt"/>
-        <line num="3" count="5" type="stmt"/>
-        <line num="12" count="5" type="stmt"/>
-        <line num="14" count="5" type="stmt"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="2" count="6" type="stmt"/>
+        <line num="3" count="6" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="14" count="6" type="stmt"/>
         <line num="20" count="4" type="stmt"/>
         <line num="21" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="22" count="3" type="stmt"/>
@@ -290,32 +290,32 @@
         <line num="108" count="1" type="stmt"/>
       </file>
       <file name="searchEmail.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/searchEmail.js">
-        <metrics statements="16" coveredstatements="5" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="1" count="5" type="stmt"/>
-        <line num="2" count="5" type="stmt"/>
-        <line num="3" count="5" type="stmt"/>
-        <line num="5" count="5" type="stmt"/>
-        <line num="7" count="5" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
+        <metrics statements="16" coveredstatements="16" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="2" count="6" type="stmt"/>
+        <line num="3" count="6" type="stmt"/>
+        <line num="5" count="6" type="stmt"/>
+        <line num="7" count="6" type="stmt"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="10" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
       </file>
       <file name="users.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/users.js">
         <metrics statements="48" coveredstatements="48" conditionals="12" coveredconditionals="12" methods="3" coveredmethods="3"/>
-        <line num="3" count="5" type="stmt"/>
-        <line num="11" count="5" type="stmt"/>
-        <line num="12" count="5" type="stmt"/>
-        <line num="13" count="5" type="stmt"/>
-        <line num="14" count="5" type="stmt"/>
-        <line num="16" count="5" type="stmt"/>
+        <line num="3" count="6" type="stmt"/>
+        <line num="11" count="6" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="13" count="6" type="stmt"/>
+        <line num="14" count="6" type="stmt"/>
+        <line num="16" count="6" type="stmt"/>
         <line num="22" count="4" type="stmt"/>
         <line num="23" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="24" count="3" type="stmt"/>
