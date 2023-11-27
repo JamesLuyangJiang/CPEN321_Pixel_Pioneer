@@ -19,11 +19,5 @@
   },
   "devDependencies": {
     "supertest": "^6.3.3"
-  },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "/backend/routes/dbconn.js",
-      "/backend/routes/firebase.js"
-    ]
   }
 }
