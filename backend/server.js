@@ -17,8 +17,12 @@ const server = http.createServer(app);
 https
   .createServer(
     {
-      key: fs.readFileSync("privkey.pem"),
-      cert: fs.readFileSync("cert.pem"),
+      key: fs.readFileSync(
+        "/home/azureuser/CPEN321_Pixel_Pioneer/backend/privkey.pem"
+      ),
+      cert: fs.readFileSync(
+        "/home/azureuser/CPEN321_Pixel_Pioneer/backend/cert.pem"
+      ),
     },
     app
   )
