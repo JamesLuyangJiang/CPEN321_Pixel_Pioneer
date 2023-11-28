@@ -5,9 +5,14 @@ const client = new MongoClient(uri);
 module.exports = {
   // ChatGPT usage: NO
   connectDB: async () => {
-    await client.connect();
-    console.log("Successfully connected to the database");
-    return true;
+    try {
+      await client.connect();
+      console.log("Successfully connected to the database");
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   },
 
   allUserEmails: async () => {
