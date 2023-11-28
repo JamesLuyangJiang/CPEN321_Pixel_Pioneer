@@ -1,6 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const apiManager = require("./apimanager");
+const { connectDB, checkIDExists } = require("./dbconn");
+
 const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
@@ -10,64 +10,59 @@ let days_duration = "";
 // Organize all the dependencies here
 // to return our recommendation list to the client
 async function recommendationRequestHandler(req, res) {
-  const userid = req.params.userid;
-  const days = req.params.days;
-  days_duration = days;
-  const distance = await getUserDistance(userid);
-  const maximum_city_number = 10;
-  const publicIP = req.ip.substring(7);
-
-  try {
-    // fetch organized observatory data from apimanager module
-    const nearby_observatory_list =
-      await apiManager.fetchNearbyObservatoryFromAPIs(
-        publicIP,
-        distance,
-        Number(days)
-      );
-
-    const recommendation_list = generateRecommendationList(
-      nearby_observatory_list,
-      distance,
-      maximum_city_number
-    );
-    // Process the data or send it as a response
-    res.json(recommendation_list);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Failed to generate recommendation list" });
-  }
-}
-
-// ChatGPT usage: NO
-// Fetch user's preferred distance
-// from user's profile database
-async function getUserDistance(userid) {
-    await client.connect();
+  const isConnected = await connectDB();
+  if (isConnected) {
     try {
-      // Fetch the current user by userid
-      const user = await client
-        .db("astronomy")
-        .collection("users")
-        .findOne({ userid });
-      // Set distance from user's data. If its null, set 1000
-      return user && user.distance ? Number(user.distance) : 1000;
-    } catch (err) {
-      console.error("Error fetching user distance:", err);
+      const userid = req.params.userid;
+      const days = req.params.days;
+      days_duration = days;
+      const maximum_city_number = 10;
+      const publicIP = req.ip.substring(7);
+
+      const user = await checkIDExists(userid);
+      if (!user) {
+        console.log("USER DOES NOT EXIST IN DATABASE");
+        res.status(404).send("User not found.");
+      } else {
+        const distance = user.distance;
+        console.log("DISTANCE IS: ", distance);
+        // fetch organized observatory data from apimanager module
+        const nearby_observatory_list =
+          await apiManager.fetchNearbyObservatoryFromAPIs(
+            publicIP,
+            distance,
+            Number(days)
+          );
+
+        const recommendation_list = generateRecommendationList(
+          nearby_observatory_list,
+          distance,
+          maximum_city_number
+        );
+        // Process the data or send it as a response
+        res.status(200).json(recommendation_list);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Failed to generate recommendation list" });
     } finally {
-    await client.close();
+      await client.close();
+      console.log("DATABASE CLOSED SUCCESSFULLY.");
+    }
+  } else {
+    res.status(500).send("DATABASE REFUSED TO CONNECT.");
   }
 }
 
-function getDateDiffScore(client_time, observatory_date){
-    const client_date = new Date(client_time);
-    const forecast_date = new Date(observatory_date);
-    const time_diff = Math.abs(forecast_date - client_date);
-    const days_diff = Math.ceil(time_diff / (24 * 60 * 60 * 1000));
-    let days_denominator = days_duration == "" ? 365 : Number(days_duration);
-    let date_diff_score = 1 - (days_diff / days_denominator);
-    date_diff_score = date_diff_score == 0 ? 1 : date_diff_score * 10;
-    return date_diff_score;
+function getDateDiffScore(client_time, observatory_date) {
+  const client_date = new Date(client_time);
+  const forecast_date = new Date(observatory_date);
+  const time_diff = Math.abs(forecast_date - client_date);
+  const days_diff = Math.ceil(time_diff / (24 * 60 * 60 * 1000));
+  let days_denominator = days_duration == "" ? 365 : Number(days_duration);
+  let date_diff_score = 1 - days_diff / days_denominator;
+  date_diff_score = date_diff_score == 0 ? 1 : date_diff_score * 10;
+  return date_diff_score;
 }
 
 // ChatGPT usage: Partial
@@ -78,14 +73,19 @@ function generateRecommendationList(
   distance_preference,
   maximum_city_number
 ) {
-  if (!Array.isArray(nearby_observatory_list) || !nearby_observatory_list.length) {
-    throw new Error('Invalid observatory list');
+  if (
+    !Array.isArray(nearby_observatory_list) ||
+    !nearby_observatory_list.length
+  ) {
+    throw new Error("Invalid observatory list");
   }
 
   // Calculate minDistance and maxDistance using reduce
   const { min_distance, max_distance } = nearby_observatory_list
-    .filter((item) =>
-      item.weatherForecast && item.weatherForecast.some((forecast) => forecast.condition_score > 20)
+    .filter(
+      (item) =>
+        item.weatherForecast &&
+        item.weatherForecast.some((forecast) => forecast.condition_score > 20)
     )
     .reduce(
       (acc, item) => {
@@ -99,27 +99,37 @@ function generateRecommendationList(
 
   // Calculate total scores and sort the recommendation list
   const recommendation_list = nearby_observatory_list
-    .map(item => {
-        if (!item.weatherForecast || item.weatherForecast.length === 0) {
-            return null;
-        }
+    .map((item) => {
+      if (!item.weatherForecast || item.weatherForecast.length === 0) {
+        return null;
+      }
 
-        const sortedForecasts = item.weatherForecast.sort((a, b) => {
+      const sortedForecasts = item.weatherForecast.sort((a, b) => {
         if (b.condition_score !== a.condition_score) {
           return b.condition_score - a.condition_score;
         }
-        return getDateDiffScore(b.client_time, b.date) - getDateDiffScore(a.client_time, a.date);
+        return (
+          getDateDiffScore(b.client_time, b.date) -
+          getDateDiffScore(a.client_time, a.date)
+        );
       });
 
       const bestForecast = sortedForecasts[0];
       const item_distance = Number(item.distance);
       const weighted_distance_score =
-        (1 - (item_distance - min_distance) / (max_distance - min_distance)) * 0.3;
-      const weighted_condition_score = (bestForecast.condition_score * 0.6) / 100;
-      const weighted_date_score = getDateDiffScore(bestForecast.client_time, bestForecast.date) * 0.1 / 10;
+        (1 - (item_distance - min_distance) / (max_distance - min_distance)) *
+        0.3;
+      const weighted_condition_score =
+        (bestForecast.condition_score * 0.6) / 100;
+      const weighted_date_score =
+        (getDateDiffScore(bestForecast.client_time, bestForecast.date) * 0.1) /
+        10;
 
       const total_score =
-        (weighted_distance_score + weighted_condition_score + weighted_date_score) * 100;
+        (weighted_distance_score +
+          weighted_condition_score +
+          weighted_date_score) *
+        100;
 
       return {
         name: item.name,
@@ -134,4 +144,4 @@ function generateRecommendationList(
   return recommendation_list.slice(0, maximum_city_number);
 }
 
-module.exports = {recommendationRequestHandler};
+module.exports = { recommendationRequestHandler };
