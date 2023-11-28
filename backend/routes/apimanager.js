@@ -2,13 +2,13 @@ const axios = require("axios");
 const fs = require("fs").promises; // Use promises interface for fs
 let observatories_cache = {};
 let client_time = "";
-let days_duration = "";
+
 // ChatGPT usage: Partial
 // Consulated ChatGPT on how to asynchronously read the contents of the file
 async function getApiKey() {
   try {
     const data = await fs.readFile("/home/azureuser/CPEN321_Pixel_Pioneer/backend/confidential_weather_api_key.txt", { encoding: "utf-8" });
-    return data.trim(); // Trim to remove any possible newline characters
+    return data.trim();
   } catch (err) {
     console.error("Error reading API key file:", err);
     throw err; // Rethrow to handle error outside
@@ -54,12 +54,11 @@ function getClientTime(client_timezone) {
 // And how to call external API to convert IP to
 // Longitude and latitude info
 async function fetchNearbyObservatoryFromAPIs(publicIP, radius, days) {
-  const client_ip = publicIP;
+  const client_ip = publicIP
   const cacheKey = `${publicIP}_${radius}_${days}`;
   if (observatories_cache[cacheKey] && !isObservatoriesCacheExpired(observatories_cache[cacheKey])) {
       return observatories_cache[cacheKey].data;
   }
-  days_duration = days;
   try {
     const CONFIDENTIAL_WEATHER_API_KEY = await getApiKey();
     const response = await axios.get(`https://ipinfo.io/${client_ip}/json`); // api to get geolocation of the client based on their ip,
@@ -82,7 +81,7 @@ async function fetchNearbyObservatoryFromAPIs(publicIP, radius, days) {
     };
     return observatoriesWithConditionInfo;
   } catch (error) {
-    console.error("Error processing fetchNearbyObservatoryFromAPIs:", error);
+    console.log("Error processing fetchNearbyObservatoryFromAPIs:", error);
     return { error: "Failed to process fetchNearbyObservatoryFromAPIs" };
   }
 }
@@ -117,17 +116,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return distance;
 }
 
-function getDateDiffScore(client_time, observatory_date){
-    const client_date = new Date(client_time);
-    const forecast_date = new Date(observatory_date);
-    const time_diff = Math.abs(client_date - forecast_date);
-    const days_diff = Math.ceil(time_diff / (24 * 60 * 60 * 1000));
-    let days_denominator = days_duration == "" ? 365 : Number(days_duration);
-    let date_diff_score = 1 - (days_diff / days_denominator);
-    date_diff_score = date_diff_score == 0 ? 1 : date_diff_score * 9;
-    return date_diff_score;
-}
-
 // ChatGPT usage: NO
 function markWeatherForecast(weatherForecast) {
   const filteredForecast = [];
@@ -135,59 +123,39 @@ function markWeatherForecast(weatherForecast) {
   for (const forecast of weatherForecast) {
     const date = forecast.date;
 
-    let condition_score = 3;
+    let condition_score = 20;
 
-//    if (forecast.hour[0].condition.text == "Clear") {
-//      condition_score *= 3;
-//    } else if (forecast.hour[0].condition.text == "Patchy rain possible" || ) {
-//
-//    }
-//    } else if (forecast.hour[0].condition.text == "Partly cloudy") {
-//      condition_score *= 2;
-//    }
     switch (forecast.hour[0].condition.text) {
         case "Clear":
-            condition_score = 9;
+            condition_score = 100;
+            break;
+        case "Partly cloudy":
+            condition_score = 85;
+            break;
+        case "Mist":
+            condition_score = 70;
+            break;
         case "Patchy rain possible":
+        case "Thundery outbreaks possible":
+            condition_score = 60;
+            break;
+        case "Overcast":
+        case "Fog":
+            condition_score = 45;
+            break;
         case "Patchy snow possible":
         case "Patchy sleet possible":
         case "Patchy freezing drizzle possible":
-        case "Thundery outbreaks possible":
-            condition_score = 8;
-        case "Partly cloudy":
-            condition_score = 7;
-        case "Overcast":
-        case "Mist":
-        case "Fog":
-            condition_score = 6;
+            condition_score = 30;
+            break;
         default:
             break;
     }
 
-//    switch (forecast.hour.air_quality) {
-//      case 7.0:
-//      case 8.0:
-//      case 9.0:
-//      case 10.0:
-//        condition_score /= 3;
-//        break;
-//      case 3.0:
-//      case 4.0:
-//      case 5.0:
-//      case 6.0:
-//        condition_score -= 2;
-//        break;
-//      default:
-//        break;
-//    }
-    const date_diff_score = getDateDiffScore(client_time, date);
-    // In this case, the date_score will contain 18% of condition_score overall.
-    const date_score = (condition_score * 0.7 + date_diff_score * 0.3) / 18;
     filteredForecast.push({
       date,
       condition_score,
-      date_score,
-      client_time: client_time,
+      client_time,
       condition: forecast.hour[0].condition.text,
     });
   }
@@ -214,8 +182,9 @@ async function fetchNearbyObservatoriesList(lat, lon, radius) {
                             current_object.longitude
                         ),
                     }))
-                    .sort((a, b) => a.distance - b.distance) // This now correctly utilizes the comparator function
-                    .slice(0, 20) // only getting the closest 100 places since the next API call will take a long time
+                    .sort((a, b) => a.distance - b.distance)
+                    .filter((_, index) => index % 4 === 0 && index < 80);
+        console.log("items.length: ", items.length);
     } catch (error) {
           console.error("Error in fetchNearbyObservatoriesList:", error);
           return { error: "Error in fetchNearbyObservatoriesList: " + error };
