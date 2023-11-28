@@ -29,16 +29,14 @@ describe("test search all active users' emails in database", () => {
   test("Database connection for GET", async () => {
     const response = await request(app).get("/search/allemails");
 
-    console.log(response);
-
     expect(response.status).toBe(400);
     expect(response.text).toBe("Database not connected");
   });
 
   test("User collection return error", async () => {
     const response = await request(app).get("/search/allemails");
+    
     expect(response.status).toBe(400);
-    console.log(response.error);
     expect(response.error.message).toBe("cannot GET /search/allemails (400)");
   });
 
