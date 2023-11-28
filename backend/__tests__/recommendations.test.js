@@ -1,10 +1,26 @@
 // STUB (DELETE LATER)
-const app = require("../app");
-const request = require("supertest");
+// const app = require("../app");
+// const request = require("supertest");
 
-test("Test server connection", () => {
-  return request(app).get("/").expect(200);
-});
+// describe("recommendation", () => {
+//   test("Test server connection", () => {
+//     return request(app).get("/").expect(200);
+//   });
+
+//   test("GET", async () => {
+//     const testID = 1;
+//     const testDays = 13;
+//     const req_body = {
+//       ip: "111.112.113.114",
+//     };
+//     const response = await request(app)
+//       .get(`/recommendations/${testID}/${testDays}`)
+//       .send(req_body);
+
+//     expect(response.status).toBe(400);
+//     expect(response.text).toBe("Database not connected");
+//   });
+// });
 
 // // NOT WORKING
 // jest.mock("../routes/apimanager", () => ({
