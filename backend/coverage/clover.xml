@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1701127299841" clover="3.2.0">
-  <project timestamp="1701127299841" name="All files">
-    <metrics statements="349" coveredstatements="202" conditionals="80" coveredconditionals="34" methods="51" coveredmethods="10" elements="480" coveredelements="246" complexity="0" loc="349" ncloc="349" packages="2" files="11" classes="11"/>
+<coverage generated="1701157554885" clover="3.2.0">
+  <project timestamp="1701157554886" name="All files">
+    <metrics statements="352" coveredstatements="234" conditionals="80" coveredconditionals="40" methods="51" coveredmethods="15" elements="483" coveredelements="289" complexity="0" loc="352" ncloc="352" packages="2" files="11" classes="11"/>
     <package name="backend">
-      <metrics statements="23" coveredstatements="23" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <metrics statements="22" coveredstatements="22" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="app.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/app.js">
-        <metrics statements="21" coveredstatements="21" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="6" type="stmt"/>
         <line num="2" count="6" type="stmt"/>
-        <line num="4" count="6" type="stmt"/>
+        <line num="8" count="6" type="stmt"/>
         <line num="9" count="6" type="stmt"/>
         <line num="10" count="6" type="stmt"/>
         <line num="11" count="6" type="stmt"/>
         <line num="12" count="6" type="stmt"/>
-        <line num="13" count="6" type="stmt"/>
-        <line num="15" count="6" type="stmt"/>
+        <line num="14" count="6" type="stmt"/>
+        <line num="25" count="6" type="stmt"/>
         <line num="26" count="6" type="stmt"/>
-        <line num="27" count="6" type="stmt"/>
+        <line num="30" count="6" type="stmt"/>
         <line num="31" count="6" type="stmt"/>
         <line num="32" count="6" type="stmt"/>
-        <line num="33" count="6" type="stmt"/>
+        <line num="35" count="6" type="stmt"/>
         <line num="36" count="6" type="stmt"/>
         <line num="37" count="6" type="stmt"/>
-        <line num="38" count="6" type="stmt"/>
-        <line num="41" count="6" type="stmt"/>
-        <line num="44" count="6" type="stmt"/>
-        <line num="47" count="6" type="stmt"/>
-        <line num="49" count="6" type="stmt"/>
+        <line num="40" count="6" type="stmt"/>
+        <line num="43" count="6" type="stmt"/>
+        <line num="46" count="6" type="stmt"/>
+        <line num="48" count="6" type="stmt"/>
       </file>
       <file name="const.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/const.js">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -35,19 +34,19 @@
       </file>
     </package>
     <package name="backend.routes">
-      <metrics statements="326" coveredstatements="179" conditionals="80" coveredconditionals="34" methods="50" coveredmethods="9"/>
+      <metrics statements="330" coveredstatements="212" conditionals="80" coveredconditionals="40" methods="50" coveredmethods="14"/>
       <file name="apimanager.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/apimanager.js">
-        <metrics statements="92" coveredstatements="6" conditionals="28" coveredconditionals="0" methods="16" coveredmethods="0"/>
+        <metrics statements="92" coveredstatements="18" conditionals="28" coveredconditionals="2" methods="16" coveredmethods="2"/>
         <line num="1" count="6" type="stmt"/>
         <line num="2" count="6" type="stmt"/>
         <line num="3" count="6" type="stmt"/>
         <line num="4" count="6" type="stmt"/>
         <line num="5" count="6" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
         <line num="11" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
         <line num="23" count="0" type="stmt"/>
         <line num="24" count="0" type="stmt"/>
         <line num="29" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -59,13 +58,13 @@
         <line num="46" count="0" type="cond" truecount="0" falsecount="5"/>
         <line num="47" count="0" type="stmt"/>
         <line num="49" count="0" type="stmt"/>
-        <line num="57" count="0" type="stmt"/>
-        <line num="58" count="0" type="stmt"/>
-        <line num="59" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="59" count="1" type="cond" truecount="2" falsecount="2"/>
         <line num="60" count="0" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
-        <line num="63" count="0" type="stmt"/>
-        <line num="64" count="0" type="stmt"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="64" count="1" type="stmt"/>
         <line num="65" count="0" type="stmt"/>
         <line num="66" count="0" type="stmt"/>
         <line num="67" count="0" type="stmt"/>
@@ -75,8 +74,8 @@
         <line num="77" count="0" type="stmt"/>
         <line num="79" count="0" type="stmt"/>
         <line num="83" count="0" type="stmt"/>
-        <line num="85" count="0" type="stmt"/>
-        <line num="86" count="0" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="86" count="1" type="stmt"/>
         <line num="93" count="0" type="stmt"/>
         <line num="96" count="0" type="stmt"/>
         <line num="97" count="0" type="stmt"/>
@@ -214,59 +213,63 @@
         <line num="37" count="1" type="stmt"/>
       </file>
       <file name="recommendations.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/recommendations.js">
-        <metrics statements="52" coveredstatements="7" conditionals="18" coveredconditionals="0" methods="12" coveredmethods="0"/>
+        <metrics statements="56" coveredstatements="28" conditionals="18" coveredconditionals="4" methods="12" coveredmethods="3"/>
         <line num="1" count="6" type="stmt"/>
         <line num="2" count="6" type="stmt"/>
         <line num="3" count="6" type="stmt"/>
         <line num="4" count="6" type="stmt"/>
         <line num="5" count="6" type="stmt"/>
         <line num="6" count="6" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="37" count="0" type="stmt"/>
-        <line num="45" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="53" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="55" count="0" type="stmt"/>
-        <line num="57" count="0" type="stmt"/>
-        <line num="69" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="73" count="0" type="stmt"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="79" count="0" type="stmt"/>
-        <line num="80" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="81" count="0" type="stmt"/>
-        <line num="83" count="0" type="stmt"/>
-        <line num="90" count="0" type="stmt"/>
-        <line num="93" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="94" count="0" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="58" count="1" type="cond" truecount="2" falsecount="2"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="74" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="85" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="95" count="0" type="stmt"/>
+        <line num="98" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="99" count="0" type="stmt"/>
-        <line num="100" count="0" type="stmt"/>
-        <line num="101" count="0" type="stmt"/>
-        <line num="107" count="0" type="stmt"/>
-        <line num="110" count="0" type="stmt"/>
-        <line num="112" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="120" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="121" count="0" type="stmt"/>
-        <line num="124" count="0" type="stmt"/>
+        <line num="103" count="0" type="stmt"/>
+        <line num="104" count="0" type="stmt"/>
+        <line num="105" count="0" type="stmt"/>
+        <line num="106" count="0" type="stmt"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="117" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="125" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="126" count="0" type="stmt"/>
-        <line num="128" count="0" type="stmt"/>
         <line num="129" count="0" type="stmt"/>
-        <line num="132" count="0" type="stmt"/>
+        <line num="131" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
         <line num="137" count="0" type="stmt"/>
-        <line num="145" count="0" type="stmt"/>
-        <line num="146" count="0" type="stmt"/>
-        <line num="148" count="0" type="stmt"/>
-        <line num="155" count="6" type="stmt"/>
+        <line num="142" count="0" type="stmt"/>
+        <line num="150" count="0" type="stmt"/>
+        <line num="151" count="0" type="stmt"/>
+        <line num="153" count="0" type="stmt"/>
+        <line num="160" count="6" type="stmt"/>
       </file>
       <file name="scheduling.js" path="/Users/jiayuhuang/Desktop/CPEN321_Pixel_Pioneer/backend/routes/scheduling.js">
         <metrics statements="48" coveredstatements="48" conditionals="14" coveredconditionals="14" methods="3" coveredmethods="3"/>
