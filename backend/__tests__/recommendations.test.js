@@ -1,8 +1,14 @@
 // STUB (DELETE LATER)
+// jest.mock("../routes/dbconn");
+
 // const app = require("../app");
 // const request = require("supertest");
 
+// const {connectDB} = require("../routes/dbconn")
+
 // describe("recommendation", () => {
+//   connectDB.mockReturnValueOnce(true);
+
 //   test("Test server connection", () => {
 //     return request(app).get("/").expect(200);
 //   });
@@ -11,14 +17,20 @@
 //     const testID = 1;
 //     const testDays = 13;
 //     const req_body = {
-//       ip: "111.112.113.114",
-//     };
+//       mockTesting: true,
+//       ip: "207.216.11.9",
+//     }
+//     // const req_body = {
+//     //   ip: "111.112.113.114",
+//     // };
 //     const response = await request(app)
 //       .get(`/recommendations/${testID}/${testDays}`)
 //       .send(req_body);
 
-//     expect(response.status).toBe(400);
-//     expect(response.text).toBe("Database not connected");
+//     // console.log(response);
+
+//     // expect(response.status).toBe(400);
+//     // expect(response.text).toBe("Database not connected");
 //   });
 // });
 
