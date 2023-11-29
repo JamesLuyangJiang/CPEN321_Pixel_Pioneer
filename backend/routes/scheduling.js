@@ -48,28 +48,35 @@ module.exports = {
     const isConnected = await connectDB();
     if (isConnected) {
       try {
+        console.log("PRINTING REQ BODY");
+        console.log(req.body.name, req.body.date);
         const { id } = req.params;
         const userProfile = await checkIDExists(id);
         if (!userProfile) {
-          res.status(400).send("FAILED because ID does not exist in database.");
+          res.status(404).send("FAILED because ID does not exist in database.");
         } else {
-          var event_obj = {
-            userid: id,
-            name: req.body.name,
-            date: req.body.date,
-            notificationToken: req.body.notificationToken,
-          };
-          await insertOneEvent(event_obj);
-          res.status(200).send("Event added successfully\n");
+          if (!req.body.name || !req.body.date) {
+            res.status(400).send("BAD REQUEST! FAILED because either the event name or event date is empty.")
+          } else {
+            var event_obj = {
+              userid: id,
+              name: req.body.name,
+              date: req.body.date,
+              notificationToken: req.body.notificationToken,
+            };
+            console.log(event_obj);
+            await insertOneEvent(event_obj);
+            res.status(200).send("Event added successfully\n");
+          }
         }
       } catch (err) {
-        res.status(400).send(err);
+        res.status(500).send(err);
       } finally {
         await client.close();
         console.log("Database connection closed");
       }
     } else {
-      res.status(400).send("Database not connected");
+      res.status(500).send("Database not connected");
     }
   },
 
