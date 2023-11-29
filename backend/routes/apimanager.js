@@ -184,7 +184,7 @@ async function fetchNearbyObservatoriesList(lat, lon, radius) {
                     }))
                     .sort((a, b) => a.distance - b.distance)
                     .filter((_, index) => index % 4 === 0 && index < 80);
-        console.log("items.length: ", items.length);
+//        console.log("items.length: ", items.length);
     } catch (error) {
           console.error("Error in fetchNearbyObservatoriesList:", error);
           return { error: "Error in fetchNearbyObservatoriesList: " + error };
@@ -208,8 +208,6 @@ async function fetchObservatoriesWithConditionInfo(
         const weather_data =
           weather_forecast_response.data.forecast.forecastday;
         item.weatherForecast = markWeatherForecast(weather_data);
-        console.log("weather_data: ", weather_data);
-        console.log("item.weatherForecast.result: ", item.weatherForecast);
       })
       .catch((err) => {
         console.error("Call weather API failed...", err);
