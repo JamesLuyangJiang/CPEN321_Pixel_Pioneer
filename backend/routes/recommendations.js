@@ -23,11 +23,11 @@ async function recommendationRequestHandler(req, res) {
       }
       const user = await checkIDExists(userid);
       if (!user) {
-        console.log("USER DOES NOT EXIST IN DATABASE");
+        // console.log("USER DOES NOT EXIST IN DATABASE");
         res.status(404).send("User not found.");
       } else {
         const distance = user.distance;
-        console.log("DISTANCE IS: ", distance);
+        // console.log("DISTANCE IS: ", distance);
         // fetch organized observatory data from apimanager module
         const nearby_observatory_list =
           await apiManager.fetchNearbyObservatoryFromAPIs(
@@ -45,11 +45,11 @@ async function recommendationRequestHandler(req, res) {
         res.status(200).json(recommendation_list);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       res.status(500).json({ error: "Failed to generate recommendation list" });
     } finally {
       await client.close();
-      console.log("DATABASE CLOSED SUCCESSFULLY.");
+      // console.log("DATABASE CLOSED SUCCESSFULLY.");
     }
   } else {
     res.status(500).send("DATABASE REFUSED TO CONNECT.");
