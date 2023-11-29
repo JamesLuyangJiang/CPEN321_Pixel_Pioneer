@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.example.m4_mvp.ProfileViewModel;
@@ -86,6 +88,9 @@ public class ResultsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_results, container, false);
         RecyclerView recyclerView = root.findViewById(R.id.recRecyclerView);
+
+        Animation fadeInFromBottomAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fragment_fade_in);
+        root.startAnimation(fadeInFromBottomAnimation);
 
         String recButtonText = "Select";
         View.OnClickListener recButtonListener = new View.OnClickListener() {

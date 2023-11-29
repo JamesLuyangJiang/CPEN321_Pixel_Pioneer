@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
@@ -44,10 +46,6 @@ public class RecommendFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-
-        if (profileViewModel.getuid() == null) {
-            Toast.makeText(requireActivity(), "Please sign in on profile page!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     // ChatGPT usage: Partial
@@ -58,6 +56,9 @@ public class RecommendFragment extends Fragment {
         // Get the data binding and view
         binding = FragmentRecommendBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fragment_fade_in);
+        root.startAnimation(fadeInAnimation);
 
         // Set up date picker
         datePicker = binding.datePicker;

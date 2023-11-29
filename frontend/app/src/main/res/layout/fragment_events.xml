@@ -32,7 +32,7 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="292dp"
+        android:layout_marginTop="276dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -43,12 +43,13 @@
         android:id="@+id/noEventsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:text="@string/noEventsTitle"
         android:textSize="10pt"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/eventsRecyclerView" />
+        app:layout_constraintTop_toTopOf="@+id/eventsRecyclerView"
+        app:layout_constraintVertical_bias="0.441" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
