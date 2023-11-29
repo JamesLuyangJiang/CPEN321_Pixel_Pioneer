@@ -2,11 +2,15 @@ jest.mock("../routes/dbconn");
 
 const app = require("../app");
 const request = require("supertest");
+const timeout = require('connect-timeout');
 
 const { connectDB } = require("../routes/dbconn");
 const { recommendationRequestHandler } = require("../routes/recommendations");
+
 describe('recommendationRequestHandler', () => {
   connectDB
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(true)
@@ -36,8 +40,6 @@ describe('recommendationRequestHandler', () => {
     const userid = '6';
     const days = '10';
     const testIP = "207.216.11.9";
-    const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
-    console.log("timezone in test: ", timezone)
     const req_body = {
         mockTesting: true,
         params: { userid, days },
@@ -51,6 +53,23 @@ describe('recommendationRequestHandler', () => {
     expect(response.text).toContain("date");
     expect(response.text).toContain("condition");
  });
+
+ test('should return the same recommendation list within an hour', async () => {
+      const userid = '6';
+      const days = '10';
+      const testIP = "207.216.11.9";
+      const req_body = {
+          mockTesting: true,
+          params: { userid, days },
+          ip: testIP,
+          };
+      const responseFormer = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+      expect(responseFormer.status).toBe(200);
+      app.use(timeout('120s')); //set waiting time for 120s
+      const responseLatter = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+      expect(responseLatter.status).toBe(200);
+      expect(responseLatter.text).toEqual(responseFormer.text);
+   });
 
  test('should fail since fetchNearbyObservatoryFromAPIs cannot work as expected', async () => {
       const userid = '6';
@@ -70,7 +89,6 @@ describe('recommendationRequestHandler', () => {
      const userid = '8';
      const days = '0';
      const testIP = "207.216.11.9";
-     const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
      const req_body = {
          mockTesting: true,
          params: { userid, days },
@@ -85,7 +103,6 @@ describe('recommendationRequestHandler', () => {
        const userid = '3';
        const days = '10';
        const testIP = "207.216.11.9";
-       const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
        const req_body = {
            mockTesting: true,
            params: { userid, days },
@@ -100,7 +117,6 @@ describe('recommendationRequestHandler', () => {
            const userid = '6';
            const days = '10';
            const testIP = "207.216.11.9";
-           const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
            const req_body = {
                mockTesting: true,
                params: { userid, days },
