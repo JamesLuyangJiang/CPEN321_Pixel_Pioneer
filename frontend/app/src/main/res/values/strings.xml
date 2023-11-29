@@ -31,9 +31,11 @@
     <string name="distanceRange">(50 KM \u2264 input \u2264 1000 KM, default = 1000)</string>
     <string name="defaultDistance">1000</string>
     <string name="updateProfileText">Update</string>
+    <string name="signOutText">Sign Out</string>
 
     <!--Events Fragment-->
     <string name="events_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/scheduling</string>
     <string name="noEventsTitle">No future events.</string>
     <string name="invite_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/invitation</string>
+    <string name="search_user_url">https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/search/allemails</string>
 </resources>

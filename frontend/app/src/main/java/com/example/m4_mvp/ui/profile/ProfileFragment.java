@@ -6,11 +6,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +23,7 @@ import android.widget.Toast;
 import com.example.m4_mvp.ProfileViewModel;
 import com.example.m4_mvp.R;
 import com.example.m4_mvp.databinding.FragmentProfileBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,6 +38,7 @@ public class ProfileFragment extends Fragment {
     final static String TAG = "ProfileFragment";
 
     private ProfileViewModel profileViewModel;
+    private NavController navController;
 
     private View profileView;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -53,8 +60,14 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
         profileView = root;
 
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fragment_fade_in);
+        root.startAnimation(fadeInAnimation);
+
         EditText maxDistance =  root.findViewById(R.id.maxDistInput);
         maxDistance.setText(String.valueOf(profileViewModel.getMaxDistance()));
+
+        Button signOutButton = root.findViewById(R.id.sign_out_button);
+        signOutButton.setOnClickListener(v -> signOut());
 
         // Inflate the layout for this fragment
         return root;
@@ -144,5 +157,22 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    // ChatGPT usage: Yes
+    private void signOut() {
+        GoogleSignInClient mGoogleSignInClient = profileViewModel.getmGoogleSignInClient();
+
+        if (mGoogleSignInClient != null) {
+            // Sign out from Google
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(requireActivity(), task -> {
+                        profileViewModel.removeGoogleAccount();
+                        profileViewModel.removeuid();
+                        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+                        navController.navigate(R.id.signin_fragment);
+                        Log.d(TAG, "signOut: ");
+                    });
+        }
     }
 }
