@@ -24,13 +24,13 @@ module.exports = {
         const userProfile = checkIDExists(id);
         let responseObj;
         if (!userProfile) {
-          res.status(400).send("FAILED because ID does not exist in database.");
+          res.status(404).send("FAILED because ID does not exist in database.");
         } else {
           responseObj = await findAllEvents(id);
           res.status(200).send(responseObj);
         }
       } catch (err) {
-        res.status(400).send(err);
+        res.status(500).send(err);
       } finally {
         await client.close();
         console.log("Database connection closed");
@@ -91,14 +91,13 @@ module.exports = {
         const { id } = req.params;
         const userProfile = await checkIDExists(id);
         if (!userProfile) {
-          res.status(400).send("FAILED because ID does not exist in database.");
+          res.status(404).send("FAILED because ID does not exist in database.");
         } else {
           const checkEventExists = await findOneEvent(id, req.body.name);
           if (!checkEventExists) {
-            res
-              .status(400)
+            res.status(404)
               .send(
-                "FAILED because this ID does not have this event in database."
+                "FAILED because this event does not have this event in database."
               );
           } else {
             await findOneAndDeleteOneEvent(id, req.body.name);
@@ -106,13 +105,13 @@ module.exports = {
           }
         }
       } catch (err) {
-        res.status(400).send(err);
+        res.status(500).send(err);
       } finally {
         await client.close();
         console.log("Database connection closed");
       }
     } else {
-      res.status(400).send("Database not connected");
+      res.status(500).send("Database not connected");
     }
   },
 };
