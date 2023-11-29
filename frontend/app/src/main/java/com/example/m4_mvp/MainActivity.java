@@ -99,10 +99,28 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_recommend:
-                        navController.navigate(R.id.recommend_fragment);
+                        if (profileViewModel.getGoogleAccount() == null) {
+                            // Sign in page
+                            navController.navigate(R.id.signin_fragment);
+                            navView.post(() -> {
+                                navView.setSelectedItemId(R.id.navigation_profile);
+                                Toast.makeText(getApplicationContext(), "Please sign in!", Toast.LENGTH_SHORT).show();
+                            });
+                        } else {
+                            navController.navigate(R.id.recommend_fragment);
+                        }
                         return true;
                     case R.id.navigation_events:
-                        navController.navigate(R.id.events_fragment);
+                        if (profileViewModel.getGoogleAccount() == null) {
+                            // Sign in page
+                            navController.navigate(R.id.signin_fragment);
+                            navView.post(() -> {
+                                navView.setSelectedItemId(R.id.navigation_profile);
+                                Toast.makeText(getApplicationContext(), "Please sign in!", Toast.LENGTH_SHORT).show();
+                            });
+                        } else {
+                            navController.navigate(R.id.events_fragment);
+                        }
                         return true;
                     case R.id.navigation_profile:
                         if (profileViewModel.getGoogleAccount() == null) {
