@@ -27,6 +27,7 @@ module.exports = {
       return [
         { userid: userID, name: "Kitslano Beach", date: "2023-11-28" },
         { userid: userID, name: "UBC", date: "2023-12-01" },
+        { userid: userID, name: "Random Event Name", date: "2029-10-10" },
       ];
     } else if (userID === "4") {
       return [{ userid: userID, name: "Kitslano Beach", date: "2023-11-28" }];
