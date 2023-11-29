@@ -62,8 +62,7 @@ function getDateDiffScore(client_time, observatory_date) {
   const forecast_date = new Date(observatory_date);
   const time_diff = Math.abs(forecast_date - client_date);
   const days_diff = Math.ceil(time_diff / (24 * 60 * 60 * 1000));
-  let date_diff_score = 1 - days_diff / Number(days_duration);
-  date_diff_score = date_diff_score * 10;
+  let date_diff_score = (1 - days_diff / Number(days_duration)) * 10;
   return date_diff_score;
 }
 
@@ -102,7 +101,7 @@ function generateRecommendationList(
   // Calculate total scores and sort the recommendation list
   const recommendation_list = nearby_observatory_list
     .map((item) => {
-      const sortedForecasts = item.weatherForecast.sort((a, b) => {
+      const sorted_forecasts = item.weatherForecast.sort((a, b) => {
         if (b.condition_score !== a.condition_score) {
           return b.condition_score - a.condition_score;
         }
@@ -112,15 +111,15 @@ function generateRecommendationList(
         );
       });
 
-      const bestForecast = sortedForecasts[0];
+      const best_forecast = sorted_forecasts[0];
       const item_distance = Number(item.distance);
       const weighted_distance_score =
         (1 - (item_distance - min_distance) / (max_distance - min_distance)) *
         0.3;
       const weighted_condition_score =
-        (bestForecast.condition_score * 0.6) / 100;
+        (best_forecast.condition_score * 0.6) / 100;
       const weighted_date_score =
-        (getDateDiffScore(bestForecast.client_time, bestForecast.date) * 0.1) /
+        (getDateDiffScore(best_forecast.client_time, best_forecast.date) * 0.1) /
         10;
 
       const total_score =
@@ -132,8 +131,8 @@ function generateRecommendationList(
       return {
         name: item.name,
         distance: item_distance.toFixed(2),
-        date: bestForecast.date,
-        condition: bestForecast.condition,
+        date: best_forecast.date,
+        condition: best_forecast.condition,
         total_score: total_score.toFixed(2),
       };
     })
