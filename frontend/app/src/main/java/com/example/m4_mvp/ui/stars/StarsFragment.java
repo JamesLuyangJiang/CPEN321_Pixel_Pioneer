@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -33,9 +35,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.concurrent.Future;
 
 public class StarsFragment extends Fragment {
     final static String TAG = "StarsFragment";
+
+    public double diff = 0;
+
+    public double offsetOfX = 0;
+    public double offsetOfY = 0;
+
     private FragmentStarsBinding binding;
 
     private ExecutorService executorService;
@@ -54,6 +63,10 @@ public class StarsFragment extends Fragment {
     private int SKYMAP_WIDTH = 2587;
     private int SKYMAP_HEIGHT = 1284;
     private String response;
+    private Future<String> networkTaskResult;
+
+    private StarsLocationListener locationListener;
+    private LocationManager locationManager;
 
     private ImageView starImage;
 
@@ -63,11 +76,14 @@ public class StarsFragment extends Fragment {
         binding = FragmentStarsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fragment_fade_in);
+        root.startAnimation(fadeInAnimation);
+
         starImage = root.findViewById(R.id.imageView);
 
         //    private static final int PERMISSIONS_REQUEST_CODE = 100;
-        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        StarsLocationListener locationListener = new StarsLocationListener();
+        locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new StarsLocationListener();
 
         if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 225);
@@ -81,6 +97,9 @@ public class StarsFragment extends Fragment {
 
     // ChatGPT usage: No
     void buildSkyMap(Bitmap canvas, Bitmap skymapRaw, double curDegree, double rightAscentionOffset, double locationLat, double timeOffset) {
+
+        int updateDiffFlag = 1;
+
         for (int i = 0; i < CANVAS_WIDTH; i++) {
             for (int j = 0; j < CANVAS_HEIGHT; j++) {
 
@@ -105,8 +124,23 @@ public class StarsFragment extends Fragment {
                 phi = Math.PI * r / 2.0;
 
                 double[] offsetArr = calculateOffset(curDegree, rightAscentionOffset, locationLat, timeOffset);
+
                 double offsetX = offsetArr[0];
                 double offsetY = offsetArr[1];
+
+                if((updateDiffFlag == 1) && (offsetOfX != 0) && (offsetOfY != 0)){
+
+                    Log.d("DIFF", String.valueOf(diff));
+
+                    double diffRaw = Math.abs(offsetX - offsetOfX) + Math.abs(offsetY - offsetOfY);
+                    diff = diffRaw / (2*Math.PI) * 86400;
+
+
+                    updateDiffFlag = 0;
+                }
+
+                offsetOfX = offsetX;
+                offsetOfY = offsetY;
 
                 double[] rotationArr = rotationY(theta, phi, offsetX, offsetY);
 
@@ -117,6 +151,10 @@ public class StarsFragment extends Fragment {
                 canvas.setPixel(i, j, color);
             }
         }
+    }
+
+    public double getDiff(){
+        return diff;
     }
 
     // ChatGPT usage: No
@@ -296,7 +334,7 @@ public class StarsFragment extends Fragment {
             executorService = Executors.newSingleThreadExecutor();
 
             // Execute the network request in a background thread
-            executorService.submit(() -> {
+            networkTaskResult = executorService.submit(() -> {
                 response = makeHttpGetRequest(currentDate, locationLat, locationLong);
                 return response;
             });
@@ -315,10 +353,10 @@ public class StarsFragment extends Fragment {
 
             image = starImage;
 
-            skymapRaw = BitmapFactory.decodeResource(getResources(), R.drawable.starc);
+            skymapRaw = BitmapFactory.decodeResource(requireActivity().getResources(), R.drawable.starc);
             skymapRaw = skymapRaw.copy(Bitmap.Config.ARGB_8888, true);
 
-            canvas = BitmapFactory.decodeResource(getResources(), R.drawable.canvas1024);
+            canvas = BitmapFactory.decodeResource(requireActivity().getResources(), R.drawable.canvas1024);
             canvas = canvas.copy(Bitmap.Config.ARGB_8888, true);
 
             CANVAS_WIDTH = canvas.getWidth();
@@ -347,11 +385,24 @@ public class StarsFragment extends Fragment {
 
     // ChatGPT usage: Yes
     @Override
+    public void onDetach() {
+        // Unregister listeners
+        if (locationManager != null && locationListener != null) {
+            Log.d(TAG, "onDetach: listener removed");
+            locationManager.removeUpdates(locationListener);
+        }
+
+        super.onDetach();
+    }
+
+    // ChatGPT usage: Yes
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
-        if (executorService != null) {
-            executorService.shutdown();
+        if (networkTaskResult != null && !networkTaskResult.isDone()) {
+            networkTaskResult.cancel(true);
         }
+        executorService.shutdownNow();
     }
 }
