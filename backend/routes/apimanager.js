@@ -7,7 +7,7 @@ let client_time = "";
 // Consulated ChatGPT on how to asynchronously read the contents of the file
 async function getApiKey() {
   try {
-    const data = await fs.readFile("/home/azureuser/CPEN321_Pixel_Pioneer/backend/confidential_weather_api_key.txt", { encoding: "utf-8" });
+    const data = await fs.readFile("confidential_weather_api_key.txt", { encoding: "utf-8" });
     return data.trim();
   } catch (err) {
     console.error("Error reading API key file:", err);
