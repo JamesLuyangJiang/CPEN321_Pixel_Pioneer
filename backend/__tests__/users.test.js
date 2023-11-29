@@ -4,7 +4,7 @@ const app = require("../app");
 const request = require("supertest");
 const { findUserEmailExists, connectDB } = require("../routes/dbconn");
 
-// POST https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users/create
+// Interface POST https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users/create
 describe("Create users", () => {
   connectDB
     .mockReturnValueOnce(false)
@@ -22,7 +22,7 @@ describe("Create users", () => {
       distance: 10,
       notificationToken: "asdfghjkl",
     };
-    const response = await request(app).post(`/users/create`).send(req_body);
+    const response = await request(app).post("/users/create").send(req_body);
     expect(response.status).toBe(400);
     expect(response.text).toBe("Database not connected");
   });
@@ -65,7 +65,7 @@ describe("Create users", () => {
   });
 });
 
-// GET https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users/get/:userid
+// Interface GET https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users/get/:userid
 describe("Get users profile", () => {
   connectDB
     .mockReturnValueOnce(false)
@@ -107,7 +107,7 @@ describe("Get users profile", () => {
   });
 });
 
-// PUT https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users/update/:userid
+// Interface PUT https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users/update/:userid
 describe("Update user profile", () => {
   connectDB
     .mockReturnValueOnce(false)
