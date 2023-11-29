@@ -1,230 +1,114 @@
-// STUB (DELETE LATER)
-// jest.mock("../routes/dbconn");
+jest.mock("../routes/dbconn");
 
-// const app = require("../app");
-// const request = require("supertest");
+const app = require("../app");
+const request = require("supertest");
 
-// const {connectDB} = require("../routes/dbconn")
+const { connectDB } = require("../routes/dbconn");
+const { recommendationRequestHandler } = require("../routes/recommendations");
+describe('recommendationRequestHandler', () => {
+  connectDB
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(false);
 
-// describe("recommendation", () => {
-//   connectDB.mockReturnValueOnce(true);
+ test("Test server connection", () => {
+     return request(app).get("/").expect(200);
+   });
 
-//   test("Test server connection", () => {
-//     return request(app).get("/").expect(200);
-//   });
+ test('should cause error since test ip is invalid', async () => {
+     const userid = '6';
+     const days = '10';
+     const testIP = "";
+     const req_body = {
+         mockTesting: true,
+         params: { userid, days },
+         ip: testIP,
+         };
+     const response = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+     expect(response.status).toBe(500);
+  });
 
-//   test("GET", async () => {
-//     const testID = 1;
-//     const testDays = 13;
-//     const req_body = {
-//       mockTesting: true,
-//       ip: "207.216.11.9",
-//     }
-//     // const req_body = {
-//     //   ip: "111.112.113.114",
-//     // };
-//     const response = await request(app)
-//       .get(`/recommendations/${testID}/${testDays}`)
-//       .send(req_body);
+ test('should return a recommendation list on successful execution', async () => {
+    const userid = '6';
+    const days = '10';
+    const testIP = "207.216.11.9";
+    const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
+    console.log("timezone in test: ", timezone)
+    const req_body = {
+        mockTesting: true,
+        params: { userid, days },
+        ip: testIP,
+        };
+    const response = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+    expect(response.status).toBe(200);
+    expect(response.text).toContain("total_score");
+    expect(response.text).toContain("name");
+    expect(response.text).toContain("distance");
+    expect(response.text).toContain("date");
+    expect(response.text).toContain("condition");
+ });
 
-//     // console.log(response);
+ test('should fail since fetchNearbyObservatoryFromAPIs cannot work as expected', async () => {
+      const userid = '6';
+      const days = '10';
+      const testIP = "127.0.0.1";
+      const req_body = {
+          mockTesting: true,
+          params: { userid, days },
+          ip: testIP,
+          };
+      const response = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+      expect(response.status).toBe(500);
+      expect(response.text).toContain("Failed to generate recommendation list");
+ });
 
-//     // expect(response.status).toBe(400);
-//     // expect(response.text).toBe("Database not connected");
-//   });
-// });
+ test('should fail with invalid observatory list', async () => {
+     const userid = '8';
+     const days = '0';
+     const testIP = "207.216.11.9";
+     const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
+     const req_body = {
+         mockTesting: true,
+         params: { userid, days },
+         ip: testIP,
+         };
+     const response = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+     expect(response.status).toBe(500);
+     expect(response.text).toContain("Failed to generate recommendation list");
+  });
 
-// // NOT WORKING
-// jest.mock("../routes/apimanager", () => ({
-//   __esModule: true,
-//   fetchNearbyObservatoryFromAPIs: jest
-//     .fn()
-//     .mockResolvedValue({
-//       name: "Vancouver",
-//       latitude: 23.98,
-//       longitude: 106.26,
-//       distance: 10.27,
-//       weatherForecast: [
-//         {
-//           condition_score: 4,
-//           date_score: 4,
-//           date: "2023-11-20",
-//           client_time: "2023-11-20",
-//           condition: "Clear",
-//         },
-//       ],
-//     }),
-// }));
+  test('should fail since user does not exist in the database', async () => {
+       const userid = '3';
+       const days = '10';
+       const testIP = "207.216.11.9";
+       const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
+       const req_body = {
+           mockTesting: true,
+           params: { userid, days },
+           ip: testIP,
+           };
+       const response = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+       expect(response.status).toBe(404);
+       expect(response.text).toBe("User not found.");
+    });
 
-// jest.mock("../routes/recommendations", () => ({
-//   __esModule: true,
-//   recommendationRequestHandler: jest.fn(),
-//   getUserDistance: jest.fn(),
-//   getDateScore: jest.fn(),
-//   generateRecommendationList: jest.fn(),
-// }));
+    test('should fail since user does not exist in the database', async () => {
+           const userid = '6';
+           const days = '10';
+           const testIP = "207.216.11.9";
+           const timezone = new Intl.DateTimeFormat('en-CA').resolvedOptions().timeZone;
+           const req_body = {
+               mockTesting: true,
+               params: { userid, days },
+               ip: testIP,
+               };
+           const response = await request(app).get(`/recommendations/${userid}/${days}`).set('X-Forwarded-For', testIP).send(req_body);
+           expect(response.status).toBe(500);
+           expect(response.text).toBe("DATABASE REFUSED TO CONNECT.");
+        });
+});
 
-// jest.mock("axios");
-// const apiManager = require("../routes/apimanager");
-// const recommendations = require("../routes/recommendations");
-
-// const { MongoClient } = require("mongodb");
-
-// describe("MongoDB connection", () => {
-//   let connection;
-//   let db;
-
-//   beforeAll(async () => {
-//     connection = await MongoClient.connect("mongodb://localhost:27017", {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//     });
-//     db = await connection.db("astronomy");
-//   });
-
-//   afterAll(async () => {
-//     await connection.close();
-//   });
-
-//   it("should connect to MongoDB successfully and fetch user preference", async () => {
-//     const users = db.collection("users");
-
-//     const insertedUser = await users.findOne({ userid: "1001" });
-
-//     await expect(insertedUser.distance).toEqual("500");
-//   });
-// });
-
-// describe("getUserDistance", () => {
-//   let connection;
-//   let db;
-
-//   beforeAll(async () => {
-//     connection = await MongoClient.connect("mongodb://localhost:27017", {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//     });
-//     db = await connection.db("astronomy");
-//   });
-
-//   afterAll(async () => {
-//     await connection.close();
-//   });
-//   recommendations.getUserDistance.mockImplementation(async (userid) => {
-//     const users = db.collection("users");
-//     const user = await users.findOne({ userid: userid });
-//     const distance = user && user.distance ? Number(user.distance) : 1000;
-//     return distance; // Return the distance from the found document
-//   });
-//   test("should return user distance", async () => {
-//     expect(await recommendations.getUserDistance("1001")).toBe(500);
-//   });
-
-//   test("return default distance value if user not exists", async () => {
-//     expect(await recommendations.getUserDistance("9999")).toBe(1000);
-//   });
-// });
-
-// describe("GET /recommendations/:userid/:days", () => {
-//   let req, res;
-//   beforeEach(() => {
-//     req = { params: { userid: "1234", days: "3" }, ip: "101.102.103.104" };
-//     res = {
-//       json: jest
-//         .fn()
-//         .mockResolvedValue({
-//           name: "Vancouver",
-//           distance: "10.27",
-//           date: "2023-11-20",
-//           condition: "Clear",
-//           total_score: "45.61",
-//         })
-//         .mockReturnThis(),
-//       status: jest.fn().mockReturnThis(),
-//     };
-//   });
-//   describe("recommendationRequestHandler", () => {
-//     test("should return a recommendation list on successful execution", async () => {
-//       recommendations.recommendationRequestHandler.mockImplementation(
-//         async () => {
-//           const observatory_list =
-//             await apiManager.fetchNearbyObservatoryFromAPIs(
-//               "101.102.103.104",
-//               1234,
-//               3
-//             );
-//           const recommendation_list =
-//             recommendations.generateRecommendationList(
-//               observatory_list,
-//               1000,
-//               10
-//             );
-//           res.json.mockResolvedValue(recommendation_list);
-//         }
-//       );
-//       req = { params: { userid: "1234", days: "3" }, ip: "101.102.103.104" };
-//       res = {
-//         json: jest.fn().mockResolvedValue({
-//           name: "Vancouver",
-
-//           distance: 10.27,
-//           date: "2023-11-20",
-//           condition: "Clear",
-//           total_score: "45.61",
-//         }),
-//         status: jest.fn().mockReturnThis(),
-//       };
-//       await recommendations.recommendationRequestHandler(req, res);
-//       expect(recommendations.recommendationRequestHandler).toHaveBeenCalled();
-//       expect(res.status).not.toHaveBeenCalledWith(500);
-//       console.log("res.json", res.json.getMockImplementation);
-//     });
-//   });
-
-//   describe("generateRecommendationList", () => {
-//     // Mock the function with a specific implementation
-//     recommendations.generateRecommendationList.mockImplementation(
-//       (nearby_observatory_list, distance_preference, maximum_city_number) => {
-//         const observatories = [
-//           {
-//             name: "Vancouver",
-//             distance: 10.27,
-//             date: "2023-11-20",
-//             condition: "Clear",
-//             total_score: "45.61",
-//           },
-//         ];
-//         return observatories.slice(0, maximum_city_number);
-//       }
-//     );
-
-//     test("should generate a recommendation list", () => {
-//       const nearby_observatory_list = [
-//         {
-//           name: "Vancouver",
-//           latitude: 23.98,
-//           longitude: 106.26,
-//           distance: 1000,
-//           weatherForecast: [
-//             {
-//               condition_score: 4,
-//               date_score: 4,
-//               date: "2023-11-20",
-//               client_time: "2023-11-20",
-//               condition: "Clear",
-//             },
-//           ],
-//         },
-//       ];
-
-//       const list = recommendations.generateRecommendationList(
-//         nearby_observatory_list,
-//         1000,
-//         10
-//       );
-
-//       expect(list).toBeInstanceOf(Array);
-//       expect(list).toHaveLength(1);
-//     });
-//   });
-// });
