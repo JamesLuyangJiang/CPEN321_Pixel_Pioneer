@@ -183,8 +183,7 @@ async function fetchNearbyObservatoriesList(lat, lon, radius) {
                         ),
                     }))
                     .sort((a, b) => a.distance - b.distance)
-                    .filter((_, index) => index % 4 === 0 && index < 80);
-//        console.log("items.length: ", items.length);
+                    .filter((_, selection) => selection % 4 === 0 && selection < 80);
     } catch (error) {
           console.error("Error in fetchNearbyObservatoriesList:", error);
           return { error: "Error in fetchNearbyObservatoriesList: " + error };
