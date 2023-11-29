@@ -17,8 +17,10 @@ async function recommendationRequestHandler(req, res) {
       const days = req.params.days;
       days_duration = days;
       const maximum_city_number = 10;
-      const publicIP = req.ip.substring(7);
-
+      let publicIP = req.ip.substring(7);
+      if(req.body.mockTesting && req.body.ip) {
+            publicIP = req.body.ip;
+      }
       const user = await checkIDExists(userid);
       if (!user) {
         console.log("USER DOES NOT EXIST IN DATABASE");
@@ -54,14 +56,14 @@ async function recommendationRequestHandler(req, res) {
   }
 }
 
+// ChatGPT usage: No
 function getDateDiffScore(client_time, observatory_date) {
   const client_date = new Date(client_time);
   const forecast_date = new Date(observatory_date);
   const time_diff = Math.abs(forecast_date - client_date);
   const days_diff = Math.ceil(time_diff / (24 * 60 * 60 * 1000));
-  let days_denominator = days_duration == "" ? 365 : Number(days_duration);
-  let date_diff_score = 1 - days_diff / days_denominator;
-  date_diff_score = date_diff_score == 0 ? 1 : date_diff_score * 10;
+  let date_diff_score = 1 - days_diff / Number(days_duration);
+  date_diff_score = date_diff_score * 10;
   return date_diff_score;
 }
 
@@ -100,10 +102,6 @@ function generateRecommendationList(
   // Calculate total scores and sort the recommendation list
   const recommendation_list = nearby_observatory_list
     .map((item) => {
-      if (!item.weatherForecast || item.weatherForecast.length === 0) {
-        return null;
-      }
-
       const sortedForecasts = item.weatherForecast.sort((a, b) => {
         if (b.condition_score !== a.condition_score) {
           return b.condition_score - a.condition_score;
