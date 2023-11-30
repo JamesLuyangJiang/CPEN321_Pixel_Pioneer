@@ -15,6 +15,8 @@ describe("test send invite notification", () => {
     return request(app).get("/").expect(200);
   });
 
+  // Test that facilitate notification.js file
+  // This is not an endpoint
   test("send notification return error", async () => {
     var message = {
       notification: {
@@ -27,6 +29,8 @@ describe("test send invite notification", () => {
     expect(response).toBe(null);
   });
 
+  // Test that facilitate notification.js file
+  // This is not an endpoint
   test("successfully send notification with valid token", async () => {
     var message = {
       notification: {
