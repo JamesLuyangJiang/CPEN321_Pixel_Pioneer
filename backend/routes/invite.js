@@ -22,16 +22,11 @@ module.exports = {
         const { userid } = req.params;
         console.log(req.body.name);
         console.log(req.body.receiver);
-
-        // const eventsCollection = client.db("astronomy").collection("events");
-        // const usersCollection = client.db("astronomy").collection("users");
-
-        // Check if userid exists, if it exists, find the name and date of the event
         const checkEventExists = await findOneEvent(userid, req.body.name);
         console.log(checkEventExists);
 
         if (!checkEventExists) {
-          res.status(400).send("EVENT NOT FOUND IN DATABASE.");
+          res.status(404).send("EVENT NOT FOUND IN DATABASE.");
         } else {
           const eventName = checkEventExists.name;
           const eventDate = checkEventExists.date;
@@ -41,7 +36,7 @@ module.exports = {
           );
 
           if (!checkReceiverEmailExists) {
-            res.status(400).send("INVITED USER NOT FOUND IN DATABASE.");
+            res.status(404).send("INVITED USER NOT FOUND IN DATABASE.");
           } else {
             const getSenderProfile = await checkIDExists(userid);
             console.log("PRINT INVITED USER INFO...");
@@ -65,13 +60,13 @@ module.exports = {
           }
         }
       } catch (err) {
-        return res.status(400).send(err);
+        return res.status(500).send(err);
       } finally {
           await client.close();
           console.log("Database connection closed");
       }
     } else {
-      res.status(400).send("Database not connected");
+      res.status(500).send("Database not connected");
     }
   },
 };
