@@ -14,13 +14,13 @@ module.exports = {
         console.log(emails);
         res.status(200).send(emails);
       } catch (err) {
-        res.status(400).send(err);
+        res.status(500).send(err);
       } finally {
         await client.close();
         console.log("Database connection closed");
       }
     } else {
-      res.status(400).send("Database not connected");
+      res.status(500).send("Database not connected");
     }
   },
 };

@@ -5,6 +5,7 @@ const request = require("supertest");
 
 const { connectDB, allUserEmails } = require("../routes/dbconn");
 
+// Interface GET https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/search/allemails
 describe("test search all active users' emails in database", () => {
   connectDB
     .mockReturnValueOnce(false)
@@ -26,20 +27,32 @@ describe("test search all active users' emails in database", () => {
     return request(app).get("/").expect(200);
   });
 
+  // Inputs: NONE
+  // Expected status code: 500
+	// Expected behavior: Could not establish connection to database, nothing change
+	// Expected output: “Database not connected”
   test("Database connection for GET", async () => {
     const response = await request(app).get("/search/allemails");
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(500);
     expect(response.text).toBe("Database not connected");
   });
 
+  // Inputs: NONE
+	// Expected status code: 500
+	// Expected behavior: Failed to complete CRUD operations in database after establishing connection, database is unchanged
+	// Expected output: “cannot GET /search/allemails (500)”
   test("User collection return error", async () => {
     const response = await request(app).get("/search/allemails");
     
-    expect(response.status).toBe(400);
-    expect(response.error.message).toBe("cannot GET /search/allemails (400)");
+    expect(response.status).toBe(500);
+    expect(response.error.message).toBe("cannot GET /search/allemails (500)");
   });
 
+  // Inputs: NONE
+  // Expected status code: 200
+  // Expected behavior: Found all user emails, nothing changed in database
+  // Expected output: A list of emails found from the database
   test("Successfully retrieved all emails in the user collection", async () => {
     const response = await request(app).get("/search/allemails");
     expect(response.status).toBe(200);
