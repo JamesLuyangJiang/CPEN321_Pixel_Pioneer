@@ -19,14 +19,14 @@ describe("GET a list of events", () => {
   });
 
   // Inputs: USERID is a valid user id existing in the database
-  // Expected status code: 400
+  // Expected status code: 500
 	// Expected behavior: Could not establish connection to database, nothing change
 	// Expected output: “Database not connected”
   test("Database connection for GET", async () => {
     const testID = 1;
     const response = await request(app).get(`/scheduling/${testID}/events`);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(500);
     expect(response.text).toBe("Database not connected");
   });
 

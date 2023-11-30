@@ -36,7 +36,7 @@ module.exports = {
         console.log("Database connection closed");
       }
     } else {
-      res.status(400).send("Database not connected");
+      res.status(500).send("Database not connected");
     }
   },
 
