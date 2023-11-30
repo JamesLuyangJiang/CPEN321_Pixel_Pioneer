@@ -168,7 +168,7 @@ describe("Get users profile", () => {
   // Expected behavior: Failed to complete CRUD operations in database after establishing connection, database is unchanged
   // Expected output: “cannot GET /users/get/8 (500)”
   test("Simulate GET catch error block when database failed", async () => {
-    testID = 8;
+    const testID = 8;
     const response = await request(app).get(`/users/get/${testID}`);
 
     expect(response.status).toBe(500);
@@ -192,7 +192,7 @@ describe("Update user profile", () => {
   // Expected behavior: Could not establish connection to database, nothing change
   // Expected output: “Database not connected”
   test("Database connection for PUT failed", async () => {
-    testID = 3;
+    const testID = 3;
     const req_body = {
       email: "harthuang990517@gmail.com",
       distance: 10,
@@ -212,7 +212,7 @@ describe("Update user profile", () => {
 	// Expected behavior: database did not find this USERID, database is unchanged
 	// Expected output: “ID does not exist in database.”
   test("Update invalid user profile", async () => {
-    testID = 3;
+    const testID = 3;
     const req_body = {
       email: "harthuang990517@gmail.com",
       distance: 10,
@@ -232,7 +232,7 @@ describe("Update user profile", () => {
   // Expected behavior: User profile found in database, this profile has been updated, no new entry added to the database
   // Expected output: Updated user profile from database
   test("Update valid user profile", async () => {
-    testID = 1;
+    const testID = 1;
     const req_body = {
       email: "harthuang990517@gmail.com",
       distance: 10,
@@ -253,7 +253,7 @@ describe("Update user profile", () => {
   // Expected behavior: Failed to complete CRUD operations in database after establishing connection, database is unchanged
   // Expected output: An error indicating PUT request failed
   test("Simulate PUT catch error block when database failed", async () => {
-    testID = 8;
+    const testID = 8;
     const response = await request(app).put(`/users/update/${testID}`);
 
     expect(response.status).toBe(400);

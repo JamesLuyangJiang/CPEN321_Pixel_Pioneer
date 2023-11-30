@@ -1,6 +1,5 @@
 const axios = require("axios");
 const fs = require("fs").promises; // Use promises interface for fs
-const fsRead = require("fs");
 let observatories_cache = {};
 let client_time = "";
 

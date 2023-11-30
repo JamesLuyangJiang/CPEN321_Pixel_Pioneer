@@ -7,15 +7,15 @@ const app = require("../app");
 const request = require("supertest");
 const timeout = require('connect-timeout');
 
-const { onIpInfoAPISuccess, onIpInfoAPIFailWithInvalidParameters,
-    onIpInfoAPISuccessWithDifferentTimezone, onGeogratisAPISuccess,
+const { 
+    onIpInfoAPISuccess,  
+    onGeogratisAPISuccess,
     onGeogratisAPISuccessWithSameConditionScore,
-    onGeogratisAPIFailWithEmptyList, onWeatherAPISuccess,
+    onWeatherAPISuccess,
     onWeatherAPISuccessWithSameConditionScore }
     = require("../routes/__mocks__/mockExternalAPIResults");
 
 const { connectDB } = require("../routes/dbconn");
-const { recommendationRequestHandler } = require("../routes/recommendations");
 
 // Interface
 // GET https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/recommendations/:userid/:days
