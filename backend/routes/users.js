@@ -101,12 +101,10 @@ module.exports = {
     if (isConnected) {
       try {
         const { userid } = req.params;
-
         const userProfile = await checkIDExists(userid);
 
-
         if (!userProfile) {
-          res.status(400).send("ID does not exist in database.");
+          res.status(404).send("ID does not exist in database.");
         } else {
           const updatedProfile = {
             userid,
@@ -114,11 +112,12 @@ module.exports = {
             distance: req.body.distance,
             notificationToken: req.body.notificationToken,
           };
-          const responseObject = await updateExistingUser(
+          await updateExistingUser(
             userid,
             updatedProfile
           );
-          res.status(200).send("User profile updated successfully\n");
+          updatedProfile.message = "User profile updated successfully.\n";
+          res.status(200).send(updatedProfile);
         }
       } catch (err) {
         res.status(400).send(err);

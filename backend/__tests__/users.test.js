@@ -6,6 +6,7 @@ const {
   findUserEmailExists,
   connectDB,
   findEmailAndReplaceUserToken,
+  updateExistingUser,
 } = require("../routes/dbconn");
 
 // Interface POST https://pixelpioneer.canadacentral.cloudapp.azure.com:8081/users/create
@@ -22,7 +23,7 @@ describe("Create users", () => {
   });
 
   // Inputs: email is a valid GOOGLE GMAIL account
-  // Inputs: distance is an integer within the maximum distance we could specify (< 1000km)
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
   // Inputs: notification token is a valid token generated when user enters the app from FCM
   // Expected status code: 500
   // Expected behavior: Could not establish connection to database, nothing change
@@ -39,7 +40,7 @@ describe("Create users", () => {
   });
 
   // Inputs: email is a valid GOOGLE GMAIL account
-  // Inputs: distance is an integer within the maximum distance we could specify (< 1000km)
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
   // Inputs: notification token is a valid token generated when user enters the app from FCM
   // Expected status code: 200
   // Expected behavior: A user profile will be created and added to the database
@@ -60,7 +61,7 @@ describe("Create users", () => {
   });
 
   // Inputs: email is a valid GOOGLE GMAIL account
-  // Inputs: distance is an integer within the maximum distance we could specify (< 1000km)
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
   // Inputs: notification token is a valid token generated when user enters the app from FCM
   // Expected status code: 200
   // Expected behavior: An existing user profile will be modified in the database
@@ -79,7 +80,7 @@ describe("Create users", () => {
   });
 
   // Inputs: email is an invalid GOOGLE GMAIL account
-  // Inputs: distance is an integer within the maximum distance we could specify (< 1000km)
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
   // Inputs: notification token is a valid token generated when user enters the app from FCM
   // Expected status code: 400
   // Expected behavior: Failed to complete CRUD operations in database after establishing connection, database is unchanged
@@ -185,7 +186,7 @@ describe("Update user profile", () => {
 
   // Inputs: USERID is a valid user id existing in the database
   // Inputs: email is a valid GOOGLE GMAIL account
-  // Inputs: distance is an integer within the maximum distance we could specify (< 1000km)
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
   // Inputs: notification token is a valid token generated when user enters the app from FCM
   // Expected status code: 500
   // Expected behavior: Could not establish connection to database, nothing change
@@ -203,22 +204,54 @@ describe("Update user profile", () => {
     expect(response.text).toBe("Database not connected");
   });
 
+  // Inputs: invalid USERID
+  // Inputs: email is a valid GOOGLE GMAIL account
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
+  // Inputs: notification token is a valid token generated when user enters the app from FCM
+  // Expected status code: 404
+	// Expected behavior: database did not find this USERID, database is unchanged
+	// Expected output: “ID does not exist in database.”
   test("Update invalid user profile", async () => {
     testID = 3;
-    const response = await request(app).put(`/users/update/${testID}`);
+    const req_body = {
+      email: "harthuang990517@gmail.com",
+      distance: 10,
+      notificationToken: "qwertyuiop",
+    };
+    const response = await request(app).put(`/users/update/${testID}`).send(req_body);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(404);
     expect(response.text).toBe("ID does not exist in database.");
   });
 
+  // Inputs: USERID is a valid user id existing in the database
+  // Inputs: email is a valid GOOGLE GMAIL account
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
+  // Inputs: notification token is a valid token generated when user enters the app from FCM
+  // Expected status code: 200
+  // Expected behavior: User profile found in database, this profile has been updated, no new entry added to the database
+  // Expected output: Updated user profile from database
   test("Update valid user profile", async () => {
     testID = 1;
-    const response = await request(app).put(`/users/update/${testID}`);
+    const req_body = {
+      email: "harthuang990517@gmail.com",
+      distance: 10,
+      notificationToken: "qwertyuiop",
+    };
+    const response = await request(app).put(`/users/update/${testID}`).send(req_body);
 
     expect(response.status).toBe(200);
-    expect(response.text).toBe("User profile updated successfully\n");
+    expect(JSON.parse(response.text).message).toBe("User profile updated successfully.\n");
+    expect(updateExistingUser).toHaveBeenCalledTimes(1);
   });
 
+  // Inputs: USERID is a valid user id existing in the database
+  // Inputs: email is a valid GOOGLE GMAIL account
+  // Inputs: distance is an integer within the range we could specify (>= 500KM && <= 1000km)
+  // Inputs: notification token is a valid token generated when user enters the app from FCM
+  // Expected status code: 500
+  // Expected behavior: Failed to complete CRUD operations in database after establishing connection, database is unchanged
+  // Expected output: An error indicating PUT request failed
   test("Simulate PUT catch error block when database failed", async () => {
     testID = 8;
     const response = await request(app).put(`/users/update/${testID}`);
