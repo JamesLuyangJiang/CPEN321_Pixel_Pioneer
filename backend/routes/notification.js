@@ -1,12 +1,5 @@
 const { firebaseCloudMessagingHelper } = require("./firebase");
 
-// // Firebase
-// var admin = require("firebase-admin");
-// var serviceAccount = require("../fcm.json");
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-// });
-
 module.exports = {
   sendInviteNotification: async (
     registrationToken,
