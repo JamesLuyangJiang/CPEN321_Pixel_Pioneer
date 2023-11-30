@@ -39,13 +39,19 @@ module.exports = {
           await findEmailAndReplaceUserToken(req.body.email, newProfile);
           res.status(200).send(newProfile);
         } else {
-          await createNewUser(
-            user_id,
-            req.body.email,
-            req.body.distance,
-            req.body.notificationToken
-          );
-          res.status(200).send(response_obj);
+          console.log("PRINTING DISTANCE");
+          console.log(req.body);
+          if (!req.body.email || !req.body.distance) {
+            res.status(400).send("BAD REQUEST, one of the required fields is missing.")
+          } else {
+            await createNewUser(
+              user_id,
+              req.body.email,
+              req.body.distance,
+              req.body.notificationToken
+            );
+            res.status(200).send(response_obj);
+          }
         }
       } catch (err) {
         res.status(400).send(err);
@@ -54,7 +60,7 @@ module.exports = {
         console.log("Database connection closed");
       }
     } else {
-      res.status(400).send("Database not connected");
+      res.status(500).send("Database not connected");
     }
   },
 
@@ -76,7 +82,7 @@ module.exports = {
           res.status(200).send(user);
         }
       } catch (err) {
-        res.status(400).send(err);
+        res.status(500).send(err);
       } finally {
         await client.close();
         console.log("Database connection closed");
