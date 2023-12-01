@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -190,7 +189,7 @@ public class StarsFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                Log.d("Codacy", "onNothingSelected: ");
             }
         });
 
@@ -351,7 +350,7 @@ public class StarsFragment extends Fragment {
             }
 
             public void onFinish() {
-                return; // restart again.
+                Log.d("Codacy", "onNothingSelected: "); // restart again.
             }
         };
 
@@ -421,7 +420,6 @@ public class StarsFragment extends Fragment {
                     int red = (color >> 8) & 0xff;
                     int green = (color >> 16) & 0xff;
                     int blue = (color >> 0) & 0xff;
-                    int alpha = 0xff << 24;
 
                     red = red / 2;
                     green = green / 2;
