@@ -19,11 +19,11 @@
 
     <NumberPicker
         android:id="@+id/datePicker"
-        style="@android:style/Widget.Material.NumberPicker"
         android:layout_width="104dp"
         android:layout_height="105dp"
         android:layout_marginTop="56dp"
         android:selectionDividerHeight="0dp"
+        android:theme="@style/NumberPickerStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.39"
         app:layout_constraintStart_toStartOf="parent"

@@ -2,10 +2,16 @@ package com.example.m4_mvp.ui.events;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -50,6 +56,7 @@ public class EventsFragment extends Fragment {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<String> networkTaskResult;
     private List<List<String>> eventsResponse = new ArrayList<>();
+    private ArrayList<String> emailList = new ArrayList<>();
 
     private ProfileViewModel profileViewModel;
 
@@ -59,10 +66,6 @@ public class EventsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-
-        if (profileViewModel.getuid() == null) {
-            Toast.makeText(requireActivity(), "Please sign in on profile page!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     // ChatGPT usage: Yes
@@ -70,6 +73,9 @@ public class EventsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEventsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        Animation fadeInFromBottomAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fragment_fade_in);
+        root.startAnimation(fadeInFromBottomAnimation);
 
         RecyclerView recyclerView = root.findViewById(R.id.eventsRecyclerView);
         View.OnClickListener cancelListener = new View.OnClickListener() {
@@ -147,11 +153,36 @@ public class EventsFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                 builder.setView(dialogView);
 
-                final EditText editText = dialogView.findViewById(R.id.editText);
+                final AutoCompleteTextView editText = dialogView.findViewById(R.id.searchText);
                 final Button btnCancel = dialogView.findViewById(R.id.btnCancel);
                 final Button btnInvite = dialogView.findViewById(R.id.dialogInviteButton);
 
-                final AlertDialog dialog = builder.create();
+                // Set up the ArrayAdapter for AutoCompleteTextView
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.email_list, emailList);
+                editText.setAdapter(adapter);
+
+                editText.setThreshold(0);
+
+                // Set up the text watcher to filter the list based on the entered text
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        // Not used in this example
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        // Filter the list based on the entered text
+                        adapter.getFilter().filter(charSequence);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        // Not used in this example
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
 
                 // Cancel button in dialog
                 btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -168,59 +199,63 @@ public class EventsFragment extends Fragment {
                         Log.d(TAG, "onClick: " + eventData);
 
                         String receiverEmail = editText.getText().toString();
-                        Log.d(TAG, "dialog invite: " + receiverEmail);
+                        Log.d(TAG, "email entered: " + receiverEmail);
 
-                        networkTaskResult = executorService.submit(() -> {
-                            try {
-                                URL url = new URL(getResources().getString(R.string.invite_url) + "/" + profileViewModel.getuid());
-                                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        if (!emailList.contains(receiverEmail)) {
+                            Toast.makeText(requireActivity(), "Invalid user email!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            networkTaskResult = executorService.submit(() -> {
+                                try {
+                                    URL url = new URL(getResources().getString(R.string.invite_url) + "/" + profileViewModel.getuid());
+                                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                                // Set up the connection for a POST request
-                                connection.setRequestMethod("POST");
-                                connection.setReadTimeout(10000);
-                                connection.setConnectTimeout(15000);
+                                    // Set up the connection for a POST request
+                                    connection.setRequestMethod("POST");
+                                    connection.setReadTimeout(10000);
+                                    connection.setConnectTimeout(15000);
 
-                                // Set the request body
-                                connection.setDoOutput(true);
-                                String requestBody = "{\"name\": \"" + eventData.get(0) + "\", \"receiver\": \"" + receiverEmail + "\"}";
+                                    // Set the request body
+                                    connection.setDoOutput(true);
+                                    String requestBody = "{\"name\": \"" + eventData.get(0) + "\", \"receiver\": \"" + receiverEmail + "\"}";
 
-                                // Set up the request body
-                                byte[] requestBytes = requestBody.getBytes("UTF-8");
-                                connection.setRequestProperty("Content-Type", "application/json");
-                                connection.setRequestProperty("Content-Length", String.valueOf(requestBytes.length));
+                                    // Set up the request body
+                                    byte[] requestBytes = requestBody.getBytes("UTF-8");
+                                    connection.setRequestProperty("Content-Type", "application/json");
+                                    connection.setRequestProperty("Content-Length", String.valueOf(requestBytes.length));
 
-                                // Write the JSON data to the connection
-                                OutputStream out = connection.getOutputStream();
-                                out.write(requestBytes);
-                                out.close();
+                                    // Write the JSON data to the connection
+                                    OutputStream out = connection.getOutputStream();
+                                    out.write(requestBytes);
+                                    out.close();
 
-                                // Get the response code
-                                int responseCode = connection.getResponseCode();
+                                    // Get the response code
+                                    int responseCode = connection.getResponseCode();
 
-                                if (responseCode == HttpURLConnection.HTTP_OK) {
-                                    Log.d(TAG, "invitation sent");
+                                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                                        Log.d(TAG, "invitation sent");
+                                        connection.disconnect();
+                                        return "done";
+                                    } else {
+                                        Log.d(TAG, "invitation request failed with response code: " + responseCode);
+                                    }
+
                                     connection.disconnect();
-                                    return "done";
-                                } else {
-                                    Log.d(TAG, "invitation request failed with response code: " + responseCode);
+                                    return null;
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return null;
                                 }
+                            });
 
-                                connection.disconnect();
-                                return null;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                return null;
+                            dialog.dismiss();
+
+                            try {
+                                networkTaskResult.get();
+
+                                Toast.makeText(requireActivity(), "Invitation sent!", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Log.d(TAG, "onClick: invitation failed");
                             }
-                        });
-
-                        dialog.dismiss();
-
-                        try {
-                            networkTaskResult.get();
-
-                            Toast.makeText(requireActivity(), "Invitation sent!", Toast.LENGTH_SHORT).show();
-                        } catch (Exception e) {
-                            Log.d(TAG, "onClick: invitation failed");
                         }
                     }
                 });
@@ -286,6 +321,47 @@ public class EventsFragment extends Fragment {
                     response = sb.toString();
 
                     Log.d(TAG, "responseString: " + response);
+
+                    // Request for all users
+                    URL secondUrl = new URL(getResources().getString(R.string.search_user_url));
+                    HttpURLConnection secondConnection = (HttpURLConnection) secondUrl.openConnection();
+                    // Configure the second connection
+                    connection.setRequestMethod("GET");
+                    connection.setReadTimeout(10000);
+                    connection.setConnectTimeout(15000);
+                    connection.connect();
+
+                    // Execute the second request
+                    int secondResponseCode = secondConnection.getResponseCode();
+                    if (secondResponseCode == HttpURLConnection.HTTP_OK) {
+                        // Read the response of the second request
+                        InputStream secondIs = secondConnection.getInputStream();
+                        BufferedReader secondBr = new BufferedReader(new InputStreamReader(secondIs));
+                        StringBuilder secondSb = new StringBuilder();
+                        String secondLine;
+                        while ((secondLine = secondBr.readLine()) != null) {
+                            secondSb.append(secondLine);
+                        }
+                        secondBr.close();
+                        String secondResponse = secondSb.toString();
+
+                        // Clear email list before store all emails again
+                        emailList.clear();
+
+                        // Store the emails
+                        JSONArray jsonArray = new JSONArray(secondResponse);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String email = jsonArray.optString(i, null);
+                            if (email != null && !email.equals("null")) {
+                                emailList.add(email);
+                            }
+                        }
+
+                    } else {
+                        Log.d(TAG, "onError when getting all emails: " + secondResponseCode);
+                    }
+
+                    secondConnection.disconnect();
 
                     onResponse(response, view);
                 } else {
@@ -363,6 +439,7 @@ public class EventsFragment extends Fragment {
                 recyclerView.setVisibility(View.VISIBLE);
 
                 Log.d(TAG, "finish updating UI");
+                Log.d(TAG, "emails: " + emailList);
             }
         });
     }

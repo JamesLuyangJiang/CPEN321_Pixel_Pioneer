@@ -2,7 +2,6 @@ package com.example.m4_mvp;
 
 import android.os.IBinder;
 import android.view.WindowManager;
-import android.widget.Toast;
 import androidx.test.espresso.Root;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

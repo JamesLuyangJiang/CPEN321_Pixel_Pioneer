@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
 public class ProfileViewModel extends ViewModel {
     private GoogleSignInAccount googleAccount;
+    private GoogleSignInClient mGoogleSignInClient;
     private SharedPreferences sharedPreferences;
     private String token;
 
@@ -19,12 +21,21 @@ public class ProfileViewModel extends ViewModel {
     }
 
     // ChatGPT usage: No
+    public void removeGoogleAccount() { this.googleAccount = null; }
+
+    // ChatGPT usage: No
     public void setGoogleAccount(GoogleSignInAccount account) {
         this.googleAccount = account;
     }
 
     // ChatGPT usage: No
     public void initGoogleAccount(Context context) { googleAccount = GoogleSignIn.getLastSignedInAccount(context); }
+
+    // ChatGPT usage: Partial
+    public void setmGoogleSignInClient(GoogleSignInClient client) { this.mGoogleSignInClient = client; }
+
+    // ChatGPT usage: Partial
+    public GoogleSignInClient getmGoogleSignInClient() { return this.mGoogleSignInClient; }
 
     // ChatGPT usage: Yes
     public void setMaxDistance(String distance) {
@@ -52,6 +63,13 @@ public class ProfileViewModel extends ViewModel {
     // ChatGPT usage: Partial
     public String getuid() {
         return this.sharedPreferences.getString("uid", null);
+    }
+
+    // ChatGPT usage: Yes
+    public void removeuid() {
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.putString("uid", null);
+        editor.apply();
     }
 
     // ChatGPT usage: Partial

@@ -1,0 +1,15 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/grey" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <item
+        android:drawable="@drawable/ic_spinner_arrow"
+        android:gravity="end|center_vertical"
+        android:width="24dp"
+        android:height="24dp"
+        android:end="12dp" />
+</layer-list>

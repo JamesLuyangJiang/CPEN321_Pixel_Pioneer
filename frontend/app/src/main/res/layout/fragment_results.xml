@@ -21,7 +21,6 @@
         android:layout_marginStart="23dp"
         android:layout_marginTop="4dp"
         android:text="@string/rank_title"
-        android:textColor="@color/black"
         android:textSize="12pt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.004"

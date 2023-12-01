@@ -20,9 +20,9 @@ public class RecRecyclerViewAssertion implements ViewAssertion {
     // ChatGPT usage: Yes
     public RecRecyclerViewAssertion(int position) {
         this.position = position;
-        this.placeNameId = R.id.placeName;
+        this.placeNameId = R.id.eventPlaceName;
         this.placeDistanceId = R.id.placeDistance;
-        this.planDateId = R.id.planDate;
+        this.planDateId = R.id.eventPlanDate;
         this.buttonId = R.id.selectButton;
     }
 

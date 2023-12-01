@@ -72,8 +72,8 @@ public class EventsRecyclerAdapter extends RecyclerView.Adapter<EventsRecyclerAd
         // ChatGPT usage: Partial
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            placeName = itemView.findViewById(R.id.placeName);
-            planDate = itemView.findViewById(R.id.planDate);
+            placeName = itemView.findViewById(R.id.eventPlaceName);
+            planDate = itemView.findViewById(R.id.eventPlanDate);
             cancelButton = itemView.findViewById(R.id.cancelButton);
             inviteButton = itemView.findViewById(R.id.inviteButton);
         }
