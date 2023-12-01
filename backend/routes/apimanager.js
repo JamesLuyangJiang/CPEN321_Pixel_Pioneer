@@ -6,13 +6,11 @@ let client_time = "";
 // ChatGPT usage: Partial
 // Consulated ChatGPT on how to asynchronously read the contents of the file
 async function getApiKey() {
-  try {
-    const data = await fs.readFile("confidential_weather_api_key.txt", { encoding: "utf-8" });
-    return data.trim();
-  } catch (err) {
-    console.error("Error reading API key file:", err);
-    throw err; // Rethrow to handle error outside
-  }
+  return await fs.readFile("confidential_weather_api_key.txt", { encoding: "utf-8" })
+                .catch((err) => {
+                    console.error("Error reading API key file:", err);
+                    throw err;
+                });
 }
 
 // ChatGPT usage: No
@@ -73,8 +71,7 @@ async function fetchNearbyObservatoryFromAPIs(publicIP, radius, days) {
     };
     return observatoriesWithConditionInfo;
   } catch (error) {
-    console.log("Error processing fetchNearbyObservatoryFromAPIs:", error);
-    return { error: "Failed to process fetchNearbyObservatoryFromAPIs" };
+    console.error("Error processing fetchNearbyObservatoryFromAPIs");
   }
 }
 
@@ -178,8 +175,7 @@ async function fetchNearbyObservatoriesList(lat, lon, radius) {
                     .sort((a, b) => a.distance - b.distance)
                     .filter((_, selection) => selection % 4 === 0 && selection < 80);
     } catch (error) {
-          console.error("Error in fetchNearbyObservatoriesList:", error);
-          return { error: "Error in fetchNearbyObservatoriesList: " + error };
+          console.error("Error in fetchNearbyObservatoriesList");
     }
 }
 
