@@ -5,14 +5,14 @@ const client = new MongoClient(uri);
 module.exports = {
   // ChatGPT usage: NO
   connectDB: async () => {
-    try {
-      await client.connect();
-      console.log("Successfully connected to the database");
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
+    return await client.connect()
+            .then(() => {
+                console.log("Successfully connected to the database");
+                return true;
+            }).catch((err) => {
+                console.error(err);
+                return false;
+            });
   },
 
   allUserEmails: async () => {
@@ -65,13 +65,13 @@ module.exports = {
     return await client
       .db("astronomy")
       .collection("users")
-      .findOne({ email: email });
+      .findOne({ email });
   },
 
   findEmailAndReplaceUserToken: async (email, newProfile) => {
     return await client.db("astronomy").collection("users").findOneAndReplace(
       {
-        email: email,
+        email,
       },
       newProfile
     );
@@ -80,8 +80,8 @@ module.exports = {
   createNewUser: async (userID, email, distance, token) => {
     return await client.db("astronomy").collection("users").insertOne({
       userid: userID,
-      email: email,
-      distance: distance,
+      email,
+      distance,
       notificationToken: token,
     });
   },
