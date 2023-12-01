@@ -15,4 +15,9 @@
     <style name="AppButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@android:color/white</item>
     </style>
+
+    <style name="SpinnerDropdownItem" parent="Widget.AppCompat.Spinner">
+        <item name="android:textSize">15pt</item>
+    </style>
+
 </resources>

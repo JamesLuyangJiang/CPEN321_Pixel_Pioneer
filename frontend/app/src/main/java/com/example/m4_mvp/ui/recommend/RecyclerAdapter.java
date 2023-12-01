@@ -69,9 +69,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         // ChatGPT usage: Partial
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            placeName = itemView.findViewById(R.id.placeName);
+            placeName = itemView.findViewById(R.id.eventPlaceName);
             placeDistance = itemView.findViewById(R.id.placeDistance);
-            planDate = itemView.findViewById(R.id.planDate);
+            planDate = itemView.findViewById(R.id.eventPlanDate);
             button = itemView.findViewById(R.id.selectButton);
         }
     }

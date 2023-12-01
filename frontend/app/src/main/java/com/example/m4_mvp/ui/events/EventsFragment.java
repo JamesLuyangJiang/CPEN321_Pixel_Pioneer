@@ -345,6 +345,9 @@ public class EventsFragment extends Fragment {
                         secondBr.close();
                         String secondResponse = secondSb.toString();
 
+                        // Clear email list before store all emails again
+                        emailList.clear();
+
                         // Store the emails
                         JSONArray jsonArray = new JSONArray(secondResponse);
                         for (int i = 0; i < jsonArray.length(); i++) {

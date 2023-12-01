@@ -1,5 +1,6 @@
 package com.example.m4_mvp.ui.stars;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -8,13 +9,20 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -27,7 +35,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,6 +51,10 @@ public class StarsFragment extends Fragment {
     final static String TAG = "StarsFragment";
 
     public double diff = 0;
+
+    public double diff1 = 0;
+    public double diff2 = 0;
+    public double diff3 = 0;
 
     public double offsetOfX = 0;
     public double offsetOfY = 0;
@@ -57,6 +71,9 @@ public class StarsFragment extends Fragment {
     private double locationLat = 49.246292;
     private double locationLong = -123.116226;
 
+    private double curLocationLat = 49.246292;
+    private double curLocationLong = -123.116226;
+
     private String responseREL = "189";
     private String responseRightAsc = "1424";
 
@@ -70,16 +87,251 @@ public class StarsFragment extends Fragment {
 
     private ImageView starImage;
 
+    private View ROOT;
+
+    private int MULTIPLIER = 1;
+
+    private long DISPLAY_TIMESTAMP;
+    private long CURRENT_TIMESTAMP;
+
+    private int SPEED_UP = 0;
+
+    private int UPDATE_INTERVAL = 500;
+    private int GPS_UPDATE_INTERVAL = 30000;
+
+    private int CUSTOM_LOCATION = 0;
+
+    private int TRANSPARENT = 0x0;
+    private CountDownTimer countDownTimer;
+
     // ChatGPT usage: Partial
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView: ");
         binding = FragmentStarsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        ROOT = root;
 
         Animation fadeInAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fragment_fade_in);
         root.startAnimation(fadeInAnimation);
 
         starImage = root.findViewById(R.id.imageView);
+
+        TextView displayedLocation = (TextView) root.findViewById(R.id.starsFrequency);
+        displayedLocation.setText("Display Location: ");
+
+        List<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add("Current Location");
+        spinnerArray.add("Vancouver");
+        spinnerArray.add("Montreal");
+        spinnerArray.add("Paris");
+        spinnerArray.add("Melbourne");
+        spinnerArray.add("Tokyo");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_item, spinnerArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner spinner = (Spinner) root.findViewById(R.id.spinner);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                switch(position){
+                    case 0:
+                        CUSTOM_LOCATION = 0;
+                        locationLat = curLocationLat;
+                        locationLong = curLocationLong;
+                        //displayedLocation.setText("Star Chart Displays: Current Location");
+                        break;
+
+                    case 1:
+                        CUSTOM_LOCATION = 1;
+                        locationLat = 49.2827;
+                        locationLong = -123.1207;
+                        //displayedLocation.setText("Star Chart Displays: Vancouver");
+                        break;
+
+                    case 2:
+                        CUSTOM_LOCATION = 1;
+                        locationLat = 45.5019;
+                        locationLong = -73.5674;
+                        //displayedLocation.setText("Star Chart Displays: Montreal");
+                        break;
+
+                    case 3:
+                        CUSTOM_LOCATION = 1;
+                        locationLat = 48.8566;
+                        locationLong = 2.3522;
+                        //displayedLocation.setText("Star Chart Displays: Paris");
+                        break;
+
+                    case 4:
+                        CUSTOM_LOCATION = 1;
+                        locationLat = -37.8136;
+                        locationLong = 144.9631;
+                        //displayedLocation.setText("Star Chart Displays: Melbourne");
+                        break;
+
+                    case 5:
+                        CUSTOM_LOCATION = 1;
+                        locationLat = 35.6764;
+                        locationLong = 139.6500;
+                        //displayedLocation.setText("Star Chart Displays: Tokyo");
+                        break;
+
+                    default:
+                        CUSTOM_LOCATION = 0;
+                        locationLat = curLocationLat;
+                        locationLong = curLocationLong;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        long timestamp;
+
+        SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        String formattedDate = time.format(new Date());
+
+        timestamp = 1000 * (Integer.valueOf(formattedDate.substring(0, 2)) * 3600
+                + Integer.valueOf(formattedDate.substring(3, 5)) * 60
+                + Integer.valueOf(formattedDate.substring(6, 8)) );
+
+        CURRENT_TIMESTAMP = timestamp;
+        DISPLAY_TIMESTAMP = timestamp;
+
+        TextView displayedTime = (TextView) root.findViewById(R.id.starsHeading);
+        displayedTime.setText("Star Chart Displays: Current Time");
+
+        Button forward = (Button) root.findViewById(R.id.forwards);
+        forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "onClick forward: ");
+
+                SPEED_UP = 1;
+
+                switch(MULTIPLIER){
+
+                    case -1200:
+                        MULTIPLIER = -600;
+                        break;
+
+                    case -600:
+                        MULTIPLIER = -300;
+                        break;
+
+                    case -300:
+                        MULTIPLIER = -100;
+                        break;
+
+                    case -100:
+                        MULTIPLIER = -10;
+                        break;
+
+                    case -10:
+                        MULTIPLIER = 1;
+                        break;
+
+                    case 1:
+                        MULTIPLIER = 10;
+                        break;
+
+                    case 10:
+                        MULTIPLIER = 100;
+                        break;
+
+                    case 100:
+                        MULTIPLIER = 300;
+                        break;
+
+                    case 300:
+                        MULTIPLIER = 600;
+                        break;
+
+                    case 600:
+                        MULTIPLIER = 1200;
+                        break;
+
+                    default:
+                        MULTIPLIER = MULTIPLIER;
+                }
+            }
+        });
+
+        Button backward = (Button) root.findViewById(R.id.backwards);
+        backward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SPEED_UP = 1;
+
+                switch(MULTIPLIER){
+
+                    case -600:
+                        MULTIPLIER = -1200;
+                        break;
+
+                    case -300:
+                        MULTIPLIER = -600;
+                        break;
+
+                    case -100:
+                        MULTIPLIER = -300;
+                        break;
+
+                    case -10:
+                        MULTIPLIER = -100;
+                        break;
+
+                    case -1:
+                        MULTIPLIER = -10;
+                        break;
+
+                    case 1:
+                        MULTIPLIER = -1;
+                        break;
+
+                    case 10:
+                        MULTIPLIER = 1;
+                        break;
+
+                    case 100:
+                        MULTIPLIER = 10;
+                        break;
+
+                    case 300:
+                        MULTIPLIER = 100;
+                        break;
+
+                    case 600:
+                        MULTIPLIER = 300;
+                        break;
+
+                    case 1200:
+                        MULTIPLIER = 600;
+                        break;
+
+                    default:
+                        MULTIPLIER = MULTIPLIER;
+                }
+            }
+        });
+
+        Button reset = (Button) root.findViewById(R.id.reset);
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SPEED_UP = 0;
+                MULTIPLIER = 1;
+            }
+        });
 
         //    private static final int PERMISSIONS_REQUEST_CODE = 100;
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -88,9 +340,22 @@ public class StarsFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 225);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 0, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_UPDATE_INTERVAL, 0, locationListener);
+            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
         }
+
+        countDownTimer = new CountDownTimer(6000000, UPDATE_INTERVAL) {
+            public void onTick(long millisUntilFinished) {
+                // For every second, do something.
+                initialize();
+            }
+
+            public void onFinish() {
+                return; // restart again.
+            }
+        };
+
+        countDownTimer.start();
 
         return root;
     }
@@ -98,6 +363,7 @@ public class StarsFragment extends Fragment {
     // ChatGPT usage: No
     void buildSkyMap(Bitmap canvas, Bitmap skymapRaw, double curDegree, double rightAscentionOffset, double locationLat, double timeOffset) {
 
+        Log.i(TAG, "buildSkyMap: ");
         int updateDiffFlag = 1;
 
         for (int i = 0; i < CANVAS_WIDTH; i++) {
@@ -107,10 +373,6 @@ public class StarsFragment extends Fragment {
                 double relativeY = 2 * (j - CANVAS_HEIGHT * 0.5) / CANVAS_HEIGHT;
 
                 double r = Math.sqrt(relativeX * relativeX + relativeY * relativeY);
-
-                if (r > 1.00) {
-                    continue;
-                }
 
                 double theta,
                        phi;
@@ -130,11 +392,17 @@ public class StarsFragment extends Fragment {
 
                 if((updateDiffFlag == 1) && (offsetOfX != 0) && (offsetOfY != 0)){
 
-                    Log.d("DIFF", String.valueOf(diff));
+//                    Log.d("DIFF", String.valueOf(diff));
 
                     double diffRaw = Math.abs(offsetX - offsetOfX) + Math.abs(offsetY - offsetOfY);
                     diff = diffRaw / (2*Math.PI) * 86400;
 
+                    diff1 = diff2;
+                    diff2 = diff3;
+                    diff3 = diff;
+
+                    TextView testDiff = getView().findViewById(R.id.testDiff);
+                    testDiff.setText(String.valueOf(Math.max(Math.max(diff1, diff2), diff3)));
 
                     updateDiffFlag = 0;
                 }
@@ -148,6 +416,21 @@ public class StarsFragment extends Fragment {
                 double rotatedPhi = rotationArr[1];
 
                 int color = getAtlasGlobe(rotatedTheta, rotatedPhi, skymapRaw);
+
+                if (r > 1.00) {
+                    int red = (color >> 8) & 0xff;
+                    int green = (color >> 16) & 0xff;
+                    int blue = (color >> 0) & 0xff;
+                    int alpha = 0xff << 24;
+
+                    red = red / 2;
+                    green = green / 2;
+                    blue = blue / 2;
+
+//                    color = alpha + (red << 8) + (green << 16) + (blue);
+                    color = TRANSPARENT;
+                }
+
                 canvas.setPixel(i, j, color);
             }
         }
@@ -265,8 +548,8 @@ public class StarsFragment extends Fragment {
                     sb.append(line);
                 }
                 br.close();
-                responseREL = sb.toString().replaceAll("[a-zA-Z\\s<>/=\"]", "").substring(599, 603).replaceAll("\\..*$", "").replaceAll("°", "");
-                Log.d(TAG, "result: " + responseREL);
+                responseREL = sb.toString().replaceAll("[a-zA-Z\\s<>/=\"]", "").substring(599, 603).replaceAll("\\..*$", "").replaceAll("°", "").replaceAll("[^0-9]", "");
+//                Log.d(TAG, "result: " + responseREL);
             } else {
                 Log.d(TAG, "Failed to get any response!" + responseCode);
             }
@@ -281,8 +564,8 @@ public class StarsFragment extends Fragment {
                     sb.append(line);
                 }
                 br.close();
-                responseRightAsc = sb.toString().replaceAll("[a-zA-Z\\s<>]", "").substring(859, 863);
-                Log.d(TAG, "result1: " + responseRightAsc);
+                responseRightAsc = sb.toString().replaceAll("[a-zA-Z\\s<>]", "").substring(859, 863).replaceAll("[^0-9]", "");
+//                Log.d(TAG, "result1: " + responseRightAsc);
             } else {
                 Log.d(TAG, "Failed to get any response!" + responseCode);
             }
@@ -302,34 +585,59 @@ public class StarsFragment extends Fragment {
          * This code is based on the answer by user3732887
          * on the post https://stackoverflow.com/questions/41441906/how-to-get-a-users-current-city
          * */
+        @SuppressLint("SetTextI18n")
         @Override
         public void onLocationChanged(Location location) {
+            double lat = location.getLatitude();
+            double lon = location.getLongitude();
+
+            if(CUSTOM_LOCATION == 0){
+                locationLat = lat;
+                locationLong = lon;
+            }
+
+            curLocationLat = lat;
+            curLocationLong = lon;
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void initialize(){
             long timestamp;
 
             SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
             String formattedDate = time.format(new Date());
 
-            timestamp = Integer.valueOf(formattedDate.substring(0, 2)) * 3600
+            timestamp = 1000 * (Integer.valueOf(formattedDate.substring(0, 2)) * 3600
                     + Integer.valueOf(formattedDate.substring(3, 5)) * 60
-                    + Integer.valueOf(formattedDate.substring(6, 8));
+                    + Integer.valueOf(formattedDate.substring(6, 8)) );
+
+
+            CURRENT_TIMESTAMP = timestamp;
+
+            if(SPEED_UP == 0){
+                DISPLAY_TIMESTAMP = CURRENT_TIMESTAMP;
+            }
+            else{
+                DISPLAY_TIMESTAMP += (long) MULTIPLIER * UPDATE_INTERVAL;
+            }
+
+            long display_in_seconds = (long) Math.floorMod((long)(DISPLAY_TIMESTAMP / 1000), (long) (24*60*60));
+            //long display_in_seconds = (DISPLAY_TIMESTAMP / 1000);
+
+            TextView displayedTime = (TextView) ROOT.findViewById(R.id.starsHeading);
+            displayedTime.setText("Star Chart At Time " + String.valueOf(display_in_seconds / 3600) + " : "
+                    + String.valueOf(Math.floorMod(display_in_seconds / 60, (long) 60)) + " : "
+                    + String.valueOf(Math.floorMod(display_in_seconds, (long) 60)));
 
             SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             String currentDate = date.format(new Date());
 
-            Log.d(TAG, timestamp + "timestamp");
-            Log.d(TAG, currentDate);
+//            Log.d(TAG, timestamp + "timestamp");
+//            Log.d(TAG, currentDate);
 
-            double lat = location.getLatitude();
-            double lon = location.getLongitude();
-
-            locationLat = lat;
-            locationLong = lon;
-
-            Log.d(TAG, locationLat + " latitude");
-            Log.d(TAG, locationLong + " longitude");
-
-//            double temp_long = -123.116226;
-//            double temp_lat = 49.246292;
+            // Log.d(TAG, locationLat + " latitude");
+            // Log.d(TAG, locationLong + " longitude");
 
             executorService = Executors.newSingleThreadExecutor();
 
@@ -369,30 +677,28 @@ public class StarsFragment extends Fragment {
             //Invoke the API to get the necessary information
 
             // Build and display the skyMap
-            double timeOffset = 2 * Math.PI * (timestamp - (13.0 * 3600.0 + 30.0 * 60.0)) / ((24. * 3600.0));
+            double timeOffset = 2 * Math.PI * (Math.floorMod((int) display_in_seconds, (int) (24 * 3600)) - (13.0 * 3600.0 + 30.0 * 60.0)) / ((24.0 * 3600.0));
             buildSkyMap(canvas, skymapRaw, curDegree, rightAscentionOffset, locationLat, timeOffset);
 
             image.setImageBitmap(canvas);
-        }
     }
 
-    // ChatGPT usage: No
+    // ChatGPT usage: Partial
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
 
-    // ChatGPT usage: Yes
-    @Override
-    public void onDetach() {
         // Unregister listeners
         if (locationManager != null && locationListener != null) {
-            Log.d(TAG, "onDetach: listener removed");
+            Log.d(TAG, "onDestroyView: listener removed");
             locationManager.removeUpdates(locationListener);
         }
 
-        super.onDetach();
+        if (countDownTimer != null) {
+            Log.i(TAG, "onDestroyView: counter cancelled");
+            countDownTimer.cancel();
+        }
     }
 
     // ChatGPT usage: Yes
@@ -403,6 +709,7 @@ public class StarsFragment extends Fragment {
         if (networkTaskResult != null && !networkTaskResult.isDone()) {
             networkTaskResult.cancel(true);
         }
+
         executorService.shutdownNow();
     }
 }

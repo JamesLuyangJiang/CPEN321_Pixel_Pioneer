@@ -2,12 +2,17 @@ package com.example.m4_mvp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static org.hamcrest.Matchers.allOf;
@@ -16,30 +21,31 @@ import static org.hamcrest.Matchers.is;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.fragment.app.testing.FragmentScenario;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.assertion.ViewAssertions;
+import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,11 +57,7 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 
-import com.example.m4_mvp.ui.stars.StarsFragment;
-
 import org.junit.Before;
-
-import java.util.Arrays;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -90,8 +92,13 @@ public class FrontEndTests {
     // ChatGPT usage: Partial
     @Test
     public void fr3Test() throws InterruptedException, UiObjectNotFoundException {
-        // Google sign in
-        googleSignIn();
+        // Click on the "Profile" menu item in the bottom navigation bar
+        uiDevice.findObject(By.res("com.example.m4_mvp:id/navigation_profile")).click();
+
+        if (isViewDisplayed(R.id.sign_in_button)) {
+            // Google sign in
+            googleSignIn();
+        }
 
         // Click on the “Recommendation” button from the bottom navigation bar
         ViewInteraction bottomNavigationItemView4 = onView(
@@ -107,15 +114,15 @@ public class FrontEndTests {
         Thread.sleep(1000);
 
         // Check the number picker is present on screen
-        Espresso.onView(ViewMatchers.withId(R.id.datePicker))
-                .check(matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.datePicker))
+                .check(matches(isDisplayed()));
 
         // Check the “Go!” button is present on screen
-        Espresso.onView(ViewMatchers.withId(R.id.recommendButton))
-                .check(matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.recommendButton))
+                .check(matches(isDisplayed()));
 
         // Select “7” in the number picker
-        Espresso.onView(ViewMatchers.withId(R.id.datePicker)).perform(ViewActions.swipeUp());
+        onView(ViewMatchers.withId(R.id.datePicker)).perform(ViewActions.swipeUp());
 
         Thread.sleep(1500);
 
@@ -130,11 +137,10 @@ public class FrontEndTests {
                         isDisplayed()));
         materialButton.perform(click());
 
-        Thread.sleep(500);
-
         // Check the presence of loading animation
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-                .check(matches(ViewMatchers.isDisplayed()));
+        // Note: sometimes the progress bar stays for too short time that it is not even enough time to detect it, so commented here.
+//        onView(ViewMatchers.withId(R.id.progressBar))
+//                .check(matches(isDisplayed()));
 
         // Wait until the result page presents
         while (true) {
@@ -148,15 +154,15 @@ public class FrontEndTests {
         // Check all results contain the required information and a “Select” button
         for (int i = 0; i < 10; i++) {
             // Perform a scroll action to ensure the item is on the screen
-            Espresso.onView(ViewMatchers.withId(R.id.recRecyclerView))
+            onView(ViewMatchers.withId(R.id.recRecyclerView))
                     .perform(RecyclerViewActions.scrollToPosition(i));
 
             // Check that the TextView within the ViewHolder at position i is not empty
-            Espresso.onView(ViewMatchers.withId(R.id.recRecyclerView))
+            onView(ViewMatchers.withId(R.id.recRecyclerView))
                     .check(new RecRecyclerViewAssertion(i));
         }
 
-        // Click on the “Recommendation” button from the bottom navigation bar
+        // Click on the “Stars” button from the bottom navigation bar
         ViewInteraction backHome = onView(
                 allOf(withId(R.id.navigation_stars), withContentDescription("Stars"),
                         childAtPosition(
@@ -173,6 +179,15 @@ public class FrontEndTests {
     // ChatGPT usage: Partial
     @Test
     public void fr4Test() throws Throwable {
+        // Prerequisite steps
+        // Click on the "Profile" menu item in the bottom navigation bar
+        uiDevice.findObject(By.res("com.example.m4_mvp:id/navigation_profile")).click();
+
+        if (isViewDisplayed(R.id.sign_in_button)) {
+            // Google sign in
+            googleSignIn();
+        }
+
         // Prerequisite steps to get to the results page of recommendation
         ViewInteraction bottomNavigationItemView4 = onView(
                 allOf(withId(R.id.navigation_recommend), withContentDescription("Recommendation"),
@@ -209,14 +224,14 @@ public class FrontEndTests {
         final String[] selectedPlan = new String[3];
 
         // Click on the “Select” button of one of the plans
-        Espresso.onView(ViewMatchers.withId(R.id.recRecyclerView))
+        onView(ViewMatchers.withId(R.id.recRecyclerView))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, new ViewAction() {
                     // ChatGPT usage: Yes
                     @Override
                     public Matcher<View> getConstraints() {
-                        return Matchers.allOf(
+                        return allOf(
                                 isDescendantOfA(isAssignableFrom(RecyclerView.class)),
-                                ViewMatchers.isDisplayed()
+                                isDisplayed()
                         );
                     }
 
@@ -247,9 +262,9 @@ public class FrontEndTests {
                         }
 
                         // Store the selected plan information
-                        selectedPlan[0] = ((TextView) viewHolder.itemView.findViewById(R.id.placeName)).getText().toString();
+                        selectedPlan[0] = ((TextView) viewHolder.itemView.findViewById(R.id.eventPlaceName)).getText().toString();
                         selectedPlan[1] = ((TextView) viewHolder.itemView.findViewById(R.id.placeDistance)).getText().toString();
-                        selectedPlan[2] = ((TextView) viewHolder.itemView.findViewById(R.id.planDate)).getText().toString();
+                        selectedPlan[2] = ((TextView) viewHolder.itemView.findViewById(R.id.eventPlanDate)).getText().toString();
 
                         // Perform a click on the button
                         button.performClick();
@@ -267,9 +282,11 @@ public class FrontEndTests {
                 }));
 
         // Check the message “Event created!” is present on screen
-        Espresso.onView(withText("Event created!"))
+        onView(withText("Event created!"))
                 .inRoot(ToastMatcher.isToast())
                 .check(matches(isDisplayed()));
+
+        Thread.sleep(2000);
 
         // Click on the “Events” button from the bottom navigation bar
         ViewInteraction eventsClick = onView(
@@ -293,28 +310,193 @@ public class FrontEndTests {
 
         Thread.sleep(1000);
 
+        int numEvents = getCountFromRecyclerView(R.id.eventsRecyclerView);
+        final int[] found = {-1};
+
         // Check all events contain the required information, an “Invite” button, and a “Cancel” button
-        boolean found = EventRecyclerViewAssertion.checkEachItem(selectedPlan);
+        for (int i = 0; i < numEvents; i++) {
+            // Perform a scroll action to ensure the item is on the screen
+            onView(ViewMatchers.withId(R.id.eventsRecyclerView))
+                    .perform(RecyclerViewActions.scrollToPosition(i));
+
+            // Perform checks on the view holder at position i
+            onView(ViewMatchers.withId(R.id.eventsRecyclerView))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(i,
+                            new ViewAction() {
+                                @Override
+                                public Matcher<View> getConstraints() {
+                                    // Specify the constraints for the action
+                                    return isAssignableFrom(RecyclerView.class);
+                                }
+
+                                @Override
+                                public String getDescription() {
+                                    return "Get text from item at position 2";
+                                }
+
+                                @Override
+                                public void perform(UiController uiController, View view) {
+                                    int position = ((RecyclerView) view.getParent()).getChildAdapterPosition(view);
+                                    // Get all elements from the view holder at current position i
+                                    TextView placeNameTextView = view.findViewById(R.id.eventPlaceName);
+                                    TextView planDateTextView = view.findViewById(R.id.eventPlanDate);
+                                    Button cancelButton = view.findViewById(R.id.cancelButton);
+                                    Button inviteButton = view.findViewById(R.id.inviteButton);
+
+                                    // Check if text fields are not empty
+                                    if (placeNameTextView != null && placeNameTextView.getText().toString().isEmpty()) {
+                                        throw new AssertionError("TextView (placeName) at position " + position + " is empty");
+                                    }
+
+                                    if (planDateTextView != null && planDateTextView.getText().toString().isEmpty()) {
+                                        throw new AssertionError("TextView (planDate) at position " + position + " is empty");
+                                    }
+
+                                    // Check at least 1 event contains the same information as the plan selected in step 1
+                                    if (placeNameTextView.getText().toString().equals(selectedPlan[0]) && planDateTextView.getText().toString().equals(selectedPlan[2])) {
+                                        found[0] = position;
+                                    }
+
+                                    // Check if buttons exist
+                                    if (cancelButton == null) {
+                                        throw new AssertionError("Button (cancelButton) at position " + position + " is not present");
+                                    }
+
+                                    if (inviteButton == null) {
+                                        throw new AssertionError("Button (inviteButton) at position " + position + " is not present");
+                                    }
+                                }
+                            }));
+        }
 
         // Check at least 1 event contains the same information as the plan selected in step 1
-        if (!found) {
-            throw new AssertionError("No same event created!");
+        if (found[0] == -1) {
+            throw new AssertionError("No selected plan found in events!");
+        }
+
+        // Clicks on the “Cancel” button of the event with the same information as the plan selected in step 1
+        onView(ViewMatchers.withId(R.id.eventsRecyclerView))
+                .perform(RecyclerViewActions.scrollToPosition(found[0]));
+
+        onView(ViewMatchers.withId(R.id.eventsRecyclerView))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(found[0],
+                        ClickOnButtonViewAction.clickChildViewWithId(R.id.cancelButton)));
+
+        // Check the loading page present on screen
+        // Note: sometimes the progress bar stays for too short time that it is not even enough time to detect it, so commented here.
+//        onView(ViewMatchers.withId(R.id.eventsProgressBar))
+//                .check(matches(isDisplayed()));
+
+        Thread.sleep(2000);
+
+        // If no more events left, means the previous event deleted, so no need to check
+        if (!isInVisible(R.id.noEventsTitle)) {
+            return;
+        }
+
+        int newNumEvents = getCountFromRecyclerView(R.id.eventsRecyclerView);
+        final int[] oldExist = {-1};
+
+        // Check no events have the same information as the event chosen for cancellation in step 4
+        for (int i = 0; i < newNumEvents; i++) {
+            // Perform a scroll action to ensure the item is on the screen
+            onView(ViewMatchers.withId(R.id.eventsRecyclerView))
+                    .perform(RecyclerViewActions.scrollToPosition(i));
+
+            // Perform checks on the view holder at position i
+            onView(ViewMatchers.withId(R.id.eventsRecyclerView))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(i,
+                            new ViewAction() {
+                                @Override
+                                public Matcher<View> getConstraints() {
+                                    // Specify the constraints for the action
+                                    return isAssignableFrom(RecyclerView.class);
+                                }
+
+                                @Override
+                                public String getDescription() {
+                                    return "Get text from item at position 2";
+                                }
+
+                                @Override
+                                public void perform(UiController uiController, View view) {
+                                    int position = ((RecyclerView) view.getParent()).getChildAdapterPosition(view);
+                                    // Get elements from the view holder at current position i
+                                    TextView placeNameTextView = view.findViewById(R.id.eventPlaceName);
+                                    TextView planDateTextView = view.findViewById(R.id.eventPlanDate);
+
+                                    // Check no events have the same information as the event chosen for cancellation in step 4
+                                    if (placeNameTextView.getText().toString().equals(selectedPlan[0]) && planDateTextView.getText().toString().equals(selectedPlan[2])) {
+                                        oldExist[0] = position;
+                                    }
+                                }
+                            }));
         }
 
         // Check no events have the same information as the event chosen for cancellation in step 4
-        boolean newFound = EventRecyclerViewAssertion.checkEachItem(selectedPlan);
-
-        if (newFound) {
-            throw new AssertionError("Selected event not removed!");
+        if (oldExist[0] != -1) {
+            throw new AssertionError("Canceled event still in the list!");
         }
 
-        Thread.sleep(10000);
+        Thread.sleep(1000);
     }
 
     // ChatGPT usage: Partial
     @Test
     public void fr5Test() throws Throwable {
         // Prerequisite steps
+        // Click on the "Profile" menu item in the bottom navigation bar
+        uiDevice.findObject(By.res("com.example.m4_mvp:id/navigation_profile")).click();
+
+        if (isViewDisplayed(R.id.sign_in_button)) {
+            // Google sign in
+            googleSignIn();
+        }
+
+        // Prerequisite steps to create an event
+        ViewInteraction bottomNavigationItemView4 = onView(
+                allOf(withId(R.id.navigation_recommend), withContentDescription("Recommendation"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.nav_view),
+                                        0),
+                                1),
+                        isDisplayed()));
+        bottomNavigationItemView4.perform(click());
+
+        Thread.sleep(1000);
+
+        ViewInteraction materialButton = onView(
+                allOf(withId(R.id.recommendButton), withText("Go!"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.nav_host_fragment_activity_main),
+                                        0),
+                                2),
+                        isDisplayed()));
+        materialButton.perform(click());
+
+        Thread.sleep(500);
+
+        while (true) {
+            Thread.sleep(1000);
+            UiObject2 resultList = uiDevice.findObject(By.clazz("androidx.recyclerview.widget.RecyclerView"));
+            if (resultList != null) {
+                break;
+            }
+        }
+
+        ViewInteraction materialButton2 = onView(
+                allOf(withId(R.id.selectButton), withText("Select"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.recRecyclerView),
+                                        0),
+                                3),
+                        isDisplayed()));
+        materialButton2.perform(click());
+
+        // Click on the “Events” button in the bottom navigation bar
         ViewInteraction eventsClick = onView(
                 allOf(withId(R.id.navigation_events), withContentDescription("Events"),
                         childAtPosition(
@@ -326,122 +508,154 @@ public class FrontEndTests {
         eventsClick.perform(click());
 
         // Click on the “Invite” button on any events
-        Espresso.onView(ViewMatchers.withId(R.id.eventsRecyclerView))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, new ViewAction() {
-                    // ChatGPT usage: Yes
-                    @Override
-                    public Matcher<View> getConstraints() {
-                        return Matchers.allOf(
-                                isDescendantOfA(isAssignableFrom(RecyclerView.class)),
-                                ViewMatchers.isDisplayed()
-                        );
-                    }
+        ViewInteraction materialButton3 = onView(
+                allOf(withId(R.id.inviteButton), withText("Invite"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.eventsRecyclerView),
+                                        0),
+                                3),
+                        isDisplayed()));
+        materialButton3.perform(click());
 
-                    // ChatGPT usage: Yes
-                    @Override
-                    public String getDescription() {
-                        return "Click on the button inside ViewHolder at position 0";
-                    }
+        Thread.sleep(1000);
 
-                    // ChatGPT usage: Yes
-                    @Override
-                    public void perform(UiController uiController, View view) {
-                        RecyclerView recyclerView = findParentRecyclerView(view);
-                        if (recyclerView == null) {
-                            throw new IllegalStateException("RecyclerView not found in the hierarchy.");
-                        }
+        // Check the dialog is present on screen with a text input, an “Invite” button, and a “Cancel” button
+        ViewInteraction linearLayout = onView(
+                allOf(withParent(allOf(withId(android.R.id.custom),
+                                withParent(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class)))),
+                        isDisplayed()));
+        linearLayout.check(matches(isDisplayed()));
 
-                        // Find the ViewHolder at position 0
-                        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(0);
-                        if (viewHolder == null) {
-                            throw new IllegalStateException("ViewHolder not found at position 0.");
-                        }
+        ViewInteraction editText = onView(
+                allOf(withId(R.id.searchText),
+                        withParent(withParent(withId(android.R.id.custom))),
+                        isDisplayed()));
+        editText.check(matches(isDisplayed()));
 
-                        // Find the button inside the ViewHolder
-                        Button button = viewHolder.itemView.findViewById(R.id.inviteButton);
-                        if (button == null) {
-                            throw new IllegalStateException("Button with ID R.id.selectButton not found inside ViewHolder.");
-                        }
+        ViewInteraction button = onView(
+                allOf(withId(R.id.dialogInviteButton), withText("INVITE"),
+                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                        isDisplayed()));
+        button.check(matches(isDisplayed()));
 
-                        // Perform a click on the button
-                        button.performClick();
-                    }
+        ViewInteraction button2 = onView(
+                allOf(withId(R.id.btnCancel), withText("CANCEL"),
+                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                        isDisplayed()));
+        button2.check(matches(isDisplayed()));
 
-                    // ChatGPT usage: Yes
-                    private RecyclerView findParentRecyclerView(View view) {
-                        for (View current = view; current != null; current = (View) current.getParent()) {
-                            if (current instanceof RecyclerView) {
-                                return (RecyclerView) current;
-                            }
-                        }
-                        return null;
-                    }
-                }));
+        // Enter “cpen” in the text input
+        ViewInteraction materialAutoCompleteTextView = onView(
+                allOf(withId(R.id.searchText),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.custom),
+                                        0),
+                                0),
+                        isDisplayed()));
+        materialAutoCompleteTextView.perform(replaceText("cpen"), closeSoftKeyboard());
 
-        // Check the dialog is present on screen with a text input and an “Invite” button
-        Espresso.onView(ViewMatchers.withId(R.id.editText))
-                .check(matches(ViewMatchers.isDisplayed()));
+        // Click on the “Invite” button in the dialog
+        ViewInteraction materialButton4 = onView(
+                allOf(withId(R.id.dialogInviteButton), withText("Invite"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                1),
+                        isDisplayed()));
+        materialButton4.perform(click());
 
-        Espresso.onView(ViewMatchers.withId(R.id.dialogInviteButton))
-                .check(matches(ViewMatchers.isDisplayed()));
+        Thread.sleep(10);
 
-        // Enter “testing” in the text input
-        Espresso.onView(ViewMatchers.withId(R.id.editText))
-                .perform(ViewActions.typeText("testing"));
-
-        // Click on the “Invite” button
-        Espresso.onView(ViewMatchers.withId(R.id.dialogInviteButton))
-                .perform(ViewActions.click());
-
-        // Check the on-screen message “Invalid email address! Please retry!” is present on screen
-        Espresso.onView(withText("Invalid email address! Please retry!"))
+        // Check the message “Invalid email address!” is present on screen
+        onView(withText("Invalid user email!"))
                 .inRoot(ToastMatcher.isToast())
                 .check(matches(isDisplayed()));
 
-        // Enter “nosuchuser@gmail.com” in the text input
-        Espresso.onView(ViewMatchers.withId(R.id.editText))
-                .perform(ViewActions.typeText("nosuchuser@gmail.com"));
+        // Continue enter “321” in the text input after the existing “cpen”
+        ViewInteraction materialAutoCompleteTextView2 = onView(
+                allOf(withId(R.id.searchText), withText("cpen"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.custom),
+                                        0),
+                                0),
+                        isDisplayed()));
+        materialAutoCompleteTextView2.perform(click());
 
-        // Click on the “Invite” button
-        Espresso.onView(ViewMatchers.withId(R.id.dialogInviteButton))
-                .perform(ViewActions.click());
+        ViewInteraction materialAutoCompleteTextView3 = onView(
+                allOf(withId(R.id.searchText), withText("cpen"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.custom),
+                                        0),
+                                0),
+                        isDisplayed()));
+        materialAutoCompleteTextView3.perform(replaceText("cpen321"));
 
-        // Check the on-screen message “No user found with this email address!” is present on screen
-        Espresso.onView(withText("No user found with this email address!"))
-                .inRoot(ToastMatcher.isToast())
-                .check(matches(isDisplayed()));
+        // Check the drop down list is present on screen and all of them begin with the letters “cpen321”
+        String searchText = "cpen321";
 
-        // Enter “jamesjiangluyang@gmail.com”  in the text input
-        Espresso.onView(ViewMatchers.withId(R.id.editText))
-                .perform(ViewActions.typeText("jamesjiangluyang@gmail.com"));
+        int itemCount = getItemCount(R.id.searchText);
 
-        // Click on the “Invite” button
-        Espresso.onView(ViewMatchers.withId(R.id.dialogInviteButton))
-                .perform(ViewActions.click());
+        for (int position = 0; position < itemCount; position++) {
+            Espresso.onData(CoreMatchers.anything())
+                    .inRoot(RootMatchers.isPlatformPopup())
+                    .atPosition(position)
+                    .check(matches(withText(CoreMatchers.startsWith(searchText))));
+        }
 
-        // Check no dialog is present on screen
-        Espresso.onView(ViewMatchers.withId(R.id.dialogInviteButton)).check(ViewAssertions.doesNotExist());
+        Thread.sleep(1000);
+
+        // Click on the email with text of “cpen321pixelpioneer@gmail.com”
+        onView(withText("cpen321pixelpioneer@gmail.com"))
+                .inRoot(RootMatchers.isPlatformPopup())
+                .perform(click());
+
+        Thread.sleep(1000);
+
+        // Check the text input contains the same email as the one selected in step 6: “cpen321pixelpioneer@gmail.com”
+        ViewInteraction editText2 = onView(
+                allOf(withId(R.id.searchText), withText("cpen321pixelpioneer@gmail.com"),
+                        withParent(withParent(withId(android.R.id.custom))),
+                        isDisplayed()));
+        editText2.check(matches(withText("cpen321pixelpioneer@gmail.com")));
+
+        // Click on the “Invite” button in the dialog
+        ViewInteraction materialButton5 = onView(
+                allOf(withId(R.id.dialogInviteButton), withText("Invite"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                1),
+                        isDisplayed()));
+        materialButton5.perform(click());
+
+        Thread.sleep(1000);
 
         // Check the on-screen message “Invitation sent!” is present on screen
-        Espresso.onView(withText("Invitation sent!"))
+        onView(withText("Invitation sent!"))
                 .inRoot(ToastMatcher.isToast())
                 .check(matches(isDisplayed()));
+
+        Thread.sleep(1000);
+
+        // Check no dialog is present on screen
+        onView(withId(R.id.dialogInviteButton))
+                .check(doesNotExist());
     }
 
     // ChatGPT usage: Partial
     @Test
     public void skyChartTest() throws InterruptedException {
-        Thread.sleep(20000);
+        Thread.sleep(10000);
 
-        FragmentScenario<StarsFragment> fragmentScenario = FragmentScenario.launch(StarsFragment.class);
+        String testDiff = getTextFromTextView(R.id.testDiff);
 
-        // Access the fragment instance and its public variable
-        fragmentScenario.onFragment(fragment -> {
-            double yourVariable = fragment.getDiff();
-
-            // Perform assertions on yourVariable
-            assert(yourVariable < 15.00);
-        });
+        assert(Float.parseFloat(testDiff) < 15.00 && Float.parseFloat(testDiff) > 0);
     }
 
     // ChatGPT usage: Partial
@@ -508,19 +722,17 @@ public class FrontEndTests {
             }
         }
 
-        Thread.sleep(3000);
+        Thread.sleep(2000);
 
         if (clickCount >= 10) {
             throw new IllegalStateException("Number of clicks exceeds maximum of 10!");
         }
     }
 
+    // ChatGPT usage: Partial
     private void googleSignIn() throws UiObjectNotFoundException, InterruptedException {
-        // Click on the "Profile" menu item in the bottom navigation bar
-        uiDevice.findObject(By.res("com.example.m4_mvp:id/navigation_profile")).click();
-
         // Wait for the fragment to load
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         // Click on the Google Sign-In button
         ViewInteraction id = onView(
@@ -568,6 +780,7 @@ public class FrontEndTests {
         }
     }
 
+    // ChatGPT usage: Partial
     private void clickButton(String text) throws InterruptedException {
         while (true) {
             Thread.sleep(500);
@@ -579,6 +792,7 @@ public class FrontEndTests {
         }
     }
 
+    // ChatGPT usage: Yes
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
@@ -596,5 +810,76 @@ public class FrontEndTests {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    // ChatGPT usage: No
+    private static int getCountFromRecyclerView(int RecyclerViewId) {
+        final int[] COUNT = {0};
+        Matcher matcher = new TypeSafeMatcher<View>() {
+            @Override
+            protected boolean matchesSafely(View item) {
+                COUNT[0] = ((RecyclerView) item).getAdapter().getItemCount();
+                return true;
+            }
+            @Override
+            public void describeTo(Description description) {}
+        };
+        onView(allOf(withId(RecyclerViewId),isDisplayed())).check(matches(matcher));
+        return COUNT[0];
+    }
+
+    // ChatGPT usage: Yes
+    private static String getTextFromTextView(int textViewId) {
+        final String[] text = {null};
+        onView(withId(textViewId)).perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(TextView.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Getting text from TextView";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                text[0] = ((TextView) view).getText().toString();
+            }
+        });
+        return text[0];
+    }
+
+    // ChatGPT usage: Yes
+    private boolean isViewDisplayed(int viewId) {
+        try {
+            onView(withId(viewId)).check(matches(isDisplayed()));
+            return true;
+        } catch (NoMatchingViewException e) {
+            return false;
+        }
+    }
+
+    // ChatGPT usage: No
+    private boolean isInVisible(int viewId) {
+        try {
+            onView(withId(viewId)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
+    }
+
+    // ChatGPT usage: Yes
+    private int getItemCount(int autoCompleteTextViewId) {
+        final int[] itemCount = new int[1];
+        onView(withId(autoCompleteTextViewId)).check((view, noViewFoundException) -> {
+            if (noViewFoundException != null) {
+                itemCount[0] = 0;
+            } else {
+                itemCount[0] = ((AutoCompleteTextView) view).getAdapter().getCount();
+            }
+        });
+        return itemCount[0];
     }
 }

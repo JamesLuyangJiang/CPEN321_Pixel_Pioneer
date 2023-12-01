@@ -104,7 +104,7 @@ public class ProfileFragment extends Fragment {
 
                         EditText inputDistance = profileView.findViewById(R.id.maxDistInput);
 
-                        if (inputDistance.getText().toString().equals("") || Integer.parseInt(inputDistance.getText().toString()) > 1000 || Integer.parseInt(inputDistance.getText().toString()) < 50) {
+                        if (inputDistance.getText().toString().equals("") || Integer.parseInt(inputDistance.getText().toString()) > 1000 || Integer.parseInt(inputDistance.getText().toString()) < 500) {
                             Log.d(TAG, "onClick: " + inputDistance.getText().toString());
                             return "rangeError";
                         }

@@ -8,7 +8,15 @@
 
     <!--Stars Fragment-->
     <string name="starsHeading">Current star chart at your location</string>
-    <string name="starsFrequency">Updates every 5 seconds</string>
+    <string name="starLocationTitle">Display Location: </string>
+    <string name="back"> 《《 </string>
+    <string name="forward"> 》》 </string>
+
+    <string-array name="locationArray">
+        <item>Current Location</item>
+        <item>Ottawa</item>
+        <item>Beijing</item>
+    </string-array>
 
     <!--Recommendation Fragment-->
     <string name="date_title">Within how many days you want to do star gazing?</string>
@@ -28,7 +36,7 @@
     <string name="preferenceTitle">Preferences</string>
     <string name="distanceTitle">Maximum distance for places:</string>
     <string name="distanceUnit">KM</string>
-    <string name="distanceRange">(50 KM \u2264 input \u2264 1000 KM, default = 1000)</string>
+    <string name="distanceRange">(500 KM \u2264 input \u2264 1000 KM, default = 1000)</string>
     <string name="defaultDistance">1000</string>
     <string name="updateProfileText">Update</string>
     <string name="signOutText">Sign Out</string>
