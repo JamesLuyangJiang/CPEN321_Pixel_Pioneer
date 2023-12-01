@@ -6,7 +6,7 @@ const fs = require("fs");
 
 const port = 8081;
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 // FOR LOCAL TESTING, USE THIS HTTP SERVER
 // server.listen(port, async () => {
